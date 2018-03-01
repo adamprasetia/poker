@@ -1,0 +1,94 @@
+body{
+    background: black;
+}
+a.active > img{
+    border:2px solid lime;
+}
+.row > div{
+    margin-right: -90px;
+}
+img.card {
+    width: 50px;
+}
+#tablecard {
+    position: absolute;
+    top:240px;
+    left: 310px;
+}
+#tablecard img{
+    display: inline;
+}
+.playercard img{
+    display: inline;
+    margin-left: -35px;
+    margin-bottom: -45px;
+}
+.giliran{
+    background: lime;
+    border-radius: 50px;
+}
+.player{
+    background: silver;
+    position: absolute;
+    padding: 40px;
+    border-radius: 100px;
+}
+.sitwrap span{
+    /* background: #9bbb59; */
+    margin-left: -30px;
+    margin-top: -50px;
+    display: block;
+    width: 120px;
+    text-align: center;
+    color: white;         
+}
+.sit-1{
+    position: absolute;
+    top: 100px;
+    left: 288px;
+}
+.sit-2{
+    position: absolute;
+    top: 100px;
+    left: 515px;
+}
+.sit-3{
+    position: absolute;
+    top: 150px;
+    left: 650px;
+}
+.sit-4{
+    position: absolute;
+    top: 400px;
+    left: 650px;
+}
+.sit-5{
+    position: absolute;
+    top: 435px;
+    left: 515px;
+}
+.sit-6{
+    position: absolute;
+    top: 435px;
+    left: 288px;
+}
+.sit-7{
+    position: absolute;
+    top: 400px;
+    left: 150px;
+}
+.sit-8{
+    position: absolute;
+    top: 150px;
+    left: 150px;
+}
+.button{
+    position: absolute;
+    top:350px;
+    left:390px;
+}
+.button-close{
+    position: absolute;
+    top:10px;
+    left:10px;
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Poker</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="form-group">
+                <label for="playerName">Isi dengan nama anda :</label>
+                <input id="playerName" type="text">
+            </div>
+            <button type="button" name="button" id="btnLogin">Login</button>
+        </div>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+        <script src="assets/js/config.js"></script>
+        <script src="assets/js/helper.js"></script>
+        <script type="text/javascript">
+            $('document').ready(function(){
+                if (getCookie('username')) {
+                    window.location = 'play.html';
+                }
+                $('#btnLogin').click(function(){
+                    var playerName = $('#playerName').val();
+                    firebase.database().ref('player/'+playerName).set({
+                        name:playerName
+                    }).then(function(){
+                        setCookie('username', playerName, 1);
+                        window.location = "play.html";
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>

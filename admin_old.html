@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Poker</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">                    
+                    <div class="card">
+                        <div class="card-body">                    
+                            <div class="form-group">
+                                <label for="">Total Player</label>                
+                                <input type="number" id="txtTotalPlayer" value="1" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Total Katu</label>                
+                                <input type="number" id="txtTotalCard" value="52" class="form-control">
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="button" name="button" id="btnBagiKartu" class="btn btn-primary">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+        <script src="assets/js/config.js"></script>
+        <script src="assets/js/helper.js"></script>
+        <script type="text/javascript">
+        $('document').ready(function(){
+            $('#btnBagiKartu').click(function(){
+                firebase.database().ref('games').once('value').then(function(response){
+                    var config_total_player = response.val().player.length;
+                    var config_total_kartu = parseInt($('#txtTotalCard').val());
+                    var kartu = new Array(config_total_kartu);
+                    for (var i = 0; i < kartu.length; i++) {
+                        kartu[i] = i;
+                    }
+                    kartu = shuffle(kartu);
+                    var playerCard = new Array(config_total_player);
+                    var player = new Array(config_total_player);
+                    for (var i = 0; i < config_total_player; i++) {
+                        playerCard[i] = [];
+                        player[i] = i;
+                    }
+                    $.each(kartu, function(index, value) {
+                        playerCard[index % config_total_player].push(value);
+                    });
+                    console.log(playerCard);
+
+                    $.each(playerCard, function(index, value) {
+                        console.log(index, JSON.stringify(value));
+                        firebase.database().ref('games/player/'+index).update({                 
+                            card: JSON.stringify(value)
+                        });                   
+                    });
+                    
+                    firebase.database().ref('games').update({
+                        card_on_arena:"[]",
+                        giliran:JSON.stringify(player)
+                    });                                
+                });
+            });
+        });            
+        </script>
+    </body>
+</html>

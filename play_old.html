@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Poker</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="assets/css/style.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="arena">
+                <div id="kartuOnArena">
+                    
+                </div>
+                <p>Giliran Player : <span id="giliran"></span></p>
+            </div>
+            <button id="btn-pas" type="button" name="button" class="btn btn-warning">Pas</button>
+            <button id="btn-send" type="button" name="button" class="btn btn-success">Send</button>
+            <hr>
+            <div id="kartu" class="row row-card">
+            </div>
+            <hr>
+            <button id="btn-keluar" type="button" name="button" class="btn btn-danger">Keluar</button>
+        </div>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+        <script src="assets/js/config.js"></script>
+        <script src="assets/js/helper.js"></script>
+        <script type="text/javascript">
+            $( function() {
+                $( ".row-card" ).sortable({
+                    update: function( ) {
+                        console.log('sortable');
+                    }                                
+                });
+                $( ".row-card" ).disableSelection();    
+            } );
+        </script>
+        <script type="text/javascript">
+            if (!getCookie('userlogin')) {
+                window.location = 'index.html';
+            }
+
+            var userlogin = JSON.parse(getCookie("userlogin"));
+            var me = userlogin.id
+            var card;
+            var cardSelected = [];
+            firebase.database().ref('games/giliran').on('value', function(response) {
+                if (response.val() && JSON.parse(response.val()) && typeof JSON.parse(response.val())[0] != 'undefined') {
+                    firebase.database().ref('games/player/'+JSON.parse(response.val())[0]).once('value', function(responsePlayer) {
+                        if (responsePlayer.val().card == '[]') {
+                            console.log("abis nih kartunya");
+                            var giliran = JSON.parse(response.val());
+                            giliran.splice(0, 1);        
+                            firebase.database().ref('games').update({
+                                giliran:JSON.stringify(giliran)
+                            });                         
+                        }
+                    });
+                }
+            });
+            firebase.database().ref('games/card_on_arena').on('value', function(response) {
+                if (response.val()) {                    
+                    var kartu = '<div class="row">';
+                    $.each(JSON.parse(response.val()), function(index, value) {
+                        kartu += '<div class="col-lg-2 col-md-2 col-sm-3 col-xs-4">'+
+                        '<img class="img-fluid img-thumbnail" src="assets/img/'+value+'.png">'+
+                        '</div>'                    
+                    });
+                    kartu += '</div>';
+                    $('#kartuOnArena').html(kartu);
+                }
+            });
+            firebase.database().ref('games/player').on('value', function(response) {                
+                if (response.val() && response.val()[me] && response.val()[me].card) {                    
+                    $('#kartu').html('');
+                    card = JSON.parse(response.val()[me].card);
+                    card.sort(function(a, b){return a - b});
+                    $.each(card, function(index, value) {
+                        $('#kartu').append(
+                            '<div class="col-lg-2 col-md-2 col-sm-3 col-xs-4">'+
+                                '<a href="javascript:void(0)" class="kartu" data-index="'+index+'" data-value="'+value+'">'+
+                                    '<img class="img-fluid img-thumbnail" src="assets/img/'+value+'.png">'+
+                                '</a>'+
+                            '</div>'
+                        );
+                    });                
+                }
+            });
+            firebase.database().ref('games').on('value', function(response) {
+                // var reset = 0;
+                // $.each(response.val().player, function(index, value) {
+                //     if (value.card == '[]') {
+                //         reset += 1;
+                //     }
+                // });
+                // if (reset == response.val().player.length-1) {
+                //     resetGame();
+                // }
+                // if (response.val() && response.val().giliran != '[]' && response.val().giliran && JSON.parse(response.val().giliran) && typeof JSON.parse(response.val().giliran)[0] != 'undefined' && response.val().player[JSON.parse(response.val().giliran)[0]].name) {
+                //     $('#giliran').html(response.val().player[JSON.parse(response.val().giliran)[0]].name);
+                //     var giliran = JSON.parse(response.val().giliran);
+                //     if (giliran.length==1) {                                
+                //         var j = parseInt(giliran[0]);
+                //         for (var i = 0; i < response.val().player.length-1; i++) {
+                //             if ((j+1) < response.val().player.length) {
+                //                 j += 1;
+                //             }else{
+                //                 j = 0;
+                //             }
+                //             giliran.push(j);
+                //         }
+                // 
+                //         firebase.database().ref('games').update({
+                //             card_on_arena:"[]",
+                //             giliran:JSON.stringify(giliran)
+                //         });                                                                
+                //     }
+                // }
+            });
+            function checkStraight(cardSelected){
+                var cardStraight = [];
+                $.each(cardSelected, function(index, value) {
+                    cardStraight.push((value - (value % 4)) / 4);
+                });
+                cardStraight.sort(function(a,b){return a-b});
+                var a = -1, b = true;
+                $.each(cardStraight, function(index, value) {
+                    if (a == -1) {
+                        a = value;
+                    }else{
+                        if (value-1 == a) {
+                            a = value;
+                        }else{
+                            b = false;
+                            return false;
+                        }
+                    }
+                });
+                return b;
+            }
+            function checkFlush(cardSelected){
+                var cardFlush = [];
+                var uniqueCardFlush = [];
+                $.each(cardSelected, function(index, value) {
+                    cardFlush.push(value % 4);
+                });
+                $.each(cardFlush, function(index, value){
+                    if($.inArray(value, uniqueCardFlush) === -1) uniqueCardFlush.push(value);
+                });                
+                if (uniqueCardFlush.length == 1) {
+                    return true;
+                }
+                return false;
+            }
+            function checkFullHouse(cardSelected){
+                var cardFullHouse = [];
+                var uniqueCardFullHouse = [];
+                $.each(cardSelected, function(index, value) {
+                    cardFullHouse.push((value - (value % 4)) / 4);
+                });                
+                $.each(cardFullHouse, function(index, value){
+                    if($.inArray(value, uniqueCardFullHouse) === -1) uniqueCardFullHouse.push(value);
+                });
+                console.log(uniqueCardFullHouse);
+                if (uniqueCardFullHouse.length == 2) {
+                    var a = uniqueCardFullHouse[0];
+                    var b = uniqueCardFullHouse[1];
+                    var aa = 0;
+                    var bb = 0;
+                    var big = 0;
+                    $.each(cardFullHouse, function(index, value){
+                        if (a == value) {
+                            aa += 1; 
+                        }
+                        if (b == value) {
+                            bb += 1;
+                        } 
+                    });
+                    if ((aa == 3 && bb == 2) || (aa == 2 && bb == 3)) {
+                        if (aa > bb) {
+                            big = a;
+                        }else{
+                            big = b;
+                        }
+                        return {'big':big, 'status':true};
+                    }
+                    return {'big':big, 'status':false};
+                }else{
+                    return {'big':big, 'status':false};
+                }               
+            }
+            function validasi(cardSelected, card_on_arena){
+                // validasi jumlah kartu
+                if (cardSelected.length != card_on_arena.length && card_on_arena.length != 0) {
+                    return false;
+                }
+                
+                // validasi single
+                if (cardSelected.length == 1 && cardSelected[0] < card_on_arena[0]) {
+                    return false;
+                }
+                // validasi pair
+                if (cardSelected.length > 1 && cardSelected.length < 5) {
+                    var valid = true;
+                    $.each(cardSelected, function(index, value) {
+                        if (((value-(value%4))/4) != ((cardSelected[0]-(cardSelected[0]%4))/4)) {
+                            valid = false;
+                            return false;
+                        }                   
+                    });
+                    if (!valid) {
+                        return false;
+                    }
+                    if (Math.max(...cardSelected) < Math.max(...card_on_arena)) {
+                        return false;
+                    }
+                }
+                // validasi 5 card
+                if (cardSelected.length == 5) {
+                    if (checkFullHouse(cardSelected).status) {
+                        console.log('full house');                        
+                        if (card_on_arena.length != 0) {
+                            if (checkFullHouse(card_on_arena).status) {
+                                console.log(checkFullHouse(cardSelected).big, checkFullHouse(card_on_arena).big);
+                                if (checkFullHouse(cardSelected).big < checkFullHouse(card_on_arena).big) {
+                                    return false;
+                                }
+                            }else{
+                                return false;
+                            }
+                        }
+                    }else if (checkFlush(cardSelected) && checkStraight(cardSelected)) {
+                        console.log('straight flush');
+                        if (card_on_arena.length != 0) {
+                            if ((checkFlush(card_on_arena) && checkStraight(card_on_arena)) || checkStraight(card_on_arena) || checkFlush(card_on_arena)) {
+                                if (Math.max(...cardSelected) < Math.max(...card_on_arena)) {
+                                    return false;
+                                }                                
+                            }else{
+                                return false;
+                            }
+                        }
+                    }else if (checkFlush(cardSelected)) {
+                        console.log('flush');    
+                        if (card_on_arena.length != 0) {                            
+                            if (checkFlush(card_on_arena) && !checkStraight(card_on_arena)) {
+                                if (Math.max(...cardSelected) < Math.max(...card_on_arena)) {
+                                    return false;
+                                }                                
+                            }else{
+                                return false;
+                            }
+                        }                    
+                    }else if (checkStraight(cardSelected)) {                        
+                        console.log('straight');
+                        if (card_on_arena.length != 0) {                            
+                            if (checkStraight(card_on_arena) && !checkFlush(card_on_arena)) {
+                                if (Math.max(...cardSelected) < Math.max(...card_on_arena)) {
+                                    return false;
+                                }                                
+                            }else{
+                                return false;
+                            }
+                        }
+                    }else{
+                        console.log('not match');
+                        return false;
+                    }
+                }
+                
+                return true;
+            }
+            $('body').on('click','#btn-send',function(){
+                firebase.database().ref('games').once('value').then(function(response){
+                    if (validasi(cardSelected, JSON.parse(response.val().card_on_arena)) && me == JSON.parse(response.val().giliran)[0]) {
+                        firebase.database().ref('games').update({
+                            card_on_arena:JSON.stringify(cardSelected)
+                        }).then(function(){        
+                            $.each(cardSelected, function(index, value) {
+                                remove(card, value);
+                            });
+                            firebase.database().ref('games/player/'+me).update({
+                                card:JSON.stringify(card)
+                            }).then(function(){                            
+                                var giliran = JSON.parse(response.val().giliran);
+                                giliran.splice(0, 1);                                
+                                giliran.push(parseInt(me));
+                                firebase.database().ref('games').update({
+                                    giliran:JSON.stringify(giliran)
+                                }); 
+                                if (card.length == 0) {
+                                    firebase.database().ref('games').update({
+                                        pemenang:JSON.stringify(giliran)
+                                    });                                     
+                                }
+                                cardSelected = [];
+                            });   
+                        });                                                                        
+                    }
+                });                                                                        
+            });
+            $('body').on('click','#btn-pas',function(){
+                firebase.database().ref('games').once('value').then(function(response){
+                    if (me == JSON.parse(response.val().giliran)[0]) {
+                        // Update Giliran
+                        var giliran = JSON.parse(response.val().giliran);
+                        if (giliran.length>1) {                            
+                            giliran.splice(0, 1);
+                        }
+                        firebase.database().ref('games').update({
+                            giliran:JSON.stringify(giliran)
+                        }).then(function(){                            
+                            if (giliran.length==1) {                                
+                                var j = parseInt(giliran[0]);
+                                for (var i = 0; i < response.val().player.length-1; i++) {
+                                    if ((j+1) < response.val().player.length) {
+                                        j += 1;
+                                    }else{
+                                        j = 0;
+                                    }
+                                    giliran.push(j);
+                                }
+                                firebase.database().ref('games').update({
+                                    card_on_arena:"[]",
+                                    giliran:JSON.stringify(giliran)
+                                });                                                                
+                            }
+                        });
+                    }
+                });                
+            });
+            $('body').on('click','#btn-keluar',function(){
+                firebase.database().ref('games/player/'+me).remove(function(){                    
+                    deleteCookie('userlogin');
+                    window.location = 'index.html';
+                });
+            });
+            $('body').on('click','.kartu',function(){
+                var value = parseInt($(this).attr('data-value'));
+                if ($(this).hasClass('active')) {
+                    $(this).removeClass('active');
+                    remove(cardSelected, value);
+                }else{      
+                    if (cardSelected.length < 5) {
+                        $(this).addClass('active');
+                        cardSelected.push(value);
+                    }
+                }
+            });            
+        </script>
+    </body>
+</html>
