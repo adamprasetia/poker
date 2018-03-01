@@ -303,6 +303,7 @@
                     $('#btn-standup').prop('disabled', true);
                     $.each(response.val().player, function(indexPlayer, valuePlayer) {
                         var giliran = 'badge-secondary';
+                        var status = '<span class="badge badge-secondary">'+valuePlayer.status+'</span>';
                         if (response.val().giliran == valuePlayer.name) {
                             giliran = 'badge-warning';
                         }
@@ -320,7 +321,7 @@
                         playercard += '</div>';
                         if (valuePlayer.sitno) {         
                             $('.tablesit > .sit-'+valuePlayer.sitno).hide();
-                            $('.playersit').append('<div class="sit-'+valuePlayer.sitno+' sitwrap"><span class="badge '+giliran+'">'+valuePlayer.name+'</span>'+playercard+'</div>');
+                            $('.playersit').append('<div class="sit-'+valuePlayer.sitno+' sitwrap"><span class="badge '+giliran+'">'+valuePlayer.name+'-'+valuePlayer.status+'</span>'+playercard+'</div>');
                         }
                         if (valuePlayer.name == me && valuePlayer.sitno && valuePlayer.sitno != 0) {
                             $('.tablesit').hide();
