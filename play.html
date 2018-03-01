@@ -430,7 +430,7 @@
             }
             function validasi(cardSelected, card_on_arena){
                 // validasi jumlah kartu
-                if (cardSelected.length != card_on_arena.length && card_on_arena.length != 0) {
+                if (cardSelected.length != card_on_arena.length && card_on_arena.length != 0 && cardSelected.length != 4 && card_on_arena[0] != 51 && card_on_arena[0] != 50 && card_on_arena[0] != 49 && card_on_arena[0] != 48) {
                     return false;
                 }
                 
@@ -447,8 +447,12 @@
                             return false;
                         }                   
                     });
+                    console.log('valid',valid);
                     if (!valid) {
                         return false;
+                    }
+                    if (cardSelected.length == 4 && card_on_arena.length == 1 && (card_on_arena[0] == 51 || card_on_arena[0] == 50 || card_on_arena[0] == 49 || card_on_arena[0] == 48)) {
+                        return true;
                     }
                     if (Math.max(...cardSelected) < Math.max(...card_on_arena)) {
                         return false;
