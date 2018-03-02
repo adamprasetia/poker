@@ -33,7 +33,10 @@
                 if ($('#username').val()) {
                     firebase.database().ref('games/player/'+$('#username').val()).once('value').then(function(response){
                         if (response.val()) {
-                            swal("Oops", "Username is existing!", "error");
+                            // swal("Oops", "Username is existing!", "error");
+                            setCookie("userlogin", JSON.stringify({'username':$('#username').val()}), 365);
+                            swal("Success", "Welcome, "+$('#username').val()+" and enjoy the game", "success");
+                            window.location = 'play.html';
                         }else{
                             firebase.database().ref('games/player/'+$('#username').val()).set({
                                 name:$('#username').val()
