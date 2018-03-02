@@ -77,8 +77,8 @@
             var me = userlogin.username;
             var cardSelected = [];
             var myCard;
-            var environment = 'production';
-            // var environment = 'development';
+            // var environment = 'production';
+            var environment = 'development';
 
             if (!getCookie('userlogin')) {
                 window.location = 'index.html';
@@ -186,7 +186,7 @@
                     if (environment == 'development') {                        
                         me = response.val().giliran;
                     }
-                    console.log('me',me);
+                    console.log('cardSelected',cardSelected);
                     if (checkGiliran()) {
                         if (validasi(cardSelected, JSON.parse(response.val().tablecard))) {
                             firebase.database().ref('games').update({
@@ -255,7 +255,7 @@
                     }
                 }                
                 $.each($('body').find('.kartu.active'), function(index, value) {
-                    cardSelected.push(value.getAttribute('data-value'));
+                    cardSelected.push(parseInt(value.getAttribute('data-value')));
                 });
                 console.log(cardSelected);
             });
