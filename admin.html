@@ -15,6 +15,13 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-4">                    
+                    <div class="card">
+                        <div class="card-body">                    
+                            <button type="button" name="button" id="btnBagiKartu" class="btn btn-primary" onclick="kickPlayer()">Kick Player</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -22,5 +29,18 @@
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
         <script src="assets/js/helper.js?v=2018.03.02.13.54"></script>
+        <script type="text/javascript">
+            function kickPlayer(){           
+                firebase.database().ref('games').once('value', function(response) {                          
+                    firebase.database().ref('games/player/'+response.val().giliran).update({
+                        card:'[]',
+                        status:0,
+                        sitno:0
+                    }).then(function(){
+                        changeGiliran();
+                    });                    
+                });
+            } 
+        </script>
     </body>
 </html>
