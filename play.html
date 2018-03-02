@@ -158,6 +158,12 @@
                 firebase.database().ref('games/player/'+me).remove(function(){
                     deleteCookie('userlogin');
                     window.location = 'index.html';
+                }).then(function(){
+                    firebase.database().ref('games').once('value').then(function(response){
+                        if (response.val().giliran == me) {                            
+                            changeGiliran();
+                        }
+                    });                    
                 });
             });
             $('body').on('click','#btn-standup',function(){
@@ -166,7 +172,11 @@
                     card:'[]',
                     status:0
                 }).then(function(){
-                    changeGiliran();
+                    firebase.database().ref('games').once('value').then(function(response){
+                        if (response.val().giliran == me) {                            
+                            changeGiliran();
+                        }
+                    });
                 });
             });
 
