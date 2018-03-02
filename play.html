@@ -187,8 +187,8 @@
                         me = response.val().giliran;
                     }
                     console.log('cardSelected',cardSelected);
-                    if (checkGiliran() && cardSelected.length > 0) {
-                        if (validasi(cardSelected, JSON.parse(response.val().tablecard))) {
+                    if (checkGiliran()) {
+                        if (validasi(cardSelected, JSON.parse(response.val().tablecard)) && cardSelected.length > 0) {
                             firebase.database().ref('games').update({
                                 tablecard:JSON.stringify(cardSelected)
                             }).then(function(){
