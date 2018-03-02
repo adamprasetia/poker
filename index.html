@@ -26,16 +26,6 @@
             if (getCookie('userlogin')) {
                 window.location = 'play.html';
             }
-            function checkPlayerExist(playername = '') {
-                var status = false;
-                firebase.database().ref('games/player/'+playername).once('value').then(function(response){
-                    status = true;
-                    console.log()
-                    if (response.val()) {
-                    }
-                });
-                return status;
-            }
             $('#btnRegister').click(function(){
                 $(this).html('Please Wait');
                 $(this).prop('disabled', true);
