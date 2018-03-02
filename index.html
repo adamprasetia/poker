@@ -37,6 +37,8 @@
                 return status;
             }
             $('#btnRegister').click(function(){
+                $(this).html('Please Wait');
+                $(this).prop('disabled', true);
                 if ($('#username').val()) {
                     firebase.database().ref('games/player/'+$('#username').val()).once('value').then(function(response){
                         if (response.val()) {

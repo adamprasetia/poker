@@ -59,11 +59,12 @@
         
         <div class="button">            
             <button id="btn-pas" type="button" name="button" class="btn btn-sm btn-warning">Pas</button>
-            <button id="btn-send" type="button" name="button" class="btn btn-sm btn-success">Send</button>
+            <button id="btn-send" type="button" name="button" class="btn btn-sm btn-primary">Send</button>
         </div>
         <div class="button-close">
             <button id="btn-keluar" type="button" name="button" class="btn btn-sm btn-danger">Keluar</button>
             <button id="btn-standup" type="button" name="button" class="btn btn-sm btn-danger">Stand Up</button>
+            <!-- <button id="btn-reset" type="button" name="button" class="btn btn-sm btn-danger" onclick="resetGame()">Reset Game</button> -->
         </div>
         
         <script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -106,6 +107,7 @@
                     }
                 });
                 return status;
+                // return true;
             }            
             function getPlayerBySit(player,sitno){
                 var status = false;
@@ -128,7 +130,21 @@
             }
             function changeGiliran(){
                 console.log('changeGiliran');
-                firebase.database().ref('games').once('value', function(response) {                                    
+                firebase.database().ref('games').once('value', function(response) {     
+
+                    if (getCountPlay(response.val().player)==0) {    
+                        console.log('sini');
+                        firebase.database().ref('games').update({
+                            giliran:response.val().warisan
+                        }).then(function(){
+                            firebase.database().ref('games').update({
+                                warisan:0
+                            });    
+                            setPlayAll(response.val().player);
+                        });
+                    }
+                    
+
                     var sitno = response.val().player[response.val().giliran].sitno;
                     if (sitno == 8) {
                         sitno = 1;
@@ -137,13 +153,42 @@
                     }                
                     for (var i = 1; i <= 8; i++) {
                         playerBySit = getPlayerBySit(response.val().player, sitno);
+                        // if (playerBySit.status && playerBySit.status != 'winner' && playerBySit.status == 'play') {
                         if (playerBySit.status && playerBySit.status == 'play') {
                             firebase.database().ref('games').update({
                                 giliran:playerBySit.name
                             }).then(function(){
-                                if (getCountPlay(response.val().player) == 1) {
-                                    setPlayAll(response.val().player);
-                                }
+                                // console.log('getCountPlay',getCountPlay(response.val().player));
+                                // if (response.val().winner && response.val().winner != 0 && typeof response.val().winner !== 'undefined') {
+                                //     if (getCountPlay(response.val().player) == 0) {
+                                //         setPlayAll(response.val().player);
+                                //     }                                    
+                                // }else{
+                                // }
+                                // if (getCountPlay(response.val().player) <= 1) {
+                                //     if (response.val().warisan && response.val().warisan != 0 && typeof response.val().warisan !== 'undefined') {
+                                //         if (getCountPlay(response.val().player)==0) {    
+                                //             console.log('sini');
+                                //             firebase.database().ref('games').update({
+                                //                 giliran:response.val().warisan
+                                //             }).then(function(){
+                                //                 firebase.database().ref('games').update({
+                                //                     warisan:0
+                                //                 });    
+                                //                 setPlayAll(response.val().player);
+                                //             });
+                                //         }
+                                //     }else{                                        
+                                //         setPlayAll(response.val().player);
+                                //     }
+                                // }          
+                                if (getCountPlay(response.val().player) <= 1) {
+                                    if (response.val().warisan && response.val().warisan != 0 && typeof response.val().warisan !== 'undefined') {
+                                        
+                                    }else{
+                                        setPlayAll(response.val().player);                                        
+                                    }
+                                }                                                              
                             });
                             break;
                         }
@@ -247,12 +292,12 @@
                 });
             }
             function checkReset(player, winner = ''){
-                console.log('checkReset');
+                // console.log('checkReset');
                 var total = 0;
                 var totalSit = 0;
                 var totalWinner = 0;
                 $.each(player, function(index, value) {
-                    console.log(value.card);
+                    // console.log(value.card);
                     if (value.card != '[]' && typeof value.card !== 'undefined') {
                         total += 1;
                     }
@@ -263,8 +308,8 @@
                         totalWinner += 1;
                     }
                 });
-                console.log('total', total);
-                console.log('totalSit', totalSit);
+                // console.log('total', total);
+                // console.log('totalSit', totalSit);
                 if (totalSit==1) {
                     resetGame();
                 }
@@ -281,7 +326,25 @@
                     }, 3000);
                 }
             }
+            function checkPlayerExist(player){
+                var status = false;
+                $.each(player, function(index, value) {
+                    if (value.name == me) {
+                        status = true;
+                    }
+                });                
+                return true;
+            }
+            // Main Utama
             firebase.database().ref('games').on('value', function(response) {
+                // for development
+                // myCard = JSON.parse(response.val().player[response.val().giliran].card);
+                
+                // if (checkPlayerExist(response.val().player)) {
+                //     deleteCookie('userlogin');
+                //     window.location = 'index.html';
+                // }
+                
                 var winner = '';
                 if (response.val().winner != 0 || typeof response.val().winner != 'undefined') {                    
                     winner = response.val().winner;
@@ -315,7 +378,9 @@
                                     playercard += '<a href="javascript:void(0)" class="kartu" data-index="'+indexCard+'" data-value="'+valueCard+'"><img class="card img-thumbnail" src="assets/img/'+valueCard+'.png"></a>';
                                 }else{                                    
                                     playercard += '<img class="card img-thumbnail" src="assets/img/back.png">';
-                                }
+                                }                   
+                                // for development
+                                // playercard += '<a href="javascript:void(0)" class="kartu" data-index="'+indexCard+'" data-value="'+valueCard+'"><img class="card img-thumbnail" src="assets/img/'+valueCard+'.png"></a>';
                             });
                         }
                         playercard += '</div>';
@@ -513,9 +578,36 @@
                 
                 return true;
             }
-            
+            function setWarisan(winner){
+                console.log('setWarisan');
+                firebase.database().ref('games').once('value', function(response) {                                    
+                    var sitno = response.val().player[winner].sitno;
+                    if (sitno == 8) {
+                        sitno = 1;
+                    }else{
+                        sitno++;
+                    }                
+                    for (var i = 1; i <= 8; i++) {
+                        playerBySit = getPlayerBySit(response.val().player, sitno);
+                        if (playerBySit.status && playerBySit.status != 'winner') {
+                            firebase.database().ref('games').update({
+                                warisan:playerBySit.name
+                            });
+                            break;
+                        }
+                        if (sitno == 8) {
+                            sitno = 1;
+                        }else{
+                            sitno++;
+                        }
+                    }
+                });
+            }
             $('body').on('click','#btn-send',function(){
                 firebase.database().ref('games').once('value').then(function(response){
+                    // for development
+                    // me = response.val().giliran;
+                    console.log('me',me);
                     if (checkGiliran()) {
                         if (validasi(cardSelected, JSON.parse(response.val().tablecard))) {
                             firebase.database().ref('games').update({
@@ -527,18 +619,33 @@
                                 firebase.database().ref('games/player/'+me).update({
                                     card:JSON.stringify(myCard)
                                 }).then(function(){   
+                                    if (response.val().warisan && response.val().warisan != 0 && typeof response.val().warisan != 'undefined') {
+                                        firebase.database().ref('games').update({
+                                            warisan:0
+                                        });                                
+                                    }
                                     if (myCard.length == 0) {
                                         firebase.database().ref('games/player/'+me).update({
                                             status:'winner'
+                                        }).then(function(){
+                                            setWarisan(me);
+                                            if (response.val().winner == 0 || typeof response.val().winner === 'undefined') {
+                                                firebase.database().ref('games').update({
+                                                    winner:me
+                                                });                                
+                                            }
                                         });
+                                        // firebase.database().ref('games').update({
+                                        //     winner:me
+                                        // });                                                                        
                                     }                            
-                                    firebase.database().ref('games').once('value', function(response) {                                
-                                        if (!response.val().winner || typeof response.val().winner == 'undefined') {
-                                            firebase.database().ref('games').update({
-                                                winner:me
-                                            });                                
-                                        }
-                                    });
+                                    // firebase.database().ref('games').once('value', function(response) {                                
+                                    //     if (!response.val().winner || typeof response.val().winner == 'undefined') {
+                                    //         firebase.database().ref('games').update({
+                                    //             winner:me
+                                    //         });                                
+                                    //     }
+                                    // });
                                     changeGiliran();
                                     cardSelected = [];
                                 });                    
@@ -552,15 +659,20 @@
                 });
             });            
             $('body').on('click','#btn-pas',function(){
-                if (checkGiliran()) {
-                    firebase.database().ref('games/player/'+me).update({
-                        status: 'pas'
-                    }).then(function(){
-                        changeGiliran();
-                    });
-                }else{
-                    swal("Oops", "Bukan giliran lu coy!" , "error");
-                }
+                firebase.database().ref('games').once('value').then(function(response){
+                    // for development
+                    // me = response.val().giliran;
+                    console.log(me);
+                    if (checkGiliran()) {
+                        firebase.database().ref('games/player/'+me).update({
+                            status: 'pas'
+                        }).then(function(){
+                            changeGiliran();
+                        });
+                    }else{
+                        swal("Oops", "Bukan giliran lu coy!" , "error");
+                    }
+                });
             });            
             $('body').on('click','.kartu',function(){
                 var value = parseInt($(this).attr('data-value'));
