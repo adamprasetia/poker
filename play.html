@@ -246,16 +246,17 @@
                 });
             });            
             $('body').on('click','.kartu',function(){
-                var value = parseInt($(this).attr('data-value'));
+                cardSelected = [];
                 if ($(this).hasClass('active')) {
                     $(this).removeClass('active');
-                    remove(cardSelected, value);
                 }else{      
                     if (cardSelected.length < 5) {
                         $(this).addClass('active');
-                        cardSelected.push(value);
                     }
-                }
+                }                
+                $.each($('body').find('.kartu.active'), function(index, value) {
+                    cardSelected.push(value.getAttribute('data-value'));
+                });
                 console.log(cardSelected);
             });
         </script>
