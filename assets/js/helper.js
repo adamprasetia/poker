@@ -358,6 +358,9 @@ function checkFullHouse(cardSelected){
     }               
 }
 function validasi(cardSelected, card_on_arena){
+    if (cardSelected.length < 1 || cardSelected.length > 5) {
+        return false;
+    }
     // validasi jumlah kartu
     if (cardSelected.length != card_on_arena.length && card_on_arena.length != 0 && cardSelected.length != 4 && card_on_arena[0] != 51 && card_on_arena[0] != 50 && card_on_arena[0] != 49 && card_on_arena[0] != 48) {
         return false;
