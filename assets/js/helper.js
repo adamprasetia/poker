@@ -56,33 +56,27 @@ function remove(array, element) {
 }
 
 function checkReset(player, winner = ''){
-    var total = 0;
-    var totalSit = 0;
-    var totalWinner = 0;
+    var totalPlayerCard = 0;
+    var totalPlayerSit = 0;
     $.each(player, function(index, value) {
         if (value.card != '[]' && typeof value.card !== 'undefined') {
-            total += 1;
+            totalPlayerCard += 1;
         }
         if (value.sitno && value.sitno != 0) {
-            totalSit += 1;
-        }
-        if (value.status == 'winner') {
-            totalWinner += 1;
+            totalPlayerSit += 1;
         }
     });
-    if (totalSit==1) {
-        resetGame();
-    }
-    if (totalSit > 1 && total == 1) {
+    if (totalPlayerSit == 1) {
+        resetGame(player);
+    }else if (totalPlayerSit > 1 && totalPlayerCard == 1) {
         swal("Info", "Bersiap, Permainan Akan Dimulai Kembali" , "info");
         setTimeout(function(){
-            resetGame(winner);
+            resetGame(player, winner);
         }, 3000);                
-    }
-    if (totalSit > 1 && total == 0) {
+    }else if (totalPlayerSit > 1 && totalPlayerCard == 0) {
         swal("Info", "Bersiap, Permainan Akan Dimulai" , "info");
         setTimeout(function(){
-            resetGame(winner);
+            resetGame(player, winner);
         }, 3000);
     }
 }
@@ -106,51 +100,48 @@ function totalPlayer(player){
     });
     return total;
 }            
-function resetGame(winner = ''){
+function resetGame(player = [], winner = ''){
     console.log('resetGame', winner);
-    firebase.database().ref('games').once('value').then(function(response){
-        var config_total_player = totalPlayer(response.val().player);
-        var config_total_kartu = 52;
-        var kartu = new Array(config_total_kartu);
-        for (var i = 0; i < kartu.length; i++) {
-            kartu[i] = i;
-        }
-        kartu = shuffle(kartu);
-        var playerCard = new Array(config_total_player);
-        for (var i = 0; i < config_total_player; i++) {
-            playerCard[i] = [];
-        }
-        $.each(kartu, function(index, value) {
-            playerCard[index % config_total_player].push(value);
-        });
-        
-        var i = 0;
-        $.each(response.val().player, function(index, value) {
-            if (value.sitno && value.sitno != 0 && totalPlayer(response.val().player) > 1) {                            
-                firebase.database().ref('games/player/'+index).update({                 
-                    card: JSON.stringify(playerCard[i]),
-                    status: 'play'
-                });                   
-                i++;
-            }else{
-                firebase.database().ref('games/player/'+index).update({                 
-                    card: '[]',
-                    status: 0
-                });                                               
-            }
-        });
-        
-        if (winner == '') {                        
-            setGiliran(response.val().player);
+    var config_total_player = totalPlayer(player);
+    var config_total_kartu = 52;
+    var kartu = new Array(config_total_kartu);
+    for (var i = 0; i < kartu.length; i++) {
+        kartu[i] = i;
+    }
+    kartu = shuffle(kartu);
+    var playerCard = new Array(config_total_player);
+    for (var i = 0; i < config_total_player; i++) {
+        playerCard[i] = [];
+    }
+    $.each(kartu, function(index, value) {
+        playerCard[index % config_total_player].push(value);
+    });
+    
+    var i = 0;
+    $.each(player, function(index, value) {
+        if (value.sitno && value.sitno != 0 && config_total_player > 1) {                            
+            firebase.database().ref('games/player/'+index).update({                 
+                card: JSON.stringify(playerCard[i]),
+                status: 'play'
+            });                   
+            i++;
         }else{
-            setGiliran(response.val().player, winner);
+            firebase.database().ref('games/player/'+index).update({                 
+                card: '[]',
+                status: 'waiting'
+            });                                               
         }
-        firebase.database().ref('games').update({
-            tablecard:"[]",
-            winner:0,
-            waktu:100
-        });        
-        
+    });
+    
+    if (winner == '') {                        
+        setGiliran(player);
+    }else{
+        setGiliran(player, winner);
+    }
+    firebase.database().ref('games').update({
+        tablecard:"[]",
+        winner:0,
+        waktu:100
     });                
 }
 function setPlayAll(player){

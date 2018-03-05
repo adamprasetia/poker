@@ -71,40 +71,27 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.05.14.01"></script>
+        <script src="assets/js/helper.js?v=2018.03.06.06.09"></script>
         <script type="text/javascript">
             var userlogin = JSON.parse(getCookie("userlogin"));
             var me = userlogin.username;
             var cardSelected = [];
-            var myCard;
             var environment = 'production';
             // var environment = 'development';
-
+            var waktu = 100;
+            
             if (!getCookie('userlogin')) {
                 window.location = 'index.html';
             }        
 
             // timer
             setInterval(function(){
-                firebase.database().ref('games').once('value', function(response) {
-                    if (typeof response.val().waktu !== 'undefined' && parseInt(response.val().waktu) != 0 && response.val().giliran == me) {
-                        var waktu = parseInt(response.val().waktu)-1;
-                        firebase.database().ref('games').update({
-                            waktu:waktu
-                        }).then(function(){
-                            if (waktu == 0) {
-                                firebase.database().ref('games').update({
-                                    waktu:100
-                                }).then(function(){
-                                    console.log('kickPlayer');
-                                    console.log('waktu kickPlayer', waktu);
-                                    kickPlayer();
-                                });
-                            }
-                        });
-                        console.log('waktu', response.val().waktu);
-                    }
-                });
+                if (waktu==0) {
+                    waktu = 100;
+                    kickPlayer();
+                }
+                waktu--;
+                $('body').find('.progress-bar').attr('style','width: '+waktu+'%');
             },1000);
             
             // Main Utama
@@ -115,20 +102,14 @@
                 }else{
                     $('.button-play').hide();
                 }
-                // for development
-                if (environment=='development') {                    
-                    myCard = JSON.parse(response.val().player[response.val().giliran].card);
-                }else{
-                    myCard = JSON.parse(response.val().player[me].card);
-                }
                 
+                // check resetGame
                 var winner = '';
                 if (response.val().winner != 0 || typeof response.val().winner != 'undefined') {                    
                     winner = response.val().winner;
                 }
-                if (response.val().giliran == me) {                    
-                    checkReset(response.val().player, winner);
-                }
+                checkReset(response.val().player, winner);
+                
                 // show tablecard
                 if (response.val().tablecard) {
                     var tablecard = '';
@@ -174,7 +155,7 @@
                         playercard += '</div>';
                         if (valuePlayer.sitno) {         
                             $('.tablesit > .sit-'+valuePlayer.sitno).hide();
-                            var waktu = '<div class="progress"><div style="width: '+response.val().waktu+'%;" class="progress-bar" role="progressbar" aria-valuenow="'+response.val().waktu+'" aria-valuemin="0" aria-valuemax="100"></div></div>';
+                            var waktu = '<div class="progress"><div style="width: 100%;" class="progress-bar" role="progressbar" aria-valuenow="'+response.val().waktu+'" aria-valuemin="0" aria-valuemax="100"></div></div>';
                             if (response.val().giliran != valuePlayer.name) {
                                 waktu = '';
                             }
@@ -185,6 +166,7 @@
                             $('#btn-standup').prop('disabled', false);
                         }
                     });
+                    waktu = 100;
                 }
             });
             $('.sit').click(function(){
@@ -225,11 +207,12 @@
             });
 
             $('body').on('click','#btn-send',function(){
-                firebase.database().ref('games').once('value').then(function(response){
+                firebase.database().ref('games').once('value').then(function(response){                    
                     // for development
                     if (environment == 'development') {                        
                         me = response.val().giliran;
                     }
+                    var myCard = JSON.parse(response.val().player[me].card);
                     console.log('cardSelected',cardSelected);
                     if (checkGiliran()) {
                         if (validasi(cardSelected, JSON.parse(response.val().tablecard))) {
@@ -258,7 +241,7 @@
                                                 });                                
                                             }
                                         });
-                                    }                            
+                                    }           
                                     changeGiliran();
                                     cardSelected = [];
                                 });                    
