@@ -147,7 +147,8 @@ function resetGame(winner = ''){
         }
         firebase.database().ref('games').update({
             tablecard:"[]",
-            winner:0
+            winner:0,
+            waktu:100
         });        
         
     });                
@@ -167,6 +168,9 @@ function setPlayAll(player){
 }
 function changeGiliran(){
     console.log('changeGiliran');
+    firebase.database().ref('games').update({
+        waktu:100
+    });    
     firebase.database().ref('games').once('value', function(response) {     
 
         if (getCountPlay(response.val().player)==0) {    
@@ -470,3 +474,14 @@ function setWarisan(winner){
         }
     });
 }
+function kickPlayer(){           
+    firebase.database().ref('games').once('value', function(response) {                          
+        firebase.database().ref('games/player/'+response.val().giliran).update({
+            card:'[]',
+            status:0,
+            sitno:0
+        }).then(function(){
+            changeGiliran();
+        });                    
+    });
+} 

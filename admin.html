@@ -28,19 +28,6 @@
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.02.13.54"></script>
-        <script type="text/javascript">
-            function kickPlayer(){           
-                firebase.database().ref('games').once('value', function(response) {                          
-                    firebase.database().ref('games/player/'+response.val().giliran).update({
-                        card:'[]',
-                        status:0,
-                        sitno:0
-                    }).then(function(){
-                        changeGiliran();
-                    });                    
-                });
-            } 
-        </script>
+        <script src="assets/js/helper.js?v=2018.03.05.11.46"></script>
     </body>
 </html>

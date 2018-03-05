@@ -71,7 +71,7 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.04.18.25"></script>
+        <script src="assets/js/helper.js?v=2018.03.05.12.31"></script>
         <script type="text/javascript">
             var userlogin = JSON.parse(getCookie("userlogin"));
             var me = userlogin.username;
@@ -83,9 +83,31 @@
             if (!getCookie('userlogin')) {
                 window.location = 'index.html';
             }        
+
+            // timer
+            setInterval(function(){
+                firebase.database().ref('games/waktu').once('value', function(response) {
+                    if (typeof response.val() !== 'undefined' && parseInt(response.val()) != 0) {
+                        var waktu = parseInt(response.val())-1;
+                        firebase.database().ref('games').update({
+                            waktu:waktu
+                        }).then(function(){
+                            if (waktu == 0) {
+                                firebase.database().ref('games').update({
+                                    waktu:100
+                                }).then(function(){
+                                    kickPlayer();
+                                });
+                            }
+                        });
+                        console.log('waktu', response.val());
+                    }
+                });
+            },1000);
             
             // Main Utama
             firebase.database().ref('games').on('value', function(response) {
+                // check button play
                 if (response.val().giliran == me || environment=='development') {
                     $('.button-play').show();
                 }else{
@@ -140,7 +162,11 @@
                         playercard += '</div>';
                         if (valuePlayer.sitno) {         
                             $('.tablesit > .sit-'+valuePlayer.sitno).hide();
-                            $('.playersit').append('<div class="sit-'+valuePlayer.sitno+' sitwrap"><span class="badge '+giliran+'">'+valuePlayer.name+'-'+valuePlayer.status+'</span>'+playercard+'</div>');
+                            var waktu = '<div class="progress"><div style="width: '+response.val().waktu+'%;" class="progress-bar" role="progressbar" aria-valuenow="'+response.val().waktu+'" aria-valuemin="0" aria-valuemax="100"></div></div>';
+                            if (response.val().giliran != valuePlayer.name) {
+                                waktu = '';
+                            }
+                            $('.playersit').append('<div class="sit-'+valuePlayer.sitno+' sitwrap"><span class="badge '+giliran+'">'+valuePlayer.name+'-'+valuePlayer.status+'</span>'+waktu+playercard+'</div>');
                         }
                         if (valuePlayer.name == me && valuePlayer.sitno && valuePlayer.sitno != 0) {
                             $('.tablesit').hide();
