@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="assets/css/style.css?v=2018.03.06.06.09">
     </head>
     <body>
         <img src="assets/img/poker_table_green.png" alt="">
@@ -55,7 +55,7 @@
         </div>
         <div class="playersit"></div>
         
-        <div class="button button-play" style="width:200px;display:none">            
+        <div class="button-play" style="width:200px;display:none">            
             <button id="btn-pas" type="button" name="button" class="btn btn-sm btn-warning">Pas</button>
             <button id="btn-send" type="button" name="button" class="btn btn-sm btn-primary">Send</button>
         </div>
@@ -97,7 +97,7 @@
             // Main Utama
             firebase.database().ref('games').on('value', function(response) {
                 // check button play
-                if (response.val().giliran == me || environment=='development') {
+                if (response.val().giliran == me && response.val().player[me].status == 'play' || environment=='development') {
                     $('.button-play').show();
                 }else{
                     $('.button-play').hide();
