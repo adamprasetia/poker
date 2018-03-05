@@ -96,6 +96,8 @@
                                 firebase.database().ref('games').update({
                                     waktu:100
                                 }).then(function(){
+                                    console.log('kickPlayer');
+                                    console.log('waktu kickPlayer', waktu);
                                     kickPlayer();
                                 });
                             }
