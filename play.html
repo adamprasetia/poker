@@ -71,7 +71,7 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.05.12.31"></script>
+        <script src="assets/js/helper.js?v=2018.03.05.14.01"></script>
         <script type="text/javascript">
             var userlogin = JSON.parse(getCookie("userlogin"));
             var me = userlogin.username;
@@ -86,9 +86,9 @@
 
             // timer
             setInterval(function(){
-                firebase.database().ref('games/waktu').once('value', function(response) {
-                    if (typeof response.val() !== 'undefined' && parseInt(response.val()) != 0) {
-                        var waktu = parseInt(response.val())-1;
+                firebase.database().ref('games').once('value', function(response) {
+                    if (typeof response.val().waktu !== 'undefined' && parseInt(response.val().waktu) != 0 && response.val().giliran == me) {
+                        var waktu = parseInt(response.val().waktu)-1;
                         firebase.database().ref('games').update({
                             waktu:waktu
                         }).then(function(){
@@ -100,7 +100,7 @@
                                 });
                             }
                         });
-                        console.log('waktu', response.val());
+                        console.log('waktu', response.val().waktu);
                     }
                 });
             },1000);
@@ -116,13 +116,17 @@
                 // for development
                 if (environment=='development') {                    
                     myCard = JSON.parse(response.val().player[response.val().giliran].card);
+                }else{
+                    myCard = JSON.parse(response.val().player[me].card);
                 }
                 
                 var winner = '';
                 if (response.val().winner != 0 || typeof response.val().winner != 'undefined') {                    
                     winner = response.val().winner;
                 }
-                checkReset(response.val().player, winner);
+                if (response.val().giliran == me) {                    
+                    checkReset(response.val().player, winner);
+                }
                 // show tablecard
                 if (response.val().tablecard) {
                     var tablecard = '';
@@ -144,15 +148,21 @@
                             giliran = 'badge-warning';
                         }
                         var playercard = '<div class="playercard">';
+                        var kartuSelected = '';
                         if (valuePlayer.card) {    
                             $.each(JSON.parse(valuePlayer.card).sort(function(a, b){return a - b}), function(indexCard, valueCard) {
+                                kartuSelected = '';
+                                if (cardSelected.length > 0){                                    
+                                    if (cardSelected.indexOf(valueCard)!= -1) {
+                                        kartuSelected = 'active';
+                                    }
+                                }
                                 // for development
                                 if (environment == 'development') {                                    
-                                    playercard += '<a href="javascript:void(0)" class="kartu" data-index="'+indexCard+'" data-value="'+valueCard+'"><img class="card img-thumbnail" src="assets/img/'+valueCard+'.png"></a>';
+                                    playercard += '<a href="javascript:void(0)" class="kartu '+kartuSelected+'" data-index="'+indexCard+'" data-value="'+valueCard+'"><img class="card img-thumbnail" src="assets/img/'+valueCard+'.png"></a>';
                                 }else{
-                                    if (valuePlayer.name == me) {  
-                                        myCard = JSON.parse(valuePlayer.card);
-                                        playercard += '<a href="javascript:void(0)" class="kartu" data-index="'+indexCard+'" data-value="'+valueCard+'"><img class="card img-thumbnail" src="assets/img/'+valueCard+'.png"></a>';
+                                    if (valuePlayer.name == me) {                                          
+                                        playercard += '<a href="javascript:void(0)" class="kartu '+kartuSelected+'" data-index="'+indexCard+'" data-value="'+valueCard+'"><img class="card img-thumbnail" src="assets/img/'+valueCard+'.png"></a>';
                                     }else{                                    
                                         playercard += '<img class="card img-thumbnail" src="assets/img/back.png">';
                                     }                                                       
@@ -179,7 +189,8 @@
                 var posisi = $(this).attr('data-index');
                 if (checkSitAvailable(parseInt(posisi))) {
                     firebase.database().ref('games/player/'+me).update({
-                        sitno:posisi
+                        sitno:posisi,
+                        status:'waiting'
                     });
                 }else{
                     swal("Oops", "Kursi ini udh ada yg nempatin woyyy!" , "error");
