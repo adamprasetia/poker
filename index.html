@@ -265,14 +265,16 @@
                                     }           
                                     changeGiliran();
                                     cardSelected = [];
-                                    $(this).prop('disabled', false);
+                                    $('#btn-pas').prop('disabled', false);
                                 });                    
                             });                    
                         }else{
                             swal("Oops", "GAK BISAAA WOYYY!" , "error");
+                            $('#btn-pas').prop('disabled', false);
                         }
                     }else{
                         swal("Oops", "Bukan giliran lu coy!" , "error");
+                        $('#btn-pas').prop('disabled', false);
                     }
                 });
             });            
@@ -284,11 +286,11 @@
                             status: 'pas'
                         }).then(function(){
                             changeGiliran();
-                            $(this).prop('disabled', false);
+                            $('#btn-pas').prop('disabled', false);
                         });
                     }else{
                         swal("Oops", "Bukan giliran lu coy!" , "error");
-                        $(this).prop('disabled', false);
+                        $('#btn-pas').prop('disabled', false);
                     }
                 });
             });            
