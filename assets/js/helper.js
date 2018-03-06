@@ -69,15 +69,9 @@ function checkReset(player, winner = ''){
     if (totalPlayerSit == 1) {
         resetGame(player);
     }else if (totalPlayerSit > 1 && totalPlayerCard == 1) {
-        swal("Info", "Bersiap, Permainan Akan Dimulai Kembali" , "info");
-        setTimeout(function(){
-            resetGame(player, winner);
-        }, 3000);                
+        resetGame(player, winner);
     }else if (totalPlayerSit > 1 && totalPlayerCard == 0) {
-        swal("Info", "Bersiap, Permainan Akan Dimulai" , "info");
-        setTimeout(function(){
-            resetGame(player, winner);
-        }, 3000);
+        resetGame(player, winner);
     }
 }
 function checkPlayerExist(playername = '') {
