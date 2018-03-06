@@ -142,8 +142,7 @@ function resetGame(player = [], winner = ''){
         tablecard:"[]",
         winner:0
     }).then(function(){
-        waktu = 100;
-        console.log('waktu', waktu);
+        timeout = 100;
     });                
 }
 function setPlayAll(player){
@@ -201,7 +200,7 @@ function changeGiliran(){
                 sitno++;
             }
         }
-        waktu = 100;
+        timeout = 100;
     });
 }
 function setGiliran(player, winner = ''){
