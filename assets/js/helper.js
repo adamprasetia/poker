@@ -230,18 +230,13 @@ function setGiliran(player, winner = ''){
 }            
 
 function checkGiliran(){
-    if (environment == 'development') {
-        return true;
-    }else{        
-        var status = false;
-        firebase.database().ref('games/giliran').once('value', function(response) {
-            if (response.val() == me.id) {
-                status = true;
-            }
-        });
-        return status;
-    }
-    // return true;
+    var status = false;
+    firebase.database().ref('games/giliran').once('value', function(response) {
+        if (response.val() == me.id) {
+            status = true;
+        }
+    });
+    return status;
 }            
 function getPlayerBySit(player,sitno){
     var status = false;

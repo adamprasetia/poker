@@ -95,13 +95,12 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.06.12.49"></script>
+        <script src="assets/js/helper.js?v=2018.03.06.14.00"></script>
         <script src="assets/js/facebook.js"></script>
         <script type="text/javascript">
+            var room = getParameterByName('room');
             var me = '';
             var cardSelected = [];
-            var environment = 'production';
-            // var environment = 'development';
             var waktu = 100;
 
             // timer
@@ -125,7 +124,7 @@
             // Main Utama
             firebase.database().ref('games').on('value', function(response) {                
                 // check button play
-                if (response.val().giliran == me.id && response.val().player[me.id].status == 'play' || environment=='development') {
+                if (response.val().giliran == me.id && response.val().player[me.id].status == 'play') {
                     $('.button-play').show();
                 }else{
                     $('.button-play').hide();
@@ -168,16 +167,11 @@
                                         kartuSelected = 'active';
                                     }
                                 }
-                                // for development
-                                if (environment == 'development') {                                    
+                                if (valuePlayer.id == me.id) {                                          
                                     playercard += '<a href="javascript:void(0)" class="kartu '+kartuSelected+'" data-index="'+indexCard+'" data-value="'+valueCard+'"><img class="card img-thumbnail" src="assets/img/'+valueCard+'.png"></a>';
-                                }else{
-                                    if (valuePlayer.id == me.id) {                                          
-                                        playercard += '<a href="javascript:void(0)" class="kartu '+kartuSelected+'" data-index="'+indexCard+'" data-value="'+valueCard+'"><img class="card img-thumbnail" src="assets/img/'+valueCard+'.png"></a>';
-                                    }else{                                    
-                                        playercard += '<img class="card img-thumbnail" src="assets/img/back.png">';
-                                    }                                                       
-                                }
+                                }else{                                    
+                                    playercard += '<img class="card img-thumbnail" src="assets/img/back.png">';
+                                }                                                       
                             });
                         }
                         playercard += '</div>';
@@ -228,10 +222,6 @@
 
             $('body').on('click','#btn-send',function(){
                 firebase.database().ref('games').once('value').then(function(response){                    
-                    // for development
-                    if (environment == 'development') {                        
-                        me.id = response.val().giliran;
-                    }
                     var myCard = JSON.parse(response.val().player[me.id].card);
                     console.log('cardSelected',cardSelected);
                     if (checkGiliran()) {
@@ -276,10 +266,6 @@
             });            
             $('body').on('click','#btn-pas',function(){
                 firebase.database().ref('games').once('value').then(function(response){
-                    // for development
-                    if (environment == 'development') {                        
-                        me.id = response.val().giliran;
-                    }
                     console.log(me);
                     if (checkGiliran()) {
                         firebase.database().ref('games/player/'+me.id).update({
@@ -319,7 +305,8 @@
                 if (e.keyCode == 13) {
                     sendChat();
                 }
-            });            
+            });  
+            console.log('room', room);
         </script>
     </body>
 </html>
