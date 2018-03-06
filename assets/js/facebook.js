@@ -38,7 +38,7 @@ function testAPI() {
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me', function(response) {
         me = response;
-        firebase.database().ref('games/player/'+response.id).update({
+        firebase.database().ref(room+'/player/'+response.id).update({
             id:response.id,
             name:response.name
         });                        
