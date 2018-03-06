@@ -143,6 +143,7 @@ function resetGame(player = [], winner = ''){
         winner:0
     }).then(function(){
         waktu = 100;
+        console.log('waktu', waktu);
     });                
 }
 function setPlayAll(player){
