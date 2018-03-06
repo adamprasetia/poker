@@ -159,11 +159,7 @@ function setPlayAll(player){
 }
 function changeGiliran(){
     console.log('changeGiliran');
-    firebase.database().ref(room).update({
-        waktu:100
-    });    
     firebase.database().ref(room).once('value', function(response) {     
-
         if (getCountPlay(response.val().player)==0) {    
             firebase.database().ref(room).update({
                 giliran:response.val().warisan
@@ -203,6 +199,7 @@ function changeGiliran(){
                 sitno++;
             }
         }
+        waktu = 100;
     });
 }
 function setGiliran(player, winner = ''){
