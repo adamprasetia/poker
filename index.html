@@ -126,8 +126,9 @@
             
             // Main Utama
             firebase.database().ref(room).on('value', function(response) {                
+                // console.log('response.val()', response.val());
                 // check button play
-                if (response.val().giliran == me.id && response.val().player[me.id].status == 'play') {
+                if (response.val() && response.val().giliran == me.id && response.val().player[me.id].status == 'play') {
                     $('.button-play').show();
                 }else{
                     $('.button-play').hide();
@@ -135,13 +136,17 @@
                 
                 // check resetGame
                 var winner = '';
-                if (response.val().winner != 0 || typeof response.val().winner != 'undefined') {                    
+                console.log('response.val()',response.val());
+                // if (response.val().winner != 0 || typeof response.val().winner != 'undefined') {
+                if (response.val() && response.val().winner && response.val().winner != 0) {
                     winner = response.val().winner;
                 }
-                checkReset(response.val().player, winner);
+                if (response.val() && response.val().player) {                    
+                    checkReset(response.val().player, winner);
+                }
                 
                 // show tablecard
-                if (response.val().tablecard) {
+                if (response.val() && response.val().tablecard) {
                     var tablecard = '';
                     $.each(JSON.parse(response.val().tablecard), function(index, value) {
                         tablecard += '<img class="card img-thumbnail" src="assets/img/'+value+'.png">';
@@ -149,7 +154,7 @@
                     $('#tablecard').html(tablecard);
                 }
                 // show player
-                if (response.val().player) {
+                if (response.val() && response.val().player) {
                     $('.playersit').html('');
                     $('.tablesit').show();
                     $('.tablesit > .sitwrap').show();
@@ -157,7 +162,7 @@
                     $.each(response.val().player, function(indexPlayer, valuePlayer) {
                         var giliran = 'badge-secondary';
                         var status = '<span class="badge badge-secondary">'+valuePlayer.status+'</span>';
-                        if (response.val().giliran == valuePlayer.id) {
+                        if (response.val().giliran && response.val().giliran == valuePlayer.id) {
                             giliran = 'badge-warning';
                         }
                         var playercard = '<div class="playercard">';
@@ -181,7 +186,7 @@
                         if (valuePlayer.sitno) {         
                             $('.tablesit > .sit-'+valuePlayer.sitno).hide();
                             var waktu = '<div class="progress"><div style="width: 100%;" class="progress-bar" role="progressbar" aria-valuenow="'+response.val().waktu+'" aria-valuemin="0" aria-valuemax="100"></div></div>';
-                            if (response.val().giliran != valuePlayer.id) {
+                            if (response.val().giliran && response.val().giliran != valuePlayer.id) {
                                 waktu = '';
                             }
                             $('.playersit').append('<div class="sit-'+valuePlayer.sitno+' sitwrap"><span class="badge '+giliran+'">'+valuePlayer.name+'-'+valuePlayer.status+'</span>'+waktu+playercard+'</div>');
