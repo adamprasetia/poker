@@ -396,11 +396,14 @@ function validasi(cardSelected, card_on_arena){
             if (card_on_arena.length != 0) {
                 if ((checkFlush(card_on_arena) && checkStraight(card_on_arena)) || checkStraight(card_on_arena) || checkFlush(card_on_arena)) {
                     if (Math.max(...cardSelected) < Math.max(...card_on_arena)) {
+                        console.log('fail bom sini 1');
                         return false;
                     }                                
                 }else if(card_on_arena[0] >= 48 && card_on_arena.length == 1){
                     // return false;
+                    console.log('fail bom sini 2');
                 }else{
+                    console.log('fail bom sini 3');
                     return false;
                 }
             }
