@@ -147,7 +147,7 @@ function resetGame(player = [], winner = ''){
 function setPlayAll(player){
     $.each(player, function(index, value) {
         if (value.status != 'winner' && value.card != '[]' && typeof value.card !== 'undefined') {
-            firebase.database().ref('games/player/'+value.name).update({
+            firebase.database().ref('games/player/'+value.id).update({
                 status:'play'
             }).then(function(){
                 firebase.database().ref('games').update({
@@ -453,7 +453,7 @@ function setWarisan(winner){
             playerBySit = getPlayerBySit(response.val().player, sitno);
             if (playerBySit.status && playerBySit.status != 'winner') {
                 firebase.database().ref('games').update({
-                    warisan:playerBySit.name
+                    warisan:playerBySit.id
                 });
                 break;
             }
