@@ -394,9 +394,10 @@ function validasi(cardSelected, card_on_arena){
         }else if (checkFlush(cardSelected) && checkStraight(cardSelected)) {
             console.log('straight flush');
             if (card_on_arena.length != 0) {
-                if ((checkFlush(card_on_arena) && checkStraight(card_on_arena)) || checkStraight(card_on_arena) || checkFlush(card_on_arena)) {
+                if (checkStraight(card_on_arena) || checkFlush(card_on_arena)) {
                     if (Math.max(...cardSelected) < Math.max(...card_on_arena)) {
                         console.log('fail bom sini 1');
+                        console.log(checkStraight(card_on_arena), checkFlush(card_on_arena));
                         return false;
                     }                                
                 }else if(card_on_arena[0] >= 48 && card_on_arena.length == 1){
