@@ -126,6 +126,7 @@
             firebase.database().ref(room+'/player').on('value', function(response) {                
                 timeout = 100;
             });
+            
             // Main Utama
             firebase.database().ref(room).on('value', function(response) {                
                 // console.log('response.val()', response.val());
@@ -141,7 +142,7 @@
                 if (response.val() && response.val().winner && response.val().winner != 0) {
                     winner = response.val().winner;
                 }
-                if (response.val() && response.val().player) {                    
+                if (response.val() && response.val().player) {
                     checkReset(response.val().player, winner);
                 }
                 
