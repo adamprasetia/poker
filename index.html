@@ -95,10 +95,13 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.06.14.00"></script>
+        <script src="assets/js/helper.js?v=2018.03.06.14.08"></script>
         <script src="assets/js/facebook.js"></script>
         <script type="text/javascript">
             var room = getParameterByName('room');
+            if (!room) {
+                room = 'games';
+            }
             var me = '';
             var cardSelected = [];
             var waktu = 100;
@@ -114,7 +117,7 @@
             },1000);
             
             // chat 
-            firebase.database().ref('games/chat').on('value', function(response) {
+            firebase.database().ref(room+'/chat').on('value', function(response) {
                 if (response.val() && typeof response.val() !== 'undefined') {
                     $('#chat-body').append('<p><span class="badge badge-secondary">'+response.val().from+'</span> '+response.val().message+'</p>');
                     $('#chat-body').scrollTop($('#chat-body')[0].scrollHeight);
@@ -122,7 +125,7 @@
             });
             
             // Main Utama
-            firebase.database().ref('games').on('value', function(response) {                
+            firebase.database().ref(room).on('value', function(response) {                
                 // check button play
                 if (response.val().giliran == me.id && response.val().player[me.id].status == 'play') {
                     $('.button-play').show();
@@ -195,7 +198,7 @@
                 var posisi = $(this).attr('data-index');
                 if (typeof me.id !== 'undefined') {                    
                     if (checkSitAvailable(parseInt(posisi))) {
-                        firebase.database().ref('games/player/'+me.id).update({
+                        firebase.database().ref(room+'/player/'+me.id).update({
                             sitno:posisi,
                             status:'waiting'
                         });
@@ -207,12 +210,12 @@
                 }
             });
             $('body').on('click','#btn-standup',function(){
-                firebase.database().ref('games/player/'+me.id).update({
+                firebase.database().ref(room+'/player/'+me.id).update({
                     sitno:0,
                     card:'[]',
                     status:0
                 }).then(function(){
-                    firebase.database().ref('games').once('value').then(function(response){
+                    firebase.database().ref(room).once('value').then(function(response){
                         if (response.val().giliran == me.id) {                            
                             changeGiliran();
                         }
@@ -221,32 +224,32 @@
             });
 
             $('body').on('click','#btn-send',function(){
-                firebase.database().ref('games').once('value').then(function(response){                    
+                firebase.database().ref(room).once('value').then(function(response){                    
                     var myCard = JSON.parse(response.val().player[me.id].card);
                     console.log('cardSelected',cardSelected);
                     if (checkGiliran()) {
                         if (validasi(cardSelected, JSON.parse(response.val().tablecard))) {
-                            firebase.database().ref('games').update({
+                            firebase.database().ref(room).update({
                                 tablecard:JSON.stringify(cardSelected)
                             }).then(function(){
                                 $.each(cardSelected, function(index, value) {
                                     remove(myCard, value);
                                 });
-                                firebase.database().ref('games/player/'+me.id).update({
+                                firebase.database().ref(room+'/player/'+me.id).update({
                                     card:JSON.stringify(myCard)
                                 }).then(function(){   
                                     if (response.val().warisan && response.val().warisan != 0 && typeof response.val().warisan != 'undefined') {
-                                        firebase.database().ref('games').update({
+                                        firebase.database().ref(room).update({
                                             warisan:0
                                         });                                
                                     }
                                     if (myCard.length == 0) {
-                                        firebase.database().ref('games/player/'+me.id).update({
+                                        firebase.database().ref(room+'/player/'+me.id).update({
                                             status:'winner'
                                         }).then(function(){
                                             setWarisan(me.id);
                                             if (response.val().winner == 0 || typeof response.val().winner === 'undefined') {
-                                                firebase.database().ref('games').update({
+                                                firebase.database().ref(room).update({
                                                     winner:me.id
                                                 });                                
                                             }
@@ -265,10 +268,10 @@
                 });
             });            
             $('body').on('click','#btn-pas',function(){
-                firebase.database().ref('games').once('value').then(function(response){
+                firebase.database().ref(room).once('value').then(function(response){
                     console.log(me);
                     if (checkGiliran()) {
-                        firebase.database().ref('games/player/'+me.id).update({
+                        firebase.database().ref(room+'/player/'+me.id).update({
                             status: 'pas'
                         }).then(function(){
                             changeGiliran();
@@ -288,7 +291,7 @@
             });
             function sendChat(){
                 if (typeof me.name !== 'undefined') {                    
-                    firebase.database().ref('games/chat').update({
+                    firebase.database().ref(room+'/chat').update({
                         message:$('#input-chat').val(),
                         from:me.name
                     }).then(function(){                    

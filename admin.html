@@ -18,7 +18,7 @@
                 <div class="col-md-4">                    
                     <div class="card">
                         <div class="card-body">                    
-                            <button type="button" name="button" id="btnKickPlayer" class="btn btn-primary" onclick="kickPlayer()">Kick Player</button>
+                            <button type="button" name="button" id="btnKickPlayer" class="btn btn-primary">Kick Player</button>
                         </div>
                     </div>
                 </div>
@@ -28,12 +28,19 @@
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.06.10.56"></script>
+        <script src="assets/js/helper.js?v=2018.03.06.14.08"></script>
         <script type="text/javascript">
+            var room = getParameterByName('room');
+            if (!room) {
+                room = 'games';
+            }        
             $('#btnResetGame').click(function(){                
                 firebase.database().ref('games/player').once('value', function(response) {                
                     resetGame(response.val());
                 });
+            });
+            $('#btnKickPlayer').click(function(){      
+                kickPlayer();
             });
         </script>
     </body>
