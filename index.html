@@ -95,7 +95,7 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.06.15.46"></script>
+        <script src="assets/js/helper.js?v=2018.03.06.15.52"></script>
         <script src="assets/js/facebook.js"></script>
         <script type="text/javascript">
             var room = getParameterByName('room');
@@ -104,16 +104,16 @@
             }
             var me = '';
             var cardSelected = [];
-            var waktu = 100;
+            var timeout = 100;
 
             // timer
             setInterval(function(){
-                if (waktu==0) {
-                    waktu = 100;
+                if (timeout==0) {
+                    timeout = 100;
                     kickPlayer();
                 }
-                waktu--;
-                $('body').find('.progress-bar').attr('style','width: '+waktu+'%');
+                timeout--;
+                $('body').find('.progress-bar').attr('style','width: '+timeout+'%');
             },1000);
             
             // chat 
@@ -185,7 +185,7 @@
                         playercard += '</div>';
                         if (valuePlayer.sitno) {         
                             $('.tablesit > .sit-'+valuePlayer.sitno).hide();
-                            var waktu = '<div class="progress"><div style="width: 100%;" class="progress-bar" role="progressbar" aria-valuenow="'+response.val().waktu+'" aria-valuemin="0" aria-valuemax="100"></div></div>';
+                            var waktu = '<div class="progress"><div style="width: 100%;" class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div></div>';
                             if (response.val().giliran && response.val().giliran != valuePlayer.id) {
                                 waktu = '';
                             }
