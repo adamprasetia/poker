@@ -186,7 +186,7 @@ function changeGiliran(){
             playerBySit = getPlayerBySit(response.val().player, sitno);
             if (playerBySit.status && playerBySit.status == 'play') {
                 firebase.database().ref('games').update({
-                    giliran:playerBySit.name
+                    giliran:playerBySit.id
                 }).then(function(){
                     if (getCountPlay(response.val().player) <= 1) {
                         if (response.val().warisan && response.val().warisan != 0 && typeof response.val().warisan !== 'undefined') {
@@ -213,7 +213,7 @@ function setGiliran(player, winner = ''){
             playerBySit = getPlayerBySit(player, sitno);
             if (parseInt(playerBySit.sitno) == sitno) {
                 firebase.database().ref('games').update({
-                    giliran:playerBySit.name
+                    giliran:playerBySit.id
                 });
                 break;
             }
@@ -236,7 +236,7 @@ function checkGiliran(){
     }else{        
         var status = false;
         firebase.database().ref('games/giliran').once('value', function(response) {
-            if (response.val() == me) {
+            if (response.val() == me.id) {
                 status = true;
             }
         });

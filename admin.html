@@ -11,14 +11,14 @@
                 <div class="col-md-4">                    
                     <div class="card">
                         <div class="card-body">                    
-                            <button type="button" name="button" id="btnBagiKartu" class="btn btn-primary" onclick="resetGame()">Reset Game</button>
+                            <button type="button" name="button" id="btnResetGame" class="btn btn-primary">Reset Game</button>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">                    
                     <div class="card">
                         <div class="card-body">                    
-                            <button type="button" name="button" id="btnBagiKartu" class="btn btn-primary" onclick="kickPlayer()">Kick Player</button>
+                            <button type="button" name="button" id="btnKickPlayer" class="btn btn-primary" onclick="kickPlayer()">Kick Player</button>
                         </div>
                     </div>
                 </div>
@@ -28,6 +28,13 @@
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.06.06.09"></script>
+        <script src="assets/js/helper.js?v=2018.03.06.10.56"></script>
+        <script type="text/javascript">
+            $('#btnResetGame').click(function(){                
+                firebase.database().ref('games/player').once('value', function(response) {                
+                    resetGame(response.val());
+                });
+            });
+        </script>
     </body>
 </html>

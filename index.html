@@ -5,52 +5,313 @@
         <title>Poker</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="assets/css/style.css?v=2018.03.06.06.09">
     </head>
     <body>
-        <div class="container">
-            <div class="jumbotron">
-                <h1>KGPoker</h1>
-                <div class="form-group">
-                    <label for="">Username</label>
-                    <input id="username" type="text" name="" value="" class="form-control">
+        <img src="assets/img/poker_table_green.png" alt="">
+        <div id="tablecard" style="width:300px"></div>
+        <div class="tablesit" style="display:none">     
+            <div class="sit-1 sitwrap">                
+                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="1">
+                    Duduk
+                </a>
+            </div>       
+            <div class="sit-2 sitwrap">
+                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="2">
+                    Duduk
+                </a>
+            </div>       
+            <div class="sit-3 sitwrap">                
+                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="3">
+                    Duduk
+                </a>
+            </div>       
+            <div class="sit-4 sitwrap">                
+                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="4">
+                    Duduk
+                </a>
+            </div>       
+            <div class="sit-5 sitwrap">                
+                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="5">
+                    Duduk
+                </a>
+            </div>       
+            <div class="sit-6 sitwrap">                
+                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="6">
+                    Duduk
+                </a>
+            </div>       
+            <div class="sit-7 sitwrap">                
+                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="7">
+                    Duduk
+                </a>
+            </div>       
+            <div class="sit-8 sitwrap">                
+                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="8">
+                    Duduk
+                </a>
+            </div>       
+        </div>
+        <div class="playersit"></div>
+        <div class="button-play" style="width:200px;display:none">            
+            <button id="btn-pas" type="button" name="button" class="btn btn-sm btn-warning">Pas</button>
+            <button id="btn-send" type="button" name="button" class="btn btn-sm btn-primary">Send</button>
+        </div>
+        <div class="button-close">
+            <button id="btn-standup" type="button" name="button" class="btn btn-sm btn-secondary" disabled="true">Stand Up</button>
+            <!-- <button id="btn-reset" type="button" name="button" class="btn btn-sm btn-danger" onclick="resetGame()">Reset Game</button> -->
+        </div>
+        <div class="chat">
+            <div class="card text-white bg-dark">
+                <div class="card-header">
+                    Chat
                 </div>
-                <button id="btnRegister" type="button" name="button" class="btn btn-primary">Register</button>
+                <div id="chat-body" class="card-body">
+                    
+                </div>
+                <div class="card-footer">
+                    <div class="input-group">
+                        <input id="input-chat" type="text" class="form-control" placeholder="Enter chat ...">
+                        <div class="input-group-append">
+                            <button id="btn-chat" class="btn btn-outline-primary" type="button">Send</button>
+                        </div>
+                    </div>                    
+                </div>
             </div>
         </div>
-        <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>        
+        <div class="login">            
+            <div class="card text-white bg-dark">
+                <div class="card-body">
+                    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+                    <div id="status"></div>                
+                </div>
+            </div>
+        </div>
+        <p>Copyright 2018 Sempak Bolong. All rights reserved.</p>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.06.06.09"></script>
+        <script src="assets/js/helper.js?v=2018.03.06.10.56"></script>
+        <script src="assets/js/facebook.js"></script>
         <script type="text/javascript">
-            if (getCookie('userlogin')) {
-                window.location = 'play.html';
-            }
-            $('#btnRegister').click(function(){
-                $(this).html('Please Wait');
-                $(this).prop('disabled', true);
-                if ($('#username').val()) {
-                    firebase.database().ref('games/player/'+$('#username').val()).once('value').then(function(response){
-                        if (response.val()) {
-                            // swal("Oops", "Username is existing!", "error");
-                            setCookie("userlogin", JSON.stringify({'username':$('#username').val()}), 365);
-                            swal("Success", "Welcome, "+$('#username').val()+" and enjoy the game", "success");
-                            window.location = 'play.html';
-                        }else{
-                            firebase.database().ref('games/player/'+$('#username').val()).set({
-                                name:$('#username').val()
-                            }).then(function(){
-                                setCookie("userlogin", JSON.stringify({'username':$('#username').val()}), 365);
-                                swal("Success", "Welcome, "+$('#username').val()+" and enjoy the game", "success");
-                                window.location = 'play.html';
-                            });                        
-                        }
-                    });
-                }else{
-                    swal("Oops", "Username is required!" , "error");
+            var me = '';
+            var cardSelected = [];
+            var environment = 'production';
+            // var environment = 'development';
+            var waktu = 100;
+
+            // timer
+            setInterval(function(){
+                if (waktu==0) {
+                    waktu = 100;
+                    kickPlayer();
+                }
+                waktu--;
+                $('body').find('.progress-bar').attr('style','width: '+waktu+'%');
+            },1000);
+            
+            // chat 
+            firebase.database().ref('games/chat').on('value', function(response) {
+                if (response.val() && typeof response.val() !== 'undefined') {
+                    $('#chat-body').append('<p><span class="badge badge-secondary">'+response.val().from+'</span> '+response.val().message+'</p>');
+                    $('#chat-body').scrollTop($('#chat-body')[0].scrollHeight);
                 }
             });
+            
+            // Main Utama
+            firebase.database().ref('games').on('value', function(response) {                
+                // check button play
+                if (response.val().giliran == me.id && response.val().player[me.id].status == 'play' || environment=='development') {
+                    $('.button-play').show();
+                }else{
+                    $('.button-play').hide();
+                }
+                
+                // check resetGame
+                var winner = '';
+                if (response.val().winner != 0 || typeof response.val().winner != 'undefined') {                    
+                    winner = response.val().winner;
+                }
+                checkReset(response.val().player, winner);
+                
+                // show tablecard
+                if (response.val().tablecard) {
+                    var tablecard = '';
+                    $.each(JSON.parse(response.val().tablecard), function(index, value) {
+                        tablecard += '<img class="card img-thumbnail" src="assets/img/'+value+'.png">';
+                    });
+                    $('#tablecard').html(tablecard);
+                }
+                // show player
+                if (response.val().player) {
+                    $('.playersit').html('');
+                    $('.tablesit').show();
+                    $('.tablesit > .sitwrap').show();
+                    $('#btn-standup').prop('disabled', true);
+                    $.each(response.val().player, function(indexPlayer, valuePlayer) {
+                        var giliran = 'badge-secondary';
+                        var status = '<span class="badge badge-secondary">'+valuePlayer.status+'</span>';
+                        if (response.val().giliran == valuePlayer.id) {
+                            giliran = 'badge-warning';
+                        }
+                        var playercard = '<div class="playercard">';
+                        var kartuSelected = '';
+                        if (valuePlayer.card) {    
+                            $.each(JSON.parse(valuePlayer.card).sort(function(a, b){return a - b}), function(indexCard, valueCard) {
+                                kartuSelected = '';
+                                if (cardSelected.length > 0){                                    
+                                    if (cardSelected.indexOf(valueCard)!= -1) {
+                                        kartuSelected = 'active';
+                                    }
+                                }
+                                // for development
+                                if (environment == 'development') {                                    
+                                    playercard += '<a href="javascript:void(0)" class="kartu '+kartuSelected+'" data-index="'+indexCard+'" data-value="'+valueCard+'"><img class="card img-thumbnail" src="assets/img/'+valueCard+'.png"></a>';
+                                }else{
+                                    if (valuePlayer.id == me.id) {                                          
+                                        playercard += '<a href="javascript:void(0)" class="kartu '+kartuSelected+'" data-index="'+indexCard+'" data-value="'+valueCard+'"><img class="card img-thumbnail" src="assets/img/'+valueCard+'.png"></a>';
+                                    }else{                                    
+                                        playercard += '<img class="card img-thumbnail" src="assets/img/back.png">';
+                                    }                                                       
+                                }
+                            });
+                        }
+                        playercard += '</div>';
+                        if (valuePlayer.sitno) {         
+                            $('.tablesit > .sit-'+valuePlayer.sitno).hide();
+                            var waktu = '<div class="progress"><div style="width: 100%;" class="progress-bar" role="progressbar" aria-valuenow="'+response.val().waktu+'" aria-valuemin="0" aria-valuemax="100"></div></div>';
+                            if (response.val().giliran != valuePlayer.id) {
+                                waktu = '';
+                            }
+                            $('.playersit').append('<div class="sit-'+valuePlayer.sitno+' sitwrap"><span class="badge '+giliran+'">'+valuePlayer.name+'-'+valuePlayer.status+'</span>'+waktu+playercard+'</div>');
+                        }
+                        if (valuePlayer.id == me.id && valuePlayer.sitno && valuePlayer.sitno != 0) {
+                            $('.tablesit').hide();
+                            $('#btn-standup').prop('disabled', false);
+                        }
+                    });
+                    waktu = 100;
+                }
+            });
+            $('.sit').click(function(){
+                var posisi = $(this).attr('data-index');
+                if (checkSitAvailable(parseInt(posisi))) {
+                    firebase.database().ref('games/player/'+me.id).update({
+                        sitno:posisi,
+                        status:'waiting'
+                    });
+                }else{
+                    swal("Oops", "Kursi ini udh ada yg nempatin woyyy!" , "error");
+                }
+            });
+            $('body').on('click','#btn-standup',function(){
+                firebase.database().ref('games/player/'+me.id).update({
+                    sitno:0,
+                    card:'[]',
+                    status:0
+                }).then(function(){
+                    firebase.database().ref('games').once('value').then(function(response){
+                        if (response.val().giliran == me.id) {                            
+                            changeGiliran();
+                        }
+                    });
+                });
+            });
+
+            $('body').on('click','#btn-send',function(){
+                firebase.database().ref('games').once('value').then(function(response){                    
+                    // for development
+                    if (environment == 'development') {                        
+                        me.id = response.val().giliran;
+                    }
+                    var myCard = JSON.parse(response.val().player[me.id].card);
+                    console.log('cardSelected',cardSelected);
+                    if (checkGiliran()) {
+                        if (validasi(cardSelected, JSON.parse(response.val().tablecard))) {
+                            firebase.database().ref('games').update({
+                                tablecard:JSON.stringify(cardSelected)
+                            }).then(function(){
+                                $.each(cardSelected, function(index, value) {
+                                    remove(myCard, value);
+                                });
+                                firebase.database().ref('games/player/'+me.id).update({
+                                    card:JSON.stringify(myCard)
+                                }).then(function(){   
+                                    if (response.val().warisan && response.val().warisan != 0 && typeof response.val().warisan != 'undefined') {
+                                        firebase.database().ref('games').update({
+                                            warisan:0
+                                        });                                
+                                    }
+                                    if (myCard.length == 0) {
+                                        firebase.database().ref('games/player/'+me.id).update({
+                                            status:'winner'
+                                        }).then(function(){
+                                            setWarisan(me.id);
+                                            if (response.val().winner == 0 || typeof response.val().winner === 'undefined') {
+                                                firebase.database().ref('games').update({
+                                                    winner:me.id
+                                                });                                
+                                            }
+                                        });
+                                    }           
+                                    changeGiliran();
+                                    cardSelected = [];
+                                });                    
+                            });                    
+                        }else{
+                            swal("Oops", "GAK BISAAA WOYYY!" , "error");
+                        }
+                    }else{
+                        swal("Oops", "Bukan giliran lu coy!" , "error");
+                    }
+                });
+            });            
+            $('body').on('click','#btn-pas',function(){
+                firebase.database().ref('games').once('value').then(function(response){
+                    // for development
+                    if (environment == 'development') {                        
+                        me.id = response.val().giliran;
+                    }
+                    console.log(me);
+                    if (checkGiliran()) {
+                        firebase.database().ref('games/player/'+me.id).update({
+                            status: 'pas'
+                        }).then(function(){
+                            changeGiliran();
+                        });
+                    }else{
+                        swal("Oops", "Bukan giliran lu coy!" , "error");
+                    }
+                });
+            });            
+            $('body').on('click','.kartu',function(){
+                cardSelected = [];
+                $(this).toggleClass('active');
+                $.each($('body').find('.kartu.active'), function(index, value) {
+                    cardSelected.push(parseInt(value.getAttribute('data-value')));
+                });
+                console.log(cardSelected);
+            });
+            function sendChat(){
+                firebase.database().ref('games/chat').update({
+                    message:$('#input-chat').val(),
+                    from:me.name
+                }).then(function(){                    
+                    $('#input-chat').val('');
+                });                                                                
+            }
+            $('#btn-chat').click(function(){
+                sendChat();
+            });
+            $('#input-chat').on('keyup', function (e) {
+                if (e.keyCode == 13) {
+                    sendChat();
+                }
+            });            
         </script>
     </body>
 </html>
