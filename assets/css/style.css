@@ -92,3 +92,13 @@ img.card {
     top:10px;
     left:10px;
 }
+.chat{
+    position: absolute;
+    top: 10px;
+    width: 300px;
+    left: 900px;
+}
+.card-body {
+    height: 400px;
+    overflow-y: scroll;
+}

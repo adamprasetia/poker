@@ -64,6 +64,24 @@
             <button id="btn-standup" type="button" name="button" class="btn btn-sm btn-danger">Stand Up</button>
             <!-- <button id="btn-reset" type="button" name="button" class="btn btn-sm btn-danger" onclick="resetGame()">Reset Game</button> -->
         </div>
+        <div class="chat">
+            <div class="card text-white bg-dark">
+                <div class="card-header">
+                    Chat
+                </div>
+                <div id="chat-body" class="card-body">
+                    
+                </div>
+                <div class="card-footer">
+                    <div class="input-group">
+                        <input id="input-chat" type="text" class="form-control" placeholder="Enter chat ...">
+                        <div class="input-group-append">
+                            <button id="btn-chat" class="btn btn-outline-primary" type="button">Send</button>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
         <p>Copyright 2018 Sempak Bolong. All rights reserved.</p>
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -94,8 +112,16 @@
                 $('body').find('.progress-bar').attr('style','width: '+waktu+'%');
             },1000);
             
+            // chat 
+            firebase.database().ref('games/chat').on('value', function(response) {
+                if (response.val() && typeof response.val() !== 'undefined') {
+                    $('#chat-body').append('<p><span class="badge badge-secondary">'+response.val().from+'</span> '+response.val().message+'</p>');
+                    $('#chat-body').scrollTop($('#chat-body')[0].scrollHeight);
+                }
+            });
+            
             // Main Utama
-            firebase.database().ref('games').on('value', function(response) {
+            firebase.database().ref('games').on('value', function(response) {                
                 // check button play
                 if (response.val().giliran == me && response.val().player[me].status == 'play' || environment=='development') {
                     $('.button-play').show();
@@ -280,6 +306,22 @@
                 });
                 console.log(cardSelected);
             });
+            function sendChat(){
+                firebase.database().ref('games/chat').update({
+                    message:$('#input-chat').val(),
+                    from:me
+                }).then(function(){                    
+                    $('#input-chat').val('');
+                });                                                                
+            }
+            $('#btn-chat').click(function(){
+                sendChat();
+            });
+            $('#input-chat').on('keyup', function (e) {
+                if (e.keyCode == 13) {
+                    sendChat();
+                }
+            });            
         </script>
     </body>
 </html>
