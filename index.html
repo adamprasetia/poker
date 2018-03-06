@@ -199,13 +199,17 @@
             });
             $('.sit').click(function(){
                 var posisi = $(this).attr('data-index');
-                if (checkSitAvailable(parseInt(posisi))) {
-                    firebase.database().ref('games/player/'+me.id).update({
-                        sitno:posisi,
-                        status:'waiting'
-                    });
+                if (typeof me.id !== 'undefined') {                    
+                    if (checkSitAvailable(parseInt(posisi))) {
+                        firebase.database().ref('games/player/'+me.id).update({
+                            sitno:posisi,
+                            status:'waiting'
+                        });
+                    }else{
+                        swal("Oops", "Kursi ini udh ada yg nempatin woyyy!" , "error");
+                    }
                 }else{
-                    swal("Oops", "Kursi ini udh ada yg nempatin woyyy!" , "error");
+                    swal("Oops", "Login dulu coy, pake facebook!" , "error");
                 }
             });
             $('body').on('click','#btn-standup',function(){
@@ -297,12 +301,16 @@
                 console.log(cardSelected);
             });
             function sendChat(){
-                firebase.database().ref('games/chat').update({
-                    message:$('#input-chat').val(),
-                    from:me.name
-                }).then(function(){                    
-                    $('#input-chat').val('');
-                });                                                                
+                if (typeof me.name !== 'undefined') {                    
+                    firebase.database().ref('games/chat').update({
+                        message:$('#input-chat').val(),
+                        from:me.name
+                    }).then(function(){                    
+                        $('#input-chat').val('');
+                    });                                                                
+                }else{
+                    swal("Oops", "Mau ngechat ya login dulu dong coy!" , "error");
+                }
             }
             $('#btn-chat').click(function(){
                 sendChat();
