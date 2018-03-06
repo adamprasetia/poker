@@ -273,6 +273,9 @@ function checkSitAvailable(sitno = 0) {
 }
 
 function checkStraight(cardSelected){
+    if (cardSelected.length != 5) {
+        return false;
+    }
     var cardStraight = [];
     $.each(cardSelected, function(index, value) {
         cardStraight.push((value - (value % 4)) / 4);
@@ -294,6 +297,9 @@ function checkStraight(cardSelected){
     return b;
 }
 function checkFlush(cardSelected){
+    if (cardSelected.length != 5) {
+        return false;
+    }    
     var cardFlush = [];
     var uniqueCardFlush = [];
     $.each(cardSelected, function(index, value) {
