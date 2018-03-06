@@ -370,7 +370,7 @@ function validasi(cardSelected, card_on_arena){
         if (!valid) {
             return false;
         }
-        if ((cardSelected.length == 4 || (checkFlush(cardSelected) && checkStraight(cardSelected))) && card_on_arena.length == 1 && (card_on_arena[0] == 51 || card_on_arena[0] == 50 || card_on_arena[0] == 49 || card_on_arena[0] == 48)) {
+        if (cardSelected.length == 4 && card_on_arena.length == 1 && card_on_arena[0] >= 48) {
             return true;
         }
         if (Math.max(...cardSelected) < Math.max(...card_on_arena)) {
@@ -398,6 +398,8 @@ function validasi(cardSelected, card_on_arena){
                     if (Math.max(...cardSelected) < Math.max(...card_on_arena)) {
                         return false;
                     }                                
+                }else if(card_on_arena[0] >= 48 && card_on_arena.length == 1){
+                    // return false;
                 }else{
                     return false;
                 }
