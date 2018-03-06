@@ -95,7 +95,7 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.07.00.24"></script>
+        <script src="assets/js/helper.js?v=2018.03.07.01.22"></script>
         <script src="assets/js/facebook.js"></script>
         <script type="text/javascript">
             var room = getParameterByName('room');
@@ -137,14 +137,14 @@
                     $('.button-play').hide();
                 }
                 
-                // check resetGame
-                var winner = '';
-                if (response.val() && response.val().winner && response.val().winner != 0) {
-                    winner = response.val().winner;
-                }
-                if (response.val() && response.val().player) {
-                    checkReset(response.val().player, winner);
-                }
+                // // check resetGame
+                // var winner = '';
+                // if (response.val() && response.val().winner && response.val().winner != 0) {
+                //     winner = response.val().winner;
+                // }
+                // if (response.val() && response.val().player) {
+                //     checkReset(response.val().player, winner);
+                // }
                 
                 // show tablecard
                 if (response.val() && response.val().tablecard) {
@@ -207,6 +207,8 @@
                         firebase.database().ref(room+'/player/'+me.id).update({
                             sitno:posisi,
                             status:'waiting'
+                        }).then(function(){
+                            checkReset();
                         });
                     }else{
                         swal("Oops", "Kursi ini udh ada yg nempatin woyyy!" , "error");
@@ -225,6 +227,7 @@
                         if (response.val().giliran == me.id) {                            
                             changeGiliran();
                         }
+                        checkReset();
                     });
                 });
             });
@@ -265,6 +268,7 @@
                                     changeGiliran();
                                     cardSelected = [];
                                     $('#btn-send').prop('disabled', false);
+                                    checkReset();
                                 });                    
                             });                    
                         }else{
@@ -286,6 +290,7 @@
                         }).then(function(){
                             changeGiliran();
                             $('#btn-pas').prop('disabled', false);
+                            checkReset();
                         });
                     }else{
                         swal("Oops", "Bukan giliran lu coy!" , "error");
