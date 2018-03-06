@@ -140,8 +140,9 @@ function resetGame(player = [], winner = ''){
     }
     firebase.database().ref(room).update({
         tablecard:"[]",
-        winner:0,
-        waktu:100
+        winner:0
+    }).then(function(){
+        waktu = 100;
     });                
 }
 function setPlayAll(player){
