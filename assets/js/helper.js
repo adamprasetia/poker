@@ -140,12 +140,16 @@ function resetGame(player = [], winner = ''){
     }
     firebase.database().ref(room).update({
         tablecard:"[]",
-        winner:0
+        winner:0,
+        bom:0
     }).then(function(){
         timeout = 100;
     });                
 }
-function setPlayAll(player){
+function setPlayAll(player, bom){
+    if (bom && typeof bom !== 'undefined' && bom != 0) {
+        resetGame(bom);
+    }
     $.each(player, function(index, value) {
         if (value.status != 'winner' && value.card != '[]' && typeof value.card !== 'undefined') {
             firebase.database().ref(room+'/player/'+value.id).update({
@@ -168,7 +172,7 @@ function changeGiliran(){
                 firebase.database().ref(room).update({
                     warisan:0
                 });    
-                setPlayAll(response.val().player);
+                setPlayAll(response.val().player, response.val().bom);
             });
         }
         
@@ -188,7 +192,7 @@ function changeGiliran(){
                         if (response.val().warisan && response.val().warisan != 0 && typeof response.val().warisan !== 'undefined') {
                             
                         }else{
-                            setPlayAll(response.val().player);                                        
+                            setPlayAll(response.val().player, response.val().bom);
                         }
                     }                                                              
                 });
@@ -372,11 +376,13 @@ function validasi(cardSelected, card_on_arena){
                 return false;
             }                   
         });
-        console.log('valid',valid);
         if (!valid) {
             return false;
         }
         if (cardSelected.length == 4 && card_on_arena.length == 1 && card_on_arena[0] >= 48) {
+            firebase.database().ref(room).update({
+                bom:me.id
+            });
             return true;
         }
         if (Math.max(...cardSelected) < Math.max(...card_on_arena)) {
@@ -402,15 +408,13 @@ function validasi(cardSelected, card_on_arena){
             if (card_on_arena.length != 0) {
                 if (checkStraight(card_on_arena) || checkFlush(card_on_arena)) {
                     if (Math.max(...cardSelected) < Math.max(...card_on_arena)) {
-                        console.log('fail bom sini 1');
-                        console.log(checkStraight(card_on_arena), checkFlush(card_on_arena));
                         return false;
                     }                                
                 }else if(card_on_arena[0] >= 48 && card_on_arena.length == 1){
-                    // return false;
-                    console.log('fail bom sini 2');
+                    firebase.database().ref(room).update({
+                        bom:me.id
+                    });
                 }else{
-                    console.log('fail bom sini 3');
                     return false;
                 }
             }
