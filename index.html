@@ -111,6 +111,7 @@
                 if (timeout==0) {
                     timeout = 100;
                     kickPlayer();
+                    checkReset();
                 }
                 timeout--;
                 $('body').find('.progress-bar').attr('style','width: '+timeout+'%');
