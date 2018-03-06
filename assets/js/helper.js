@@ -205,7 +205,7 @@ function changeGiliran(){
 }
 function setGiliran(player, winner = ''){
     if (winner == '') {                    
-        var sitno = 1;
+        var sitno = Math.floor((Math.random() * 8) + 1);
         for (var i = 1; i <= 8; i++) {
             playerBySit = getPlayerBySit(player, sitno);
             if (parseInt(playerBySit.sitno) == sitno) {
