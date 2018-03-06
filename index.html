@@ -123,7 +123,9 @@
                     $('#chat-body').scrollTop($('#chat-body')[0].scrollHeight);
                 }
             });
-            
+            firebase.database().ref(room+'/player').on('value', function(response) {                
+                timeout = 100;
+            });
             // Main Utama
             firebase.database().ref(room).on('value', function(response) {                
                 // console.log('response.val()', response.val());
