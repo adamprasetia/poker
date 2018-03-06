@@ -138,8 +138,6 @@
                 
                 // check resetGame
                 var winner = '';
-                console.log('response.val()',response.val());
-                // if (response.val().winner != 0 || typeof response.val().winner != 'undefined') {
                 if (response.val() && response.val().winner && response.val().winner != 0) {
                     winner = response.val().winner;
                 }
