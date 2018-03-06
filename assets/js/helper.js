@@ -165,7 +165,6 @@ function changeGiliran(){
     firebase.database().ref('games').once('value', function(response) {     
 
         if (getCountPlay(response.val().player)==0) {    
-            console.log('sini');
             firebase.database().ref('games').update({
                 giliran:response.val().warisan
             }).then(function(){
