@@ -231,6 +231,7 @@
             });
 
             $('body').on('click','#btn-send',function(){
+                $(this).prop('disabled', true);
                 firebase.database().ref(room).once('value').then(function(response){                    
                     var myCard = JSON.parse(response.val().player[me.id].card);
                     console.log('cardSelected',cardSelected);
@@ -264,6 +265,7 @@
                                     }           
                                     changeGiliran();
                                     cardSelected = [];
+                                    $(this).prop('disabled', false);
                                 });                    
                             });                    
                         }else{
@@ -275,16 +277,18 @@
                 });
             });            
             $('body').on('click','#btn-pas',function(){
+                $(this).prop('disabled', true);
                 firebase.database().ref(room).once('value').then(function(response){
-                    console.log(me);
                     if (checkGiliran()) {
                         firebase.database().ref(room+'/player/'+me.id).update({
                             status: 'pas'
                         }).then(function(){
                             changeGiliran();
+                            $(this).prop('disabled', false);
                         });
                     }else{
                         swal("Oops", "Bukan giliran lu coy!" , "error");
+                        $(this).prop('disabled', false);
                     }
                 });
             });            
