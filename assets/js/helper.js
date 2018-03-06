@@ -148,7 +148,7 @@ function resetGame(player = [], winner = ''){
 }
 function setPlayAll(player, bom){
     if (bom && typeof bom !== 'undefined' && bom != 0) {
-        resetGame(bom);
+        resetGame(player, bom);
     }
     $.each(player, function(index, value) {
         if (value.status != 'winner' && value.card != '[]' && typeof value.card !== 'undefined') {
