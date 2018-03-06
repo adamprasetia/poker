@@ -67,11 +67,17 @@ function checkReset(player, winner = ''){
         }
     });
     if (totalPlayerSit == 1) {
-        resetGame(player);
-    }else if (totalPlayerSit > 1 && totalPlayerCard == 1) {
-        resetGame(player, winner);
-    }else if (totalPlayerSit > 1 && totalPlayerCard == 0) {
-        resetGame(player, winner);
+        firebase.database().ref(room).update({                 
+            reset: 1
+        }).then(function(){            
+            resetGame(player);
+        });
+    }else if (totalPlayerSit > 1 && totalPlayerCard <= 1) {
+        firebase.database().ref(room).update({                 
+            reset: 1
+        }).then(function(){            
+            resetGame(player);
+        });
     }
 }
 function checkPlayerExist(playername = '') {
@@ -95,50 +101,55 @@ function totalPlayer(player){
     return total;
 }            
 function resetGame(player = [], winner = ''){
-    console.log('resetGame', winner);
-    var config_total_player = totalPlayer(player);
-    var config_total_kartu = 52;
-    var kartu = new Array(config_total_kartu);
-    for (var i = 0; i < kartu.length; i++) {
-        kartu[i] = i;
-    }
-    kartu = shuffle(kartu);
-    var playerCard = new Array(config_total_player);
-    for (var i = 0; i < config_total_player; i++) {
-        playerCard[i] = [];
-    }
-    $.each(kartu, function(index, value) {
-        playerCard[index % config_total_player].push(value);
-    });
-    
-    var i = 0;
-    $.each(player, function(index, value) {
-        if (value.sitno && value.sitno != 0 && config_total_player > 1) {                            
-            firebase.database().ref(room+'/player/'+index).update({                 
-                card: JSON.stringify(playerCard[i]),
-                status: 'play'
-            });                   
-            i++;
-        }else{
-            firebase.database().ref(room+'/player/'+index).update({                 
-                card: '[]',
-                status: 'waiting'
-            });                                               
+    firebase.database().ref(room).once('value').then(function(response){                    
+        if (response.val().reset != 1) {
+            console.log('resetGame', winner);
+            var config_total_player = totalPlayer(player);
+            var config_total_kartu = 52;
+            var kartu = new Array(config_total_kartu);
+            for (var i = 0; i < kartu.length; i++) {
+                kartu[i] = i;
+            }
+            kartu = shuffle(kartu);
+            var playerCard = new Array(config_total_player);
+            for (var i = 0; i < config_total_player; i++) {
+                playerCard[i] = [];
+            }
+            $.each(kartu, function(index, value) {
+                playerCard[index % config_total_player].push(value);
+            });
+            
+            var i = 0;
+            $.each(player, function(index, value) {
+                if (value.sitno && value.sitno != 0 && config_total_player > 1) {                            
+                    firebase.database().ref(room+'/player/'+index).update({                 
+                        card: JSON.stringify(playerCard[i]),
+                        status: 'play'
+                    });                   
+                    i++;
+                }else{
+                    firebase.database().ref(room+'/player/'+index).update({                 
+                        card: '[]',
+                        status: 'waiting'
+                    });                                               
+                }
+            });
+            
+            if (winner == '') {                        
+                setGiliran(player);
+            }else{
+                setGiliran(player, winner);
+            }
+            firebase.database().ref(room).update({
+                tablecard:"[]",
+                winner:0,
+                bom:0,
+                reset:0
+            }).then(function(){
+                timeout = 100;
+            });                            
         }
     });
-    
-    if (winner == '') {                        
-        setGiliran(player);
-    }else{
-        setGiliran(player, winner);
-    }
-    firebase.database().ref(room).update({
-        tablecard:"[]",
-        winner:0,
-        bom:0
-    }).then(function(){
-        timeout = 100;
-    });                
 }
 function setPlayAll(player, bom){
     if (bom && typeof bom !== 'undefined' && bom != 0) {
