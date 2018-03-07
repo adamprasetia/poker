@@ -30,9 +30,9 @@ img.tablecard {
     top:450px;
 }
 .mecard img{
-    width: 100px;
+    width: 80px;
     display: inline;
-    margin-right: -60px;
+    margin-right: -50px;
     margin-bottom: -80px;
 }
 .playercard{
