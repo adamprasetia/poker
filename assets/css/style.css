@@ -11,12 +11,12 @@ img.card {
     width: 20px;
 }
 img.tablecard {
-    width: 60px;
+    width: 50px;
 }
 #tablecard {
     position: absolute;
-    top:240px;
-    left: 280px;
+    top:190px;
+    left: 225px;
 }
 #tablecard img{
     display: inline;
