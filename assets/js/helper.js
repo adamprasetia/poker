@@ -157,7 +157,7 @@ function setPlayAll(player, bom){
         }
     });
 }
-function changeGiliran(){
+function changeGiliran(callback){
     console.log('changeGiliran');
     firebase.database().ref(room).once('value', function(response) {     
         if (getCountPlay(response.val().player)==0) {    
@@ -170,19 +170,15 @@ function changeGiliran(){
                 setPlayAll(response.val().player, response.val().bom);
             });
         }
-        console.log('changeGiliran giliran', response.val().giliran);
         var sitno = parseInt(response.val().player[response.val().giliran].sitno);
-        console.log('before site no', sitno);
         if (sitno == 10) {
             sitno = 1;
         }else{
             sitno++;
         }                
-        console.log('change giliran sit no', sitno);
         for (var i = 1; i <= 10; i++) {
             playerBySit = getPlayerBySit(response.val().player, sitno);
             if (playerBySit.status && playerBySit.status == 'play') {
-                console.log('change giliran playerBySit', playerBySit);
                 firebase.database().ref(room).update({
                     giliran:playerBySit.id
                 }).then(function(){
@@ -204,6 +200,7 @@ function changeGiliran(){
         }
         timeout = 100;
     });
+    callback();
 }
 function getSitNoByPlayer(players, player){
     var status = false;
@@ -491,7 +488,7 @@ function kickPlayer(){
         }).then(function(){
             firebase.database().ref(room).once('value', function(response) {
                 if (response.val().giliran == giliran) {                    
-                    changeGiliran();
+                    changeGiliran(function(){});
                 }
             });
             checkReset();
