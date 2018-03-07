@@ -130,7 +130,7 @@
                     timeout = 100;
                     kickPlayer();
                 }
-                timeout--;
+                // timeout--;
                 $('body').find('.progress-bar').attr('style','width: '+timeout+'%');
             },1000);
             
@@ -236,16 +236,25 @@
             });
             $('body').on('click','#btn-standup',function(){
                 firebase.database().ref(room).once('value').then(function(response){
-                    if (response.val().giliran == me.id) {                            
+                    if (response.val().giliran == me.id) {       
                         changeGiliran(function(){
                             firebase.database().ref(room+'/player/'+me.id).update({
                                 sitno:0,
                                 card:'[]',
                                 status:0
-                            });                        
+                            }).then(function(){                            
+                                checkReset();
+                            });                                                
                         });
+                    }else{
+                        firebase.database().ref(room+'/player/'+me.id).update({
+                            sitno:0,
+                            card:'[]',
+                            status:0
+                        }).then(function(){                            
+                            checkReset();
+                        });                                                
                     }
-                    checkReset();
                 });
             });
 
