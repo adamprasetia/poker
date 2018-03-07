@@ -6,10 +6,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <link rel="stylesheet" href="assets/css/style.css?v=2018.03.06.13.07">
+        <link rel="stylesheet" href="assets/css/style.css?v=2018.03.07.11.47">
     </head>
     <body>
-        <img src="assets/img/poker_table_green.png" alt="">
+        <img src="assets/img/poker_table_green.png?v=2018.03.07.11.47" alt="">
         <div id="tablecard" style="width:300px"></div>
         <div class="tablesit" style="display:none">     
             <div class="sit-1 sitwrap">                
@@ -52,12 +52,18 @@
                     Duduk
                 </a>
             </div>       
+            <div class="sit-9 sitwrap">                
+                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="9">
+                    Duduk
+                </a>
+            </div>       
+            <div class="sit-10 sitwrap">                
+                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="10">
+                    Duduk
+                </a>
+            </div>       
         </div>
         <div class="playersit"></div>
-        <div class="button-play" style="width:200px;display:none">            
-            <button id="btn-pas" type="button" name="button" class="btn btn-sm btn-warning">Pas</button>
-            <button id="btn-send" type="button" name="button" class="btn btn-sm btn-primary">Send</button>
-        </div>
         <div class="button-close">
             <button id="btn-standup" type="button" name="button" class="btn btn-sm btn-secondary" disabled="true">Stand Up</button>
             <!-- <button id="btn-reset" type="button" name="button" class="btn btn-sm btn-danger" onclick="resetGame()">Reset Game</button> -->
@@ -88,14 +94,26 @@
                 </div>
             </div>
         </div>
-        <p>Copyright 2018 Sempak Bolong. All rights reserved.</p>
+        <div class="mecard">
+            <div class="card text-white bg-dark">
+                <div class="card-header">
+                    <div class="button-play" style="width:200px;display:none">            
+                        <button id="btn-pas" type="button" name="button" class="btn btn-sm btn-warning">Pas</button>
+                        <button id="btn-send" type="button" name="button" class="btn btn-sm btn-primary">Send</button>
+                    </div>
+                </div>
+                <div id="mecard" class="card-body">
+
+                </div>
+            </div>
+        </div>
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.07.01.22"></script>
+        <script src="assets/js/helper.js?v=2018.03.07.11.47"></script>
         <script src="assets/js/facebook.js"></script>
         <script type="text/javascript">
             var room = getParameterByName('room');
@@ -113,7 +131,7 @@
                     kickPlayer();
                     checkReset();
                 }
-                timeout--;
+                // timeout--;
                 $('body').find('.progress-bar').attr('style','width: '+timeout+'%');
             },1000);
             
@@ -130,28 +148,18 @@
             
             // Main Utama
             firebase.database().ref(room).on('value', function(response) {                
-                // console.log('response.val()', response.val());
                 // check button play
                 if (response.val() && response.val().giliran == me.id && response.val().player[me.id].status == 'play') {
                     $('.button-play').show();
                 }else{
                     $('.button-play').hide();
                 }
-                
-                // // check resetGame
-                // var winner = '';
-                // if (response.val() && response.val().winner && response.val().winner != 0) {
-                //     winner = response.val().winner;
-                // }
-                // if (response.val() && response.val().player) {
-                //     checkReset(response.val().player, winner);
-                // }
-                
+
                 // show tablecard
                 if (response.val() && response.val().tablecard) {
                     var tablecard = '';
                     $.each(JSON.parse(response.val().tablecard), function(index, value) {
-                        tablecard += '<img class="card img-thumbnail" src="assets/img/'+value+'.png">';
+                        tablecard += '<img class="tablecard img-thumbnail" src="assets/img/'+value+'.png">';
                     });
                     $('#tablecard').html(tablecard);
                 }
@@ -161,11 +169,12 @@
                     $('.tablesit').show();
                     $('.tablesit > .sitwrap').show();
                     $('#btn-standup').prop('disabled', true);
+                    var mecard = '<div>';
                     $.each(response.val().player, function(indexPlayer, valuePlayer) {
-                        var giliran = 'badge-secondary';
+                        var giliran = 'bg-dark';
                         var status = '<span class="badge badge-secondary">'+valuePlayer.status+'</span>';
                         if (response.val().giliran && response.val().giliran == valuePlayer.id) {
-                            giliran = 'badge-warning';
+                            giliran = 'bg-warning';
                         }
                         var playercard = '<div class="playercard">';
                         var kartuSelected = '';
@@ -178,27 +187,32 @@
                                     }
                                 }
                                 if (valuePlayer.id == me.id) {                                          
-                                    playercard += '<a href="javascript:void(0)" class="kartu '+kartuSelected+'" data-index="'+indexCard+'" data-value="'+valueCard+'"><img class="card img-thumbnail" src="assets/img/'+valueCard+'.png"></a>';
+                                    mecard += '<a href="javascript:void(0)" class="kartu '+kartuSelected+'" data-index="'+indexCard+'" data-value="'+valueCard+'"><img class="card img-thumbnail" src="assets/img/'+valueCard+'.png"></a>';
+                                    playercard += '<img class="card img-thumbnail" src="assets/img/back.png">';
                                 }else{                                    
                                     playercard += '<img class="card img-thumbnail" src="assets/img/back.png">';
                                 }                                                       
                             });
                         }
                         playercard += '</div>';
+                        mecard += '</div>';
                         if (valuePlayer.sitno) {         
                             $('.tablesit > .sit-'+valuePlayer.sitno).hide();
-                            var waktu = '<div class="progress"><div style="width: 100%;" class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div></div>';
+                            var waktu = '<div class="progress" style="height: 5px;"><div style="width: 100%;" class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div></div>';
                             if (response.val().giliran && response.val().giliran != valuePlayer.id) {
                                 waktu = '';
                             }
-                            $('.playersit').append('<div class="sit-'+valuePlayer.sitno+' sitwrap"><span class="badge '+giliran+'">'+valuePlayer.name+'-'+valuePlayer.status+'</span>'+waktu+playercard+'</div>');
+                            // $('.playersit').append('<div class="sit-'+valuePlayer.sitno+' sitwrap"><span class="badge '+giliran+'">'+valuePlayer.name+'-'+valuePlayer.status+'</span>'+waktu+playercard+'</div>');
+                            // $('.playersit').append('<div class="sit-'+valuePlayer.sitno+'"><div class="card text-white bg-dark"><img class="img-thumbnail img-fluid" src="'+valuePlayer.picture+'">'+waktu+'</div><span class="badge '+giliran+'">'+valuePlayer.name+'-'+valuePlayer.status+'</span></div>');
+                            $('.playersit').append('<div class="sit-'+valuePlayer.sitno+' sitwrap"><div class="card-custom card text-white '+giliran+'"><div class="card-header">'+valuePlayer.name+'</div><div class="card-body"><img class="img-thumbnail img-fluid" src="'+valuePlayer.picture+'"></div><div class="card-footer">'+waktu+playercard+'</div></div></div>');
+                            // console.log('<div class="sit-'+valuePlayer.sitno+' sitwrap"><div class="card-custom card text-white '+giliran+'"><div class="card-header">'+valuePlayer.name+'</div><div class="card-body"><img class="img-thumbnail img-fluid" src="'+valuePlayer.picture+'"></div><div class="card-footer">'+waktu+'</div><div class="card-footer>"'+playercard+'</div></div></div>');
                         }
                         if (valuePlayer.id == me.id && valuePlayer.sitno && valuePlayer.sitno != 0) {
                             $('.tablesit').hide();
                             $('#btn-standup').prop('disabled', false);
                         }
                     });
-                    // waktu = 100;
+                    $('#mecard').html(mecard);
                 }
             });
             $('.sit').click(function(){

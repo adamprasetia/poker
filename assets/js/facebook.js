@@ -36,11 +36,12 @@ fjs.parentNode.insertBefore(js, fjs);
 
 function testAPI() {
     console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me', function(response) {
+    FB.api('/me', {fields: "id,name,picture"}, function(response) {
         me = response;
         firebase.database().ref(room+'/player/'+response.id).update({
             id:response.id,
-            name:response.name
+            name:response.name,
+            picture:response.picture.data.url
         });                        
         
         console.log('me',response);

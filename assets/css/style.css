@@ -8,20 +8,46 @@ a.active > img{
     margin-right: -90px;
 }
 img.card {
-    width: 50px;
+    width: 20px;
+}
+img.tablecard {
+    width: 60px;
 }
 #tablecard {
     position: absolute;
     top:240px;
-    left: 310px;
+    left: 280px;
 }
 #tablecard img{
     display: inline;
 }
+#mecard{
+    padding-bottom: 100px;
+}
+.mecard{
+    position: absolute;
+    width:1000px;
+    top:450px;
+}
+.mecard img{
+    width: 100px;
+    display: inline;
+    margin-right: -60px;
+    margin-bottom: -80px;
+}
+.playercard{
+    /* display: absolute; */
+    position: absolute;
+    width: 100px;
+    top: 50px;
+    left: 10px;
+}
 .playercard img{
     display: inline;
-    margin-left: -35px;
-    margin-bottom: -45px;
+    /* position: absolute; */
+    margin-right: -18px;
+    /* margin-bottom: 10px; */
+    /* margin-top: -10px; */
 }
 .giliran{
     background: lime;
@@ -33,59 +59,64 @@ img.card {
     padding: 40px;
     border-radius: 100px;
 }
-.sitwrap span{
+.card-custom{
     /* background: #9bbb59; */
-    margin-left: -30px;
+    position: absolute;
+    margin-left: 0px;
     margin-top: -50px;
     display: block;
-    width: 120px;
     text-align: center;
     color: white;         
 }
 .sit-1{
     position: absolute;
-    top: 100px;
-    left: 288px;
+    top: 80px;
+    left: 225px;
 }
 .sit-2{
     position: absolute;
-    top: 100px;
-    left: 515px;
+    top: 80px;
+    left: 407px;
 }
 .sit-3{
     position: absolute;
-    top: 150px;
-    left: 650px;
+    top: 115px;
+    left: 510px;
 }
 .sit-4{
     position: absolute;
-    top: 400px;
-    left: 650px;
+    top: 210px;
+    left: 550px;
 }
 .sit-5{
     position: absolute;
-    top: 435px;
-    left: 515px;
+    top: 310px;
+    left: 510px;
 }
 .sit-6{
     position: absolute;
-    top: 435px;
-    left: 288px;
+    top: 350px;
+    left: 407px;
 }
 .sit-7{
     position: absolute;
-    top: 400px;
-    left: 150px;
+    top: 350px;
+    left: 225px;
 }
 .sit-8{
     position: absolute;
-    top: 150px;
-    left: 150px;
+    top: 310px;
+    left: 115px;
 }
-.button-play{
+.sit-9{
     position: absolute;
-    top:350px;
-    left:390px;
+    top: 210px;
+    left: 85px;
+}
+.sit-10{
+    position: absolute;
+    top: 115px;
+    left: 115px;
 }
 .button-close{
     position: absolute;
@@ -96,15 +127,29 @@ img.card {
     position: absolute;
     top: 130px;
     width: 300px;
-    left: 900px;
+    left: 700px;
 }
 #chat-body {
-    height: 310px;
+    height: 200px;
     overflow-y: scroll;
 }
 .login{
     top: 10px;
-    left : 900px;
+    left : 700px;
     width: 300px;
     position: absolute;
 }
+.card-custom .card-header{
+    white-space: nowrap; 
+    padding:5px;
+    max-width: 60px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 8px;
+}
+.card-custom .card-body{
+    padding:5px;
+    max-width: 100px;
+}
+.card-custom .card-footer{
+    padding:5px;

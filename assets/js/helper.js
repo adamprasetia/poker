@@ -171,12 +171,12 @@ function changeGiliran(){
         }
         
         var sitno = response.val().player[response.val().giliran].sitno;
-        if (sitno == 8) {
+        if (sitno == 10) {
             sitno = 1;
         }else{
             sitno++;
         }                
-        for (var i = 1; i <= 8; i++) {
+        for (var i = 1; i <= 10; i++) {
             playerBySit = getPlayerBySit(response.val().player, sitno);
             if (playerBySit.status && playerBySit.status == 'play') {
                 firebase.database().ref(room).update({
@@ -192,7 +192,7 @@ function changeGiliran(){
                 });
                 break;
             }
-            if (sitno == 8) {
+            if (sitno == 10) {
                 sitno = 1;
             }else{
                 sitno++;
@@ -203,8 +203,8 @@ function changeGiliran(){
 }
 function setGiliran(player, winner = ''){
     if (winner == '') {                    
-        var sitno = Math.floor((Math.random() * 8) + 1);
-        for (var i = 1; i <= 8; i++) {
+        var sitno = Math.floor((Math.random() * 10) + 1);
+        for (var i = 1; i <= 10; i++) {
             playerBySit = getPlayerBySit(player, sitno);
             if (parseInt(playerBySit.sitno) == sitno) {
                 firebase.database().ref(room).update({
@@ -212,7 +212,7 @@ function setGiliran(player, winner = ''){
                 });
                 break;
             }
-            if (sitno == 8) {
+            if (sitno == 10) {
                 sitno = 1;
             }else{
                 sitno++;
@@ -446,12 +446,12 @@ function setWarisan(winner){
     console.log('setWarisan');
     firebase.database().ref(room).once('value', function(response) {                                    
         var sitno = response.val().player[winner].sitno;
-        if (sitno == 8) {
+        if (sitno == 10) {
             sitno = 1;
         }else{
             sitno++;
         }                
-        for (var i = 1; i <= 8; i++) {
+        for (var i = 1; i <= 10; i++) {
             playerBySit = getPlayerBySit(response.val().player, sitno);
             if (playerBySit.status && playerBySit.status != 'winner') {
                 firebase.database().ref(room).update({
@@ -459,7 +459,7 @@ function setWarisan(winner){
                 });
                 break;
             }
-            if (sitno == 8) {
+            if (sitno == 10) {
                 sitno = 1;
             }else{
                 sitno++;
