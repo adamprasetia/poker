@@ -172,6 +172,7 @@ function changeGiliran(){
         }
         console.log('changeGiliran giliran', response.val().giliran);
         var sitno = parseInt(response.val().player[response.val().giliran].sitno);
+        console.log('before site no', sitno);
         if (sitno == 10) {
             sitno = 1;
         }else{
