@@ -177,9 +177,11 @@ function changeGiliran(){
         }else{
             sitno++;
         }                
+        console.log('change giliran sit no', sitno);
         for (var i = 1; i <= 10; i++) {
             playerBySit = getPlayerBySit(response.val().player, sitno);
             if (playerBySit.status && playerBySit.status == 'play') {
+                console.log('change giliran playerBySit', playerBySit);
                 firebase.database().ref(room).update({
                     giliran:playerBySit.id
                 }).then(function(){
