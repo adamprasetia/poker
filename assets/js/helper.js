@@ -171,7 +171,7 @@ function changeGiliran(){
             });
         }
         
-        var sitno = response.val().player[response.val().giliran].sitno;
+        var sitno = parseInt(response.val().player[response.val().giliran].sitno);
         if (sitno == 10) {
             sitno = 1;
         }else{
