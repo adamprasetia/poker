@@ -130,7 +130,7 @@
                     timeout = 100;
                     kickPlayer();
                 }
-                timeout--;
+                // timeout--;
                 $('body').find('.progress-bar').attr('style','width: '+timeout+'%');
             },1000);
             
@@ -169,7 +169,13 @@
                     $('.tablesit > .sitwrap').show();
                     $('#btn-standup').prop('disabled', true);
                     var mecard = '<div>';
+                    var mahkota = '';
                     $.each(response.val().player, function(indexPlayer, valuePlayer) {
+                        if (response.val().winner == valuePlayer.id) {
+                            mahkota = '<div class="card-header"><img class="img-fluid" src="assets/img/mahkota.png"></div>';
+                        }else{
+                            mahkota = '';
+                        }
                         var giliran = 'bg-dark';
                         var status = '<span class="badge badge-secondary">'+valuePlayer.status+'</span>';
                         if (response.val().giliran && response.val().giliran == valuePlayer.id) {
@@ -201,7 +207,7 @@
                             if (response.val().giliran && response.val().giliran != valuePlayer.id) {
                                 waktu = '';
                             }
-                            $('.playersit').append('<div class="sit-'+valuePlayer.sitno+' sitwrap"><div class="card-custom card text-white '+giliran+'"><div class="card-header">'+valuePlayer.name+'</div><div class="card-body"><img class="img-thumbnail img-fluid" src="'+valuePlayer.picture+'"></div>'+waktu+'<div class="card-status">'+valuePlayer.status+'</div>'+playercard+'</div></div></div>');
+                            $('.playersit').append('<div class="sit-'+valuePlayer.sitno+' sitwrap"><div class="card-custom card text-white '+giliran+'">'+mahkota+'<div class="card-header">'+valuePlayer.name+'</div><div class="card-body"><img class="img-thumbnail img-fluid" src="'+valuePlayer.picture+'"></div>'+waktu+'<div class="card-status">'+valuePlayer.status+'</div>'+playercard+'</div></div></div>');
                         }
                         if (valuePlayer.id == me.id && valuePlayer.sitno && valuePlayer.sitno != 0) {
                             $('.tablesit').hide();
