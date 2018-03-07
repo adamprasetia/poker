@@ -208,7 +208,7 @@ function getSitNoByPlayer(players, player){
             status = value.sitno;
         }
         return false;
-    }
+    });
     return status;
 }
 function setGiliran(player, winner = ''){
