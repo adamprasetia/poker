@@ -97,7 +97,7 @@ function totalPlayer(player){
 function resetGame(player = [], winner = ''){
     console.log('resetGame', winner);
     var config_total_player = totalPlayer(player);
-    var config_total_kartu = 52;
+    var config_total_kartu = 3;
     var kartu = new Array(config_total_kartu);
     for (var i = 0; i < kartu.length; i++) {
         kartu[i] = i;
