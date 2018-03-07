@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <link rel="stylesheet" href="assets/css/style.css?v=2018.03.07.11.52">
+        <link rel="stylesheet" href="assets/css/style.css?v=2018.03.07.14.42">
     </head>
     <body>
         <img src="assets/img/poker_table_green.png?v=2018.03.07.11.47" alt="">
@@ -113,7 +113,7 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.07.11.47"></script>
+        <script src="assets/js/helper.js?v=2018.03.07.14.46"></script>
         <script src="assets/js/facebook.js"></script>
         <script type="text/javascript">
             var room = getParameterByName('room');
@@ -129,7 +129,6 @@
                 if (timeout==0) {
                     timeout = 100;
                     kickPlayer();
-                    checkReset();
                 }
                 timeout--;
                 $('body').find('.progress-bar').attr('style','width: '+timeout+'%');
@@ -198,14 +197,11 @@
                         mecard += '</div>';
                         if (valuePlayer.sitno) {         
                             $('.tablesit > .sit-'+valuePlayer.sitno).hide();
-                            var waktu = '<div class="progress" style="height: 5px;"><div style="width: 100%;" class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div></div>';
+                            var waktu = '<div class="card-footer"><div class="progress" style="height: 5px;"><div style="width: 100%;" class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div></div></div>';
                             if (response.val().giliran && response.val().giliran != valuePlayer.id) {
                                 waktu = '';
                             }
-                            // $('.playersit').append('<div class="sit-'+valuePlayer.sitno+' sitwrap"><span class="badge '+giliran+'">'+valuePlayer.name+'-'+valuePlayer.status+'</span>'+waktu+playercard+'</div>');
-                            // $('.playersit').append('<div class="sit-'+valuePlayer.sitno+'"><div class="card text-white bg-dark"><img class="img-thumbnail img-fluid" src="'+valuePlayer.picture+'">'+waktu+'</div><span class="badge '+giliran+'">'+valuePlayer.name+'-'+valuePlayer.status+'</span></div>');
-                            $('.playersit').append('<div class="sit-'+valuePlayer.sitno+' sitwrap"><div class="card-custom card text-white '+giliran+'"><div class="card-header">'+valuePlayer.name+'</div><div class="card-body"><img class="img-thumbnail img-fluid" src="'+valuePlayer.picture+'"></div><div class="card-footer">'+waktu+'<small>'+valuePlayer.status+'</small>'+playercard+'</div></div></div>');
-                            // console.log('<div class="sit-'+valuePlayer.sitno+' sitwrap"><div class="card-custom card text-white '+giliran+'"><div class="card-header">'+valuePlayer.name+'</div><div class="card-body"><img class="img-thumbnail img-fluid" src="'+valuePlayer.picture+'"></div><div class="card-footer">'+waktu+'</div><div class="card-footer>"'+playercard+'</div></div></div>');
+                            $('.playersit').append('<div class="sit-'+valuePlayer.sitno+' sitwrap"><div class="card-custom card text-white '+giliran+'"><div class="card-header">'+valuePlayer.name+'</div><div class="card-body"><img class="img-thumbnail img-fluid" src="'+valuePlayer.picture+'"></div>'+waktu+'<div class="card-status">'+valuePlayer.status+'</div>'+playercard+'</div></div></div>');
                         }
                         if (valuePlayer.id == me.id && valuePlayer.sitno && valuePlayer.sitno != 0) {
                             $('.tablesit').hide();

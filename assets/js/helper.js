@@ -468,13 +468,19 @@ function setWarisan(winner){
     });
 }
 function kickPlayer(){           
-    firebase.database().ref(room).once('value', function(response) {                          
-        firebase.database().ref(room+'/player/'+response.val().giliran).update({
+    firebase.database().ref(room).once('value', function(response) {
+        var giliran = response.val().giliran;
+        firebase.database().ref(room+'/player/'+giliran).update({
             card:'[]',
             status:0,
             sitno:0
         }).then(function(){
-            changeGiliran();
+            firebase.database().ref(room).once('value', function(response) {
+                if (response.val().giliran == giliran) {                    
+                    changeGiliran();
+                }
+            });
+            checkReset();
         });                    
     });
 } 

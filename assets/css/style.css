@@ -141,11 +141,11 @@ img.tablecard {
 }
 .card-custom .card-header{
     white-space: nowrap; 
-    padding:5px;
-    max-width: 60px;
+    padding:2px;
+    width: 60px;
     text-overflow: ellipsis;
     overflow: hidden;
-    font-size: 8px;
+    font-size: 9px;
 }
 .card-custom .card-body{
     padding:5px;
@@ -153,3 +153,13 @@ img.tablecard {
 }
 .card-custom .card-footer{
     padding:5px;
+}
+.card-status{
+    white-space: nowrap; 
+    padding:2px;
+    width: 60px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 9px;
+    border-top: 1px solid rgba(0,0,0,.125);
+}
