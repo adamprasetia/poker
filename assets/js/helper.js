@@ -201,8 +201,22 @@ function changeGiliran(){
         timeout = 100;
     });
 }
+function getSitNoByPlayer(players, player){
+    var status = false;
+    $.each(players, function(index, value) {
+        if (value.id == player) {
+            status = value.sitno;
+        }
+        return false;
+    }
+    return status;
+}
 function setGiliran(player, winner = ''){
-    if (winner == '') {                    
+    if (winner != '' && getSitNoByPlayer(winner)) {                    
+        firebase.database().ref(room).update({
+            giliran:winner
+        });                    
+    }else{
         var sitno = Math.floor((Math.random() * 10) + 1);
         for (var i = 1; i <= 10; i++) {
             playerBySit = getPlayerBySit(player, sitno);
@@ -218,10 +232,6 @@ function setGiliran(player, winner = ''){
                 sitno++;
             }
         }
-    }else{
-        firebase.database().ref(room).update({
-            giliran:winner
-        });                    
     }
 }            
 

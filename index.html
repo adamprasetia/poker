@@ -113,7 +113,7 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.07.14.46"></script>
+        <script src="assets/js/helper.js?v=2018.03.07.18.47"></script>
         <script src="assets/js/facebook.js"></script>
         <script type="text/javascript">
             var room = getParameterByName('room');
@@ -278,7 +278,9 @@
                                             if (response.val().winner == 0 || typeof response.val().winner === 'undefined') {
                                                 firebase.database().ref(room).update({
                                                     winner:me.id
-                                                });                                
+                                                }).then(function(){
+                                                    checkReset();
+                                                });
                                             }
                                         });
                                     }           
