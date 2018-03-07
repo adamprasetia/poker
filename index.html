@@ -113,7 +113,7 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.07.21.02"></script>
+        <script src="assets/js/helper.js?v=2018.03.07.21.46"></script>
         <script src="assets/js/facebook.js"></script>
         <script type="text/javascript">
             var room = getParameterByName('room');
@@ -253,7 +253,6 @@
                 $(this).prop('disabled', true);
                 firebase.database().ref(room).once('value').then(function(response){                    
                     var myCard = JSON.parse(response.val().player[me.id].card);
-                    console.log('cardSelected',cardSelected);
                     if (checkGiliran()) {
                         if (validasi(cardSelected, JSON.parse(response.val().tablecard))) {
                             firebase.database().ref(room).update({
@@ -268,7 +267,7 @@
                                     if (response.val().warisan && response.val().warisan != 0 && typeof response.val().warisan != 'undefined') {
                                         firebase.database().ref(room).update({
                                             warisan:0
-                                        });                                
+                                        });      
                                     }
                                     if (myCard.length == 0) {
                                         firebase.database().ref(room+'/player/'+me.id).update({
@@ -281,13 +280,14 @@
                                                 }).then(function(){
                                                     checkReset();
                                                 });
+                                            }else{
+                                                checkReset();                                                
                                             }
                                         });
-                                    }           
+                                    }
                                     changeGiliran();
                                     cardSelected = [];
                                     $('#btn-send').prop('disabled', false);
-                                    checkReset();
                                 });                    
                             });                    
                         }else{

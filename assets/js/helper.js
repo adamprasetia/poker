@@ -56,6 +56,7 @@ function remove(array, element) {
 }
 
 function checkReset(){
+    console.log('checkReset');
     firebase.database().ref(room).once('value').then(function(response){        
         var player = response.val().player;
         var winner = response.val().winner;
@@ -97,7 +98,7 @@ function totalPlayer(player){
 function resetGame(player = [], winner = ''){
     console.log('resetGame', winner);
     var config_total_player = totalPlayer(player);
-    var config_total_kartu = 3;
+    var config_total_kartu = 52;
     var kartu = new Array(config_total_kartu);
     for (var i = 0; i < kartu.length; i++) {
         kartu[i] = i;
@@ -206,13 +207,12 @@ function getSitNoByPlayer(players, player){
     $.each(players, function(index, value) {
         if (value.id == player) {
             status = value.sitno;
+            return false;
         }
-        return false;
     });
     return status;
 }
 function setGiliran(player, winner = ''){
-    console.log('setGiliran', winner, getSitNoByPlayer(player, winner));
     if (winner != '' && getSitNoByPlayer(player, winner) != false) {                    
         firebase.database().ref(room).update({
             giliran:winner
