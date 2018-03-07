@@ -212,7 +212,7 @@ function getSitNoByPlayer(players, player){
     return status;
 }
 function setGiliran(player, winner = ''){
-    if (winner != '' && getSitNoByPlayer(winner)) {                    
+    if (winner != '' && getSitNoByPlayer(player, winner)) {                    
         firebase.database().ref(room).update({
             giliran:winner
         });                    
