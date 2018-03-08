@@ -113,7 +113,7 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.07.22.46"></script>
+        <script src="assets/js/helper.js?v=2018.03.08.08.00"></script>
         <script src="assets/js/facebook.js"></script>
         <script type="text/javascript">
             var room = getParameterByName('room');
@@ -146,7 +146,7 @@
             });
             
             // Main Utama
-            firebase.database().ref(room).on('value', function(response) {                
+            firebase.database().ref(room).on('value', function(response) {                                
                 // check button play
                 if (response.val() && response.val().giliran == me.id && response.val().player[me.id].status == 'play') {
                     $('.button-play').show();
@@ -168,11 +168,14 @@
                     $('.tablesit').show();
                     $('.tablesit > .sitwrap').show();
                     $('#btn-standup').prop('disabled', true);
-                    var mecard = '<div>';
                     var mahkota = '';
+                    var mecard = '';
                     $.each(response.val().player, function(indexPlayer, valuePlayer) {
                         if (response.val().winner == valuePlayer.id) {
                             mahkota = '<div class="card-header"><img class="img-fluid" src="assets/img/mahkota.png"></div>';
+                        }else if(response.val().loser == valuePlayer.id){
+                            mahkota = '<div class="card-header"><img class="img-fluid" src="assets/img/loser.jpg"></div>';
+                            mahkota += '<div class="anting" style="position:absolute;left:-40px"><img class="img-fluid" src="assets/img/anting.png"></div>';
                         }else{
                             mahkota = '';
                         }
@@ -200,7 +203,6 @@
                             });
                         }
                         playercard += '</div>';
-                        mecard += '</div>';
                         if (valuePlayer.sitno) {         
                             $('.tablesit > .sit-'+valuePlayer.sitno).hide();
                             var waktu = '<div class="card-footer"><div class="progress" style="height: 5px;"><div style="width: 100%;" class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div></div></div>';
@@ -214,6 +216,7 @@
                             $('#btn-standup').prop('disabled', false);
                         }
                     });
+
                     $('#mecard').html(mecard);
                 }
             });
@@ -332,7 +335,6 @@
                 $.each($('body').find('.kartu.active'), function(index, value) {
                     cardSelected.push(parseInt(value.getAttribute('data-value')));
                 });
-                console.log(cardSelected);
             });
             function sendChat(){
                 if (typeof me.name !== 'undefined') {                    
@@ -354,7 +356,6 @@
                     sendChat();
                 }
             });  
-            console.log('room', room);
         </script>
     </body>
 </html>

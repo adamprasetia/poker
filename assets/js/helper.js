@@ -55,6 +55,15 @@ function remove(array, element) {
     array.splice(index, 1);
 }
 
+function setLoser(player){
+    $.each(player, function(index, value) {
+        if (value.card != '[]' && (value.status == 'play' || value.status == 'pas')) {
+            firebase.database().ref(room).update({                 
+                loser: value.id
+            });
+        }
+    });
+}
 function checkReset(){
     console.log('checkReset');
     firebase.database().ref(room).once('value').then(function(response){        
@@ -71,6 +80,7 @@ function checkReset(){
             }
         });
         if (totalPlayerSit == 1 || (totalPlayerSit > 1 && totalPlayerCard <= 1)) {
+            setLoser(player);
             resetGame(player, winner);
         }
     });    
