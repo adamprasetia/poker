@@ -170,7 +170,6 @@ function setPlayAll(player, bom){
     });
 }
 function changeGiliran(callback){
-    console.log('changeGiliran');
     firebase.database().ref(room).once('value', function(response) {     
         if (getCountPlay(response.val().player)==0) {    
             firebase.database().ref(room).update({
@@ -190,6 +189,7 @@ function changeGiliran(callback){
         }                
         for (var i = 1; i <= 10; i++) {
             playerBySit = getPlayerBySit(response.val().player, sitno);
+            console.log('cek giliran playerBySit', playerBySit);
             if (playerBySit.status && playerBySit.status == 'play') {
                 firebase.database().ref(room).update({
                     giliran:playerBySit.id
@@ -211,8 +211,9 @@ function changeGiliran(callback){
             }
         }
         timeout = 100;
+    }).then(function(){        
+        callback();
     });
-    callback();
 }
 function getSitNoByPlayer(players, player){
     var status = false;
@@ -490,20 +491,25 @@ function setWarisan(winner){
         }
     });
 }
+function tes(callback){
+    console.log('tes 1');
+    console.log('tes 2');
+    console.log('tes 3');
+    callback();
+}
 function kickPlayer(){           
     firebase.database().ref(room).once('value', function(response) {
         var giliran = response.val().giliran;
-        firebase.database().ref(room+'/player/'+giliran).update({
-            card:'[]',
-            status:0,
-            sitno:0
-        }).then(function(){
-            firebase.database().ref(room).once('value', function(response) {
-                if (response.val().giliran == giliran) {                    
-                    changeGiliran(function(){});
-                }
+        if (response.val().giliran == giliran) {                    
+            changeGiliran(function(){
+                firebase.database().ref(room+'/player/'+giliran).update({
+                    card:'[]',
+                    status:0,
+                    sitno:0
+                }).then(function(){
+                    checkReset();
+                });
             });
-            checkReset();
-        });                    
+        }
     });
 } 
