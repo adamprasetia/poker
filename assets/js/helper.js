@@ -80,7 +80,9 @@ function checkReset(){
             }
         });
         if (totalPlayerSit == 1 || (totalPlayerSit > 1 && totalPlayerCard <= 1)) {
-            setLoser(player);
+            if (totalPlayerSit > 1) {                
+                setLoser(player);
+            }
             resetGame(player, winner);
         }
     });    
