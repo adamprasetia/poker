@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <link rel="stylesheet" href="assets/css/style.css?v=2018.03.08.19.15">
+        <link rel="stylesheet" href="assets/css/style.css?v=2018.03.09.10.15">
     </head>
     <body>
         <img src="assets/img/poker_table_green.png?v=2018.03.07.11.47" alt="">
@@ -65,7 +65,7 @@
         </div>
         <div class="playersit"></div>
         <div class="button-close">
-            <button id="btn-standup" type="button" name="button" class="btn btn-sm btn-secondary" disabled="true">Stand Up</button>
+            <button id="btn-standup" type="button" name="button" class="btn btn-sm btn-secondary" disabled="true">Berdiri</button>
             <!-- <button id="btn-reset" type="button" name="button" class="btn btn-sm btn-danger" onclick="resetGame()">Reset Game</button> -->
         </div>
         <div class="chat">
@@ -80,7 +80,7 @@
                     <div class="input-group">
                         <input id="input-chat" type="text" class="form-control" placeholder="Enter chat ...">
                         <div class="input-group-append">
-                            <button id="btn-chat" class="btn btn-outline-primary" type="button">Send</button>
+                            <button id="btn-chat" class="btn btn-primary" type="button">Send</button>
                         </div>
                     </div>                    
                 </div>
@@ -96,7 +96,7 @@
         </div>
         <div class="button-play">            
             <button id="btn-pas" type="button" name="button" class="btn btn-lg btn-danger">Pas</button>
-            <button id="btn-send" type="button" name="button" class="btn btn-lg btn-success">Send</button>
+            <button id="btn-send" type="button" name="button" class="btn btn-lg btn-success">Ikut</button>
         </div>
         <div class="mecard">
             <div class="card text-white bg-dark">
@@ -104,6 +104,17 @@
 
                 </div>
             </div>
+        </div>
+        <div class="room">
+            <div class="card text-white bg-dark">
+                <div class="card-body">
+                    <label for="">Room</label>
+                    <div class="form-group">
+                        <input id="room-name" type="text" name="" value="" class="form-control">
+                    </div>
+                    <button id="join-room" type="button" name="button" class="btn btn-primary">Ikut Gabung</button>
+                </div>
+            </div>            
         </div>
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -364,6 +375,13 @@
                     sendChat();
                 }
             });  
+            $('#join-room').click(function(){
+                if ($('#room-name').val() != '') {
+                    window.location = '?room='+$('#room-name').val();
+                }else{
+                    swal("Oops", "Isi dulu dong nama room nya coy!" , "error");
+                }
+            })
         </script>
     </body>
 </html>

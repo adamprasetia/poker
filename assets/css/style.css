@@ -177,3 +177,9 @@ img.tablecard {
     top: 100px;
     left: 200px; */
 }
+.room{
+    top: 10px;
+    left : 1010px;
+    width: 300px;
+    position: absolute;
+}
