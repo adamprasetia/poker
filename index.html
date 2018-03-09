@@ -111,7 +111,7 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.08.19.20"></script>
+        <script src="assets/js/helper.js?v=2018.03.09.09.19"></script>
         <script src="assets/js/facebook.js"></script>
         <script type="text/javascript">
             var room = getParameterByName('room');
@@ -264,12 +264,16 @@
                 $(this).prop('disabled', true);
                 firebase.database().ref(room).once('value').then(function(response){                    
                     var myCard = JSON.parse(response.val().player[me.id].card);
+                    var uniqueCardSelected = [];
+                    $.each(cardSelected, function(i, el){
+                        if($.inArray(el, uniqueCardSelected) === -1 && el <= 51 && el >= 0 && $.inArray(el, myCard) !== -1) uniqueCardSelected.push(el);
+                    });
                     if (checkGiliran()) {
-                        if (validasi(cardSelected, JSON.parse(response.val().tablecard))) {
+                        if (validasi(uniqueCardSelected, JSON.parse(response.val().tablecard))) {
                             firebase.database().ref(room).update({
-                                tablecard:JSON.stringify(cardSelected)
+                                tablecard:JSON.stringify(uniqueCardSelected)
                             }).then(function(){
-                                $.each(cardSelected, function(index, value) {
+                                $.each(uniqueCardSelected, function(index, value) {
                                     remove(myCard, value);
                                 });
                                 firebase.database().ref(room+'/player/'+me.id).update({
