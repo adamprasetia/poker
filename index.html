@@ -122,7 +122,7 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.09.09.19"></script>
+        <script src="assets/js/helper.js?v=2018.03.09.13.02"></script>
         <script src="assets/js/facebook.js"></script>
         <script type="text/javascript">
             var room = getParameterByName('room');
@@ -180,7 +180,7 @@
                     var mahkota = '';
                     var mecard = '';
                     $.each(response.val().player, function(indexPlayer, valuePlayer) {
-                        if (response.val().winner == valuePlayer.id) {
+                        if (response.val().juara == valuePlayer.id) {
                             mahkota = '<div class="card-header"><img class="img-fluid" src="assets/img/mahkota.png"></div>';
                             mahkota += '<div class="piala" style="position:absolute;left:-40px;top:-5px"><img class="img-fluid" src="assets/img/piala.png"></div>';
                         }else if(response.val().loser == valuePlayer.id){
@@ -302,7 +302,8 @@
                                             setWarisan(me.id);
                                             if (response.val().winner == 0 || typeof response.val().winner === 'undefined') {
                                                 firebase.database().ref(room).update({
-                                                    winner:me.id
+                                                    winner:me.id,
+                                                    juara:me.id
                                                 }).then(function(){
                                                     checkReset();
                                                 });

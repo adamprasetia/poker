@@ -148,6 +148,7 @@ function resetGame(player = [], winner = ''){
     firebase.database().ref(room).update({
         tablecard:"[]",
         winner:0,
+        juara:winner,
         bom:0
     }).then(function(){
         timeout = 100;
