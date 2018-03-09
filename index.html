@@ -342,7 +342,7 @@
                         firebase.database().ref(room+'/player/'+me.id).update({
                             status: 'pas'
                         }).then(function(){                            
-                            if (getCountPlay(response.val().player)==2 && response.val().bom != 0) {    
+                            if (getCountPlay(response.val().player)==1 && response.val().bom != 0) {    
                                 firebase.database().ref(room).update({
                                     loser: me.id
                                 });
