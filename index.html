@@ -130,7 +130,7 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.09.16.09"></script>
+        <script src="assets/js/helper.js?v=2018.03.09.16.43"></script>
         <script src="assets/js/facebook.js"></script>
         <script type="text/javascript">
             var room = getParameterByName('room');
@@ -341,15 +341,12 @@
                     if (checkGiliran()) {
                         firebase.database().ref(room+'/player/'+me.id).update({
                             status: 'pas'
-                        }).then(function(){                            
-                            if (getCountPlay(response.val().player)==1 && response.val().bom != 0) {    
-                                firebase.database().ref(room).update({
-                                    loser: me.id
-                                });
-                            }
-                            changeGiliran(function(){});
-                            $('#btn-pas').prop('disabled', false);
-                            checkReset();
+                        }).then(function(){          
+                            setLoserByBom(response.val().player, response.val().bom, function(){                                
+                                changeGiliran(function(){});
+                                $('#btn-pas').prop('disabled', false);
+                                checkReset();
+                            });
                         });
                     }else{
                         swal("Oops", "Bukan giliran lu coy!" , "error");

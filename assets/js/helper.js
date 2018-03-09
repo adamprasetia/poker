@@ -520,3 +520,11 @@ function kickPlayer(){
         }
     });
 } 
+function setLoserByBom(player, bom, callback){
+    if (getCountPlay(player)==2 && bom != 0) {    
+        firebase.database().ref(room).update({
+            loser: me.id
+        });
+    }    
+    callback(player, bom);
+}
