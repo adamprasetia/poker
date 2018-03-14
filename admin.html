@@ -60,17 +60,18 @@
                 kickPlayer();
             });
             $('#btnAddBot').click(function(){      
+                var dewaJudiList = ['Chow Yun Fat', 'Stephen Chow', 'Andy Lau', 'Ng Man-tat', 'Charles Heung', 'Shing Fui-On', 'Lung Fong', 'Jhon Ching', 'Wong Yat-fei', 'Wong Jing'];
                 console.log('add bot');
                 firebase.database().ref(room).once('value', function(response) {
                     for (var i = 1; i <= 10; i++) {
                         if (getPlayerBySit(response.val().player, i) == false) {
                             firebase.database().ref(room+'/player/'+i).update({
                                 id:i,
-                                name:'BOT '+i,
+                                name: dewaJudiList[i-1],
                                 status:'waiting',
                                 card:'[]',
                                 sitno:i,
-                                picture:'assets/img/people.jpg',
+                                picture:'assets/img/bot'+i+'.jpg',
                                 type:'bot'
                             });                            
                             break;
