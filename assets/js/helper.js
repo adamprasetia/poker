@@ -147,6 +147,7 @@ function resetGame(player = [], winner = ''){
     }
     firebase.database().ref(room).update({
         tablecard:"[]",
+        tablecardplayer:0,
         winner:0,
         juara:winner,
         bom:0
@@ -170,7 +171,8 @@ function setPlayAll(player, bom){
                 status:'play'
             }).then(function(){
                 firebase.database().ref(room).update({
-                    tablecard:'[]'
+                    tablecard:'[]',
+                    tablecardplayer:0
                 });
             });
         }
@@ -178,46 +180,47 @@ function setPlayAll(player, bom){
 }
 function changeGiliran(callback){
     firebase.database().ref(room).once('value', function(response) {     
-        if (getCountPlay(response.val().player)==0) {    
-            firebase.database().ref(room).update({
-                giliran:response.val().warisan
-            }).then(function(){
+        if (response.val() && response.val().giliran) {            
+            if (getCountPlay(response.val().player)==0) {    
                 firebase.database().ref(room).update({
-                    warisan:0
-                });    
-                setPlayAll(response.val().player, response.val().bom);
-            });
-        }
-        var sitno = parseInt(response.val().player[response.val().giliran].sitno);
-        if (sitno == 10) {
-            sitno = 1;
-        }else{
-            sitno++;
-        }                
-        for (var i = 1; i <= 10; i++) {
-            playerBySit = getPlayerBySit(response.val().player, sitno);
-            console.log('cek giliran playerBySit', playerBySit);
-            if (playerBySit.status && playerBySit.status == 'play') {
-                firebase.database().ref(room).update({
-                    giliran:playerBySit.id
+                    giliran:response.val().warisan
                 }).then(function(){
-                    if (getCountPlay(response.val().player) <= 1) {
-                        if (response.val().warisan && response.val().warisan != 0 && typeof response.val().warisan !== 'undefined') {
-                            
-                        }else{
-                            setPlayAll(response.val().player, response.val().bom);
-                        }
-                    }      
+                    firebase.database().ref(room).update({
+                        warisan:0
+                    });    
+                    setPlayAll(response.val().player, response.val().bom);
                 });
-                break;
             }
+            var sitno = parseInt(response.val().player[response.val().giliran].sitno);
             if (sitno == 10) {
                 sitno = 1;
             }else{
                 sitno++;
+            }                
+            for (var i = 1; i <= 10; i++) {
+                playerBySit = getPlayerBySit(response.val().player, sitno);
+                if (playerBySit.status && playerBySit.status == 'play') {
+                    firebase.database().ref(room).update({
+                        giliran:playerBySit.id
+                    }).then(function(){
+                        if (getCountPlay(response.val().player) <= 1) {
+                            if (response.val().warisan && response.val().warisan != 0 && typeof response.val().warisan !== 'undefined') {
+                                
+                            }else{
+                                setPlayAll(response.val().player, response.val().bom);
+                            }
+                        }      
+                    });
+                    break;
+                }
+                if (sitno == 10) {
+                    sitno = 1;
+                }else{
+                    sitno++;
+                }
             }
+            timeout = 100;
         }
-        timeout = 100;
     }).then(function(){        
         callback();
     });
@@ -504,20 +507,23 @@ function tes(callback){
     console.log('tes 3');
     callback();
 }
-function kickPlayer(){           
+function kickPlayer(player = 0){           
     firebase.database().ref(room).once('value', function(response) {
         var giliran = response.val().giliran;
-        if (response.val().giliran == giliran) {                    
-            changeGiliran(function(){
-                firebase.database().ref(room+'/player/'+giliran).update({
-                    card:'[]',
-                    status:0,
-                    sitno:0
-                }).then(function(){
+        if (player != 0) {
+            giliran = player;
+        }
+        firebase.database().ref(room+'/player/'+giliran).update({
+            card:'[]',
+            status:0,
+            sitno:0
+        }).then(function(){
+            if (response.val().giliran == giliran) {                    
+                changeGiliran(function(){
                     checkReset();
                 });
-            });
-        }
+            }
+        });
     });
 } 
 function setLoserByBom(player, bom, callback){
@@ -527,4 +533,85 @@ function setLoserByBom(player, bom, callback){
         });
     }    
     callback(player, bom);
+}
+function bot(){
+    firebase.database().ref(room).once('value', function(response) {        
+        if (response.val() && response.val().tablecard) {            
+            var tablecard = JSON.parse(response.val().tablecard);
+            var playergiliran = response.val().player[response.val().giliran];
+            var botcard = JSON.parse(playergiliran.card);
+            var botselected = [];
+            if (playergiliran.status == 'play' && playergiliran.type == 'bot' && response.val().tablecardplayer != playergiliran.id) {            
+                if (tablecard.length == 0) {      
+                    botselected.push(botcard.sort(function(a, b){return a - b})[0]);
+                    sendCard(botselected, function(){});
+                }else if (tablecard.length == 1) {            
+                    $.each(botcard.sort(function(a, b){return a - b}), function(indexCard, valueCard) {
+                        if (valueCard > tablecard[0]) {
+                            botselected.push(valueCard);
+                            sendCard(botselected, function(){});
+                            return false;
+                        }
+                    });
+                    if (botselected.length == 0) {
+                        firebase.database().ref(room+'/player/'+response.val().giliran).update({
+                            status: 'pas'
+                        }).then(function(){                      
+                            changeGiliran(function(){});
+                        });                
+                    }
+                }else{     
+                    firebase.database().ref(room+'/player/'+response.val().giliran).update({
+                        status: 'pas'
+                    }).then(function(){                      
+                        changeGiliran(function(){});
+                    });                
+                }                    
+            }
+        }
+    });
+}
+function sendCard(cardSelected, callback)
+{
+    firebase.database().ref(room).once('value', function(response) {
+        var giliran = response.val().giliran;
+        var playerCard = JSON.parse(response.val().player[giliran].card)
+        firebase.database().ref(room).update({
+            tablecard:JSON.stringify(cardSelected),
+            tablecardplayer:response.val().player[giliran].id
+        }).then(function(){
+            $.each(cardSelected, function(index, value) {
+                remove(playerCard, value);
+            });
+            firebase.database().ref(room+'/player/'+giliran).update({
+                card:JSON.stringify(playerCard)
+            }).then(function(){   
+                if (response.val().warisan && response.val().warisan != 0 && typeof response.val().warisan != 'undefined') {
+                    firebase.database().ref(room).update({
+                        warisan:0
+                    });      
+                }
+                if (playerCard.length == 0) {
+                    firebase.database().ref(room+'/player/'+giliran).update({
+                        status:'winner'
+                    }).then(function(){
+                        setWarisan(giliran);
+                        if (response.val().winner == 0 || typeof response.val().winner === 'undefined') {
+                            firebase.database().ref(room).update({
+                                winner:giliran,
+                                juara:giliran
+                            }).then(function(){
+                                checkReset();
+                            });
+                        }else{
+                            checkReset();                                                
+                        }
+                    });
+                }
+                changeGiliran(function(){});
+            });                    
+        });                    
+    }).then(function(){
+        callback(cardSelected);
+    });                    
 }

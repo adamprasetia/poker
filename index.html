@@ -130,7 +130,7 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.14.07.53"></script>
+        <script src="assets/js/helper.js?v=2018.03.14.14.20"></script>
         <script src="assets/js/facebook.js?v=2"></script>
         <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
         <script type="text/javascript">
@@ -154,9 +154,8 @@
             
             // chat 
             firebase.database().ref(room+'/chat').on('value', function(response) {
-                console.log('chattttt');
                 firebase.database().ref(room+'/giliran').once('value', function(responseGiliran) {                    
-                    if (responseGiliran.val() == me.id) {                    
+                    if (responseGiliran.val() && responseGiliran.val() == me.id) {                    
                         responsiveVoice.speak(response.val().message, "Indonesian Female");
                     }                
                 });
@@ -168,11 +167,29 @@
             firebase.database().ref(room+'/player').on('value', function(response) {                
                 timeout = 100;
             });
+            // bot
+            // firebase.database().ref(room+'/giliran').on('value', function(response) {   
+            //     if (response.val()) {                    
+            //         firebase.database().ref(room+'/player/'+response.val()).once('value', function(responsePlayer) {                       
+            //             // bot
+            //             if (responsePlayer.val() && responsePlayer.val().type == 'bot') {
+            //                 setTimeout(function(){                        
+            //                     console.log('bot Jalan');
+            //                     bot();
+            //                 },3000)
+            //             }                
+            //         });
+            //     }
+            // });
+
+            setInterval(function(){
+                bot();
+            },3000)
             
             // Main Utama
             firebase.database().ref(room).on('value', function(response) {   
                 // Notif
-                if (response.val().giliran == me.id) {
+                if (response.val() && response.val().giliran == me.id) {
                     responsiveVoice.speak("Dieum Dieum Bae, Jalan Coy", "Indonesian Female");
                 }                                                        
                 
@@ -301,42 +318,45 @@
                     });
                     if (checkGiliran()) {
                         if (validasi(uniqueCardSelected, JSON.parse(response.val().tablecard))) {
-                            firebase.database().ref(room).update({
-                                tablecard:JSON.stringify(uniqueCardSelected)
-                            }).then(function(){
-                                $.each(uniqueCardSelected, function(index, value) {
-                                    remove(myCard, value);
-                                });
-                                firebase.database().ref(room+'/player/'+me.id).update({
-                                    card:JSON.stringify(myCard)
-                                }).then(function(){   
-                                    if (response.val().warisan && response.val().warisan != 0 && typeof response.val().warisan != 'undefined') {
-                                        firebase.database().ref(room).update({
-                                            warisan:0
-                                        });      
-                                    }
-                                    if (myCard.length == 0) {
-                                        firebase.database().ref(room+'/player/'+me.id).update({
-                                            status:'winner'
-                                        }).then(function(){
-                                            setWarisan(me.id);
-                                            if (response.val().winner == 0 || typeof response.val().winner === 'undefined') {
-                                                firebase.database().ref(room).update({
-                                                    winner:me.id,
-                                                    juara:me.id
-                                                }).then(function(){
-                                                    checkReset();
-                                                });
-                                            }else{
-                                                checkReset();                                                
-                                            }
-                                        });
-                                    }
-                                    changeGiliran(function(){});
-                                    cardSelected = [];
-                                    $('#btn-send').prop('disabled', false);
-                                });                    
-                            });                    
+                            sendCard(uniqueCardSelected, function(){
+                                $('#btn-send').prop('disabled', false);
+                            });
+                            // firebase.database().ref(room).update({
+                            //     tablecard:JSON.stringify(uniqueCardSelected)
+                            // }).then(function(){
+                            //     $.each(uniqueCardSelected, function(index, value) {
+                            //         remove(myCard, value);
+                            //     });
+                            //     firebase.database().ref(room+'/player/'+me.id).update({
+                            //         card:JSON.stringify(myCard)
+                            //     }).then(function(){   
+                            //         if (response.val().warisan && response.val().warisan != 0 && typeof response.val().warisan != 'undefined') {
+                            //             firebase.database().ref(room).update({
+                            //                 warisan:0
+                            //             });      
+                            //         }
+                            //         if (myCard.length == 0) {
+                            //             firebase.database().ref(room+'/player/'+me.id).update({
+                            //                 status:'winner'
+                            //             }).then(function(){
+                            //                 setWarisan(me.id);
+                            //                 if (response.val().winner == 0 || typeof response.val().winner === 'undefined') {
+                            //                     firebase.database().ref(room).update({
+                            //                         winner:me.id,
+                            //                         juara:me.id
+                            //                     }).then(function(){
+                            //                         checkReset();
+                            //                     });
+                            //                 }else{
+                            //                     checkReset();                                                
+                            //                 }
+                            //             });
+                            //         }
+                            //         changeGiliran(function(){});
+                            //         cardSelected = [];
+                            //         $('#btn-send').prop('disabled', false);
+                            //     });                    
+                            // });                    
                         }else{
                             swal("Oops", "GAK BISAAA WOYYY!" , "error");
                             $('#btn-send').prop('disabled', false);

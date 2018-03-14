@@ -31,13 +31,21 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-4">                    
+                    <div class="card">
+                        <div class="card-body">                    
+                            <button type="button" name="button" id="btnAddBot" class="btn btn-primary">Add Bot</button>
+                            <button type="button" name="button" id="btnRemoveBot" class="btn btn-primary">Remove Bot</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.08.17.41"></script>
+        <script src="assets/js/helper.js?v=2018.03.14.14.20"></script>
         <script type="text/javascript">
             var room = getParameterByName('room');
             if (!room) {
@@ -50,6 +58,37 @@
             });
             $('#btnKickPlayer').click(function(){      
                 kickPlayer();
+            });
+            $('#btnAddBot').click(function(){      
+                console.log('add bot');
+                firebase.database().ref(room).once('value', function(response) {
+                    for (var i = 1; i <= 10; i++) {
+                        if (getPlayerBySit(response.val().player, i) == false) {
+                            firebase.database().ref(room+'/player/'+i).update({
+                                id:i,
+                                name:'BOT '+i,
+                                status:'waiting',
+                                card:'[]',
+                                sitno:i,
+                                picture:'assets/img/people.jpg',
+                                type:'bot'
+                            });                            
+                            break;
+                        }
+                    }
+                });                
+            });
+            $('#btnRemoveBot').click(function(){      
+                console.log('remove bot');
+                firebase.database().ref(room+'/player').once('value', function(response) {
+                    $.each(response.val(), function(index, value) {
+                        if (value.type == 'bot' && value.sitno != 0) {
+                            console.log('kick bot', value.id);
+                            kickPlayer(value.id);
+                            return false;
+                        }
+                    });
+                });                
             });
         </script>
     </body>
