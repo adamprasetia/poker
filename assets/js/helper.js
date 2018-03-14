@@ -149,7 +149,6 @@ function resetGame(player = [], winner = ''){
         tablecard:"[]",
         tablecardplayer:0,
         winner:0,
-        juara:winner,
         bom:0
     }).then(function(){
         timeout = 100;
