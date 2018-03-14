@@ -207,7 +207,7 @@ function changeGiliran(callback){
                         }else{
                             setPlayAll(response.val().player, response.val().bom);
                         }
-                    }                                                              
+                    }      
                 });
                 break;
             }
@@ -484,7 +484,7 @@ function setWarisan(winner){
         }                
         for (var i = 1; i <= 10; i++) {
             playerBySit = getPlayerBySit(response.val().player, sitno);
-            if (playerBySit.status && playerBySit.status != 'winner') {
+            if (playerBySit.status && playerBySit.status != 'winner' && playerBySit.status != 'waiting') {
                 firebase.database().ref(room).update({
                     warisan:playerBySit.id
                 });
