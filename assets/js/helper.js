@@ -559,6 +559,33 @@ function bot(){
                             changeGiliran(function(){});
                         });                
                     }
+                }else if (tablecard.length > 1 && tablecard.length < 5) { 
+                    var tablecardindex = (tablecard[0]-(tablecard[0]%4))/4;
+                    var pair;
+                    $.each(botcard.sort(function(a, b){return a - b}), function(index, value) {
+                        pair = [];
+                        var total = 0;
+                        $.each(botcard.sort(function(a, b){return a - b}), function(indexs, values) {
+                            if ((value-(value%4))/4==(values-(values%4))/4 && (values-(values%4))/4 > tablecardindex) {
+                                if (total < tablecard.length) {                                    
+                                    pair.push(values);
+                                }
+                                total++;
+                            }
+                        });
+                        if (total == tablecard.length) {
+                            return false;
+                        }
+                    });
+                    if (pair.length == tablecard.length) {                        
+                        sendCard(pair);
+                    }else{
+                        firebase.database().ref(room+'/player/'+response.val().giliran).update({
+                            status: 'pas'
+                        }).then(function(){                      
+                            changeGiliran(function(){});
+                        });                                        
+                    }
                 }else{     
                     firebase.database().ref(room+'/player/'+response.val().giliran).update({
                         status: 'pas'
