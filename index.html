@@ -574,6 +574,31 @@
                     return false;
                 }                
             }
+            function botStraight(card){
+                var card = card.sort(function(a, b){return a - b});
+                var selected;
+                var status = false;
+                $.each(card, function(index, value) {
+                    selected = [];
+                    selected.push(value);
+                    total = 1;
+                    $.each(card, function(indexs, values) {
+                        if (((selected[selected.length-1]-(selected[selected.length-1]%4))/4)+1 == (values-(values%4))/4) {
+                            selected.push(values);
+                            total++;
+                        }                  
+                    });
+                    if (total == 5) {
+                        status = true;
+                        return false;
+                    }                                                              
+                });
+                if (status) {
+                    return selected;
+                }else{
+                    return false;
+                }                
+            }
             function botMinPair(card, count = 1, tablecard = 0){
                 var selected, total;
                 $.each(card, function(index, value) {
@@ -612,7 +637,10 @@
                             if (tablecard.length == 0) {
                                 botselected = botFullHouse(botcard);
                                 if (!botselected) {                                    
-                                    botselected = botMinMatch(botcard);
+                                    botselected = botStraight(botcard);
+                                    if (!botselected) {                                    
+                                        botselected = botMinMatch(botcard);
+                                    }
                                 }
                                 sendCard(botselected, function(){});
                             }else if (tablecard.length >= 1 && tablecard.length < 5) {            
