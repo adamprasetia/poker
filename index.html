@@ -544,6 +544,36 @@
                     return false;
                 }
             }
+            function botFullHouse(card){
+                var card = card.sort(function(a, b){return a - b});
+                var selected;
+                var status = false;
+                $.each(card, function(index, value) {
+                    selected = [];
+                    total = 0;
+                    $.each(card, function(indexs, values) {
+                        if ((value-(value%4))/4 == (values-(values%4))/4) {
+                            selected.push(values);
+                            total++;
+                        }                                                                                
+                    });
+                    if (total == 3) {
+                        var child = botMinMatch(card, 0, 2);
+                        if (child) {
+                            $.each(child, function(indexChild, valueChild) {
+                                selected.push(valueChild);
+                            });
+                            status = true;
+                            return false;
+                        }                        
+                    }
+                });
+                if (status) {
+                    return selected;
+                }else{
+                    return false;
+                }                
+            }
             function botMinPair(card, count = 1, tablecard = 0){
                 var selected, total;
                 $.each(card, function(index, value) {
@@ -580,8 +610,10 @@
                         var botselected = [];
                         if (playergiliran.status == 'play' && playergiliran.type == 'bot' && response.val().tablecardplayer != playergiliran.id) {            
                             if (tablecard.length == 0) {
-                                botselected = botMinMatch(botcard);
-                                console.log('botselected', botselected);
+                                botselected = botFullHouse(botcard);
+                                if (!botselected) {                                    
+                                    botselected = botMinMatch(botcard);
+                                }
                                 sendCard(botselected, function(){});
                             }else if (tablecard.length >= 1 && tablecard.length < 5) {            
                                 botselected = botMinMatch(botcard, tablecard);
