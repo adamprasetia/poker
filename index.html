@@ -189,9 +189,9 @@
             // Main Utama
             firebase.database().ref(room).on('value', function(response) {   
                 // Notif
-                if (response.val() && response.val().giliran == me.id) {
-                    responsiveVoice.speak("Dieum Dieum Bae, Jalan Coy", "Indonesian Female");
-                }                                                        
+                // if (response.val() && response.val().giliran == me.id) {
+                //     responsiveVoice.speak("Dieum Dieum Bae, Jalan Coy", "Indonesian Female");
+                // }                                                        
                 
                 // check button play
                 if (response.val() && response.val().giliran == me.id && response.val().player[me.id].status == 'play') {
