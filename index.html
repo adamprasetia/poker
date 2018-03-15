@@ -130,7 +130,7 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
         <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.14.17.05"></script>
+        <script src="assets/js/helper.js?v=2018.03.15.23.03"></script>
         <script src="assets/js/facebook.js?v=2"></script>
         <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
         <script type="text/javascript">
@@ -318,6 +318,7 @@
                     });
                     if (checkGiliran()) {
                         if (validasi(uniqueCardSelected, JSON.parse(response.val().tablecard))) {
+                            console.log('cardSelected', uniqueCardSelected);
                             sendCard(uniqueCardSelected, function(){
                                 $('#btn-send').prop('disabled', false);
                             });
@@ -419,7 +420,205 @@
                 }else{
                     swal("Oops", "Isi dulu dong nama room nya coy!" , "error");
                 }
-            })
+            });
+            function botMinMatch(card, tablecard = 0, count = 0){
+                var card = card.sort(function(a, b){return a - b});
+                console.log('tablecard', tablecard.length);
+                var selected, total, status;
+                status = false;
+                $.each(card, function(index, value) {
+                    selected = [];
+                    total = 0;
+                    $.each(card, function(indexs, values) {
+                        if ((value-(value%4))/4 == (values-(values%4))/4) {
+                            selected.push(values);
+                            total++;
+                        }                        
+                    });                    
+                    if (tablecard !== 0) {
+                        if (total == tablecard.length) {
+                            if (Math.max.apply(Math, selected) > Math.max.apply(Math, tablecard)) {
+                                status = true;
+                                return false;
+                            }
+                        }
+                    }else{          
+                        if (count !== 0) {
+                            if (total == count) {
+                                status = true;
+                                return false;                                
+                            }
+                        }else{                            
+                            status = true;    
+                            return false;
+                        }
+                    }
+                });
+                if (status) {
+                    return selected;
+                }else{
+                    return false;
+                }
+            }
+            function botMinMatch5(card, tablecard = 0){
+                var matchtype;
+                if (checkFullHouse(tablecard).status) {
+                    console.log('fullhouse');
+                    matchtype = 'fh';
+                }else if (checkFlush(tablecard) && checkStraight(tablecard)) {
+                    console.log('straight flush');
+                    matchtype = 'sf';
+                }else if (checkFlush(tablecard)) {
+                    console.log('flush');    
+                    matchtype = 'f';
+                }else if (checkStraight(tablecard)) {                        
+                    console.log('straight');    
+                    matchtype = 's';
+                }
+                
+                var card = card.sort(function(a, b){return a - b});
+                var selected, total, status;
+                status = false;
+                $.each(card, function(index, value) {
+                    selected = [];
+                    selected.push(value);
+                    total = 1;
+                    $.each(card, function(indexs, values) {
+                        if (value != values) {                            
+                            if (matchtype == 'fh') {
+                                if ((value-(value%4))/4 == (values-(values%4))/4) {
+                                    selected.push(values);
+                                    total++;
+                                }                                                        
+                            }else if (matchtype == 'sf') {
+                                if ((selected[selected.length-1]%4 == values%4) && (((selected[selected.length-1]-(selected[selected.length-1]%4))/4)+1 == (values-(values%4))/4)) {
+                                    selected.push(values);
+                                    total++;                                
+                                }
+                            }else if (matchtype == 'f') {
+                                if (selected[selected.length-1]%4 == values%4) {
+                                    selected.push(values);
+                                    total++;
+                                }                                                                         
+                            }else if (matchtype == 's') {
+                                if (((selected[selected.length-1]-(selected[selected.length-1]%4))/4)+1 == (values-(values%4))/4) {
+                                    selected.push(values);
+                                    total++;
+                                }                                             
+                            }
+                        }
+                        if (total == tablecard.length) {
+                            return false;
+                        }       
+                    });      
+                    if (matchtype == 'fh') {                        
+                        if (total == 3) {
+                            var child = botMinMatch(card, 0, 2);
+                            if (child) {
+                                $.each(child, function(indexChild, valueChild) {
+                                    selected.push(valueChild);
+                                });
+                            }
+                            if (checkFullHouse(selected).big > checkFullHouse(tablecard).big) {                                
+                                status = true;
+                                return false;
+                            }
+                        }
+                    }else{
+                        if (tablecard !== 0) {
+                            if (total == tablecard.length) {
+                                if (Math.max.apply(Math, selected) > Math.max.apply(Math, tablecard)) {
+                                    status = true;
+                                    return false;
+                                }
+                            }
+                        }else{                    
+                            status = true;    
+                            return false;
+                        }
+                    }         
+                });
+                if (status) {
+                    return selected;
+                }else{
+                    return false;
+                }
+            }
+            function botMinPair(card, count = 1, tablecard = 0){
+                var selected, total;
+                $.each(card, function(index, value) {
+                    selected = [];
+                    total = 0;
+                    $.each(card, function(indexs, values) {
+                        if ((value-(value%4))/4 == (values-(values%4))/4) {
+                            selected.push(values);
+                            total++;
+                        }                        
+                    });
+                    if (total == count) {
+                        if (tablecard != 0) {
+                            if (Math.max.apply(Math, selected) > Math.max.apply(Math, tablecard)) {
+                                return false;
+                            }
+                        }else{                            
+                            return false;
+                        }
+                    }
+                });
+                if (selected.length == count) {                    
+                    return selected;
+                }else{
+                    return false;
+                }
+            }
+            function bot(){
+                firebase.database().ref(room).once('value', function(response) {        
+                    if (response.val() && response.val().tablecard) {            
+                        var tablecard = JSON.parse(response.val().tablecard);
+                        var playergiliran = response.val().player[response.val().giliran];
+                        var botcard = JSON.parse(playergiliran.card);
+                        var botselected = [];
+                        if (playergiliran.status == 'play' && playergiliran.type == 'bot' && response.val().tablecardplayer != playergiliran.id) {            
+                            if (tablecard.length == 0) {
+                                botselected = botMinMatch(botcard);
+                                console.log('botselected', botselected);
+                                sendCard(botselected, function(){});
+                            }else if (tablecard.length >= 1 && tablecard.length < 5) {            
+                                botselected = botMinMatch(botcard, tablecard);
+                                console.log('botselected', botselected);
+                                if (botselected) {
+                                    sendCard(botselected, function(){});
+                                }else{
+                                    firebase.database().ref(room+'/player/'+response.val().giliran).update({
+                                        status: 'pas'
+                                    }).then(function(){                      
+                                        changeGiliran(function(){});
+                                    });                                    
+                                }
+                            }else if (tablecard.length == 5) {            
+                                botselected = botMinMatch5(botcard, tablecard);
+                                console.log('botselected', botselected);
+                                if (botselected) {
+                                    sendCard(botselected, function(){});
+                                }else{
+                                    firebase.database().ref(room+'/player/'+response.val().giliran).update({
+                                        status: 'pas'
+                                    }).then(function(){                      
+                                        changeGiliran(function(){});
+                                    });                                    
+                                }
+                            }else{     
+                                firebase.database().ref(room+'/player/'+response.val().giliran).update({
+                                    status: 'pas'
+                                }).then(function(){                      
+                                    changeGiliran(function(){});
+                                });                
+                            }                    
+                        }
+                    }
+                });
+            }
+            
         </script>
     </body>
 </html>
