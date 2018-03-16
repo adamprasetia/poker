@@ -421,9 +421,8 @@
                     swal("Oops", "Isi dulu dong nama room nya coy!" , "error");
                 }
             });
-            function botMinMatch(card, tablecard = 0, count = 0){
+            function botPair(card, tablecard = 0, count = 0){
                 var card = card.sort(function(a, b){return a - b});
-                console.log('tablecard', tablecard.length);
                 var selected, total, status;
                 status = false;
                 $.each(card, function(index, value) {
@@ -513,7 +512,7 @@
                     });      
                     if (matchtype == 'fh') {                        
                         if (total == 3) {
-                            var child = botMinMatch(card, 0, 2);
+                            var child = botPair(card, 0, 2);
                             if (child) {
                                 $.each(child, function(indexChild, valueChild) {
                                     selected.push(valueChild);
@@ -558,7 +557,7 @@
                         }                                                                                
                     });
                     if (total == 3) {
-                        var child = botMinMatch(card, 0, 2);
+                        var child = botPair(card, 0, 2);
                         if (child) {
                             $.each(child, function(indexChild, valueChild) {
                                 selected.push(valueChild);
@@ -599,32 +598,30 @@
                     return false;
                 }                
             }
-            function botMinPair(card, count = 1, tablecard = 0){
-                var selected, total;
+            function botStraightFlush(card){
+                var card = card.sort(function(a, b){return a - b});
+                var selected;
+                var status = false;
                 $.each(card, function(index, value) {
                     selected = [];
-                    total = 0;
+                    selected.push(value);
+                    total = 1;
                     $.each(card, function(indexs, values) {
-                        if ((value-(value%4))/4 == (values-(values%4))/4) {
+                        if ((((selected[selected.length-1]-(selected[selected.length-1]%4))/4)+1 == (values-(values%4))/4) && (selected[selected.length-1]%4 == values%4)) {
                             selected.push(values);
                             total++;
-                        }                        
+                        }                  
                     });
-                    if (total == count) {
-                        if (tablecard != 0) {
-                            if (Math.max.apply(Math, selected) > Math.max.apply(Math, tablecard)) {
-                                return false;
-                            }
-                        }else{                            
-                            return false;
-                        }
-                    }
+                    if (total == 5) {
+                        status = true;
+                        return false;
+                    }                                                              
                 });
-                if (selected.length == count) {                    
+                if (status) {
                     return selected;
                 }else{
                     return false;
-                }
+                }                
             }
             function bot(){
                 firebase.database().ref(room).once('value', function(response) {        
@@ -637,14 +634,35 @@
                             if (tablecard.length == 0) {
                                 botselected = botFullHouse(botcard);
                                 if (!botselected) {                                    
-                                    botselected = botStraight(botcard);
+                                    botselected = botStraightFlush(botcard);
                                     if (!botselected) {                                    
-                                        botselected = botMinMatch(botcard);
+                                        botselected = botStraight(botcard);
+                                        if (!botselected) {                                    
+                                            botselected = botPair(botcard);
+                                        }
                                     }
                                 }
                                 sendCard(botselected, function(){});
+                            }else if (tablecard.length == 1 && tablecard[0] > 47) {       
+                                botselected = botStraightFlush(botcard);
+                                if (!botselected) {                                    
+                                    botselected = botPair(botcard, 0, 4);
+                                }                                
+                                if (botselected) {
+                                    sendCard(botselected, function(){
+                                        firebase.database().ref(room).update({
+                                            bom: playergiliran.id
+                                        });
+                                    });
+                                }else{
+                                    firebase.database().ref(room+'/player/'+response.val().giliran).update({
+                                        status: 'pas'
+                                    }).then(function(){                      
+                                        changeGiliran(function(){});
+                                    });                                    
+                                }
                             }else if (tablecard.length >= 1 && tablecard.length < 5) {            
-                                botselected = botMinMatch(botcard, tablecard);
+                                botselected = botPair(botcard, tablecard);
                                 console.log('botselected', botselected);
                                 if (botselected) {
                                     sendCard(botselected, function(){});
