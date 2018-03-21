@@ -15,7 +15,13 @@ function statusChangeCallback(response) {
         document.getElementById('status').innerHTML = 'Silakan login terlebih dahulu.';
     }
 }
-
+function signed(){
+    FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+    });
+    
+    FB.Event.subscribe('auth.authResponseChange', checkLoginState);
+}
 function checkLoginState(event) {
   if (event.authResponse) {
     // User is signed-in Facebook.
