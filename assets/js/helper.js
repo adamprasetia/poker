@@ -21,7 +21,7 @@ function getRoom(){
 function setSit(playerId, sitNo, callBack){
     firebase.database().ref(room).once('value').then(function(response){                   
         var players = response.val().player;
-        if (getPlayerBySit(players, sitNo)==false) {        
+        if (getPlayerBySit(players, sitNo)===false) {        
             firebase.database().ref(room+'/player/'+playerId).update({
                 card:'[]',
                 sitno:parseInt(sitNo),
