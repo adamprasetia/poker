@@ -450,7 +450,8 @@ function setPlayAll(players){
         if (bom && typeof bom !== 'undefined' && bom != 0) {
             if (winner != 0 && typeof winner !== 'undefined') {                
                 firebase.database().ref(room).update({
-                    winner:bom
+                    winner:bom,
+                    juara:bom
                 }).then(function(){
                     resetGame();
                 });
