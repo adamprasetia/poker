@@ -84,7 +84,7 @@ function showPlayer(response, callBack){
                     }                
                     
                     playerCard += '<img class="card-small img-thumbnail" src="assets/img/card/back.png">';
-                    if (player.id == me.id) {
+                    if (me && player.id == me.id) {
                         mecard += '<a href="javascript:void(0)" class="kartu '+kartuSelected+'" data-index="'+index+'" data-value="'+value+'"><img class="card img-thumbnail" src="assets/img/card/'+value+'.png"></a>';
                     }
                 });
