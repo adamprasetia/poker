@@ -19,17 +19,20 @@ function getRoom(){
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 function setSit(playerId, sitNo, callBack){
-    if (getPlayerBySit==false) {        
-        firebase.database().ref(room+'/player/'+playerId).update({
-            card:'[]',
-            sitno:parseInt(sitNo),
-            status:'menunggu'
-        }).then(function(){
-            callBack(playerId, sitNo);
-        });
-    }else{
-        swal("Oops", "Maaf, Tempat Duduk Sudah Terisi" , "error");
-    }
+    firebase.database().ref(room).once('value').then(function(response){                   
+        var players = response.val().player;
+        if (getPlayerBySit(players, sitNo)==false) {        
+            firebase.database().ref(room+'/player/'+playerId).update({
+                card:'[]',
+                sitno:parseInt(sitNo),
+                status:'menunggu'
+            }).then(function(){
+                callBack(playerId, sitNo);
+            });
+        }else{
+            swal("Oops", "Maaf, Tempat Duduk Sudah Terisi" , "error");
+        }
+    });
 }
 function showPlayer(response, callBack){
     if (response) {        
