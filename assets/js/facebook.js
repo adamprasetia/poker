@@ -15,12 +15,32 @@ function statusChangeCallback(response) {
         document.getElementById('status').innerHTML = 'Silakan login terlebih dahulu.';
     }
 }
-function checkLoginState() {
-    FB.getLoginStatus(function(response) {
-        statusChangeCallback(response);
-    });
-}
 
+function checkLoginState(event) {
+  if (event.authResponse) {
+    // User is signed-in Facebook.
+    var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
+      unsubscribe();
+        // Build Firebase credential with the Facebook auth token.
+        var credential = firebase.auth.FacebookAuthProvider.credential(
+            event.authResponse.accessToken);
+        // Sign in with the credential from the Facebook user.
+        firebase.auth().signInWithCredential(credential).catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // The email of the user's account used.
+          var email = error.email;
+          // The firebase.auth.AuthCredential type that was used.
+          var credential = error.credential;
+          // ...
+        });
+    });
+  } else {
+    // User is signed-out of Facebook.
+    firebase.auth().signOut();
+  }
+}
 window.fbAsyncInit = function() {
     FB.init({
         // appId      : '2107385236164859', // development
@@ -32,6 +52,7 @@ window.fbAsyncInit = function() {
     FB.getLoginStatus(function(response) {
         statusChangeCallback(response);
     });
+    FB.Event.subscribe('auth.authResponseChange', checkLoginState);
 };
 
 // Load the SDK asynchronously
