@@ -17,6 +17,12 @@
         </script>                
     </head>
     <body>
+        <div class="card text-white bg-dark">
+            <div class="card-body">
+                <div id="status"></div>                
+                <fb:login-button id="fb-login" scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+            </div>
+        </div>                
         <div class="row">
             <div class="col-md-8">
                 <div class="card text-white bg-dark">
@@ -46,12 +52,6 @@
                 </div>
             </div>
             <div class="col-md-4">                
-                <div class="card text-white bg-dark">
-                    <div class="card-body">
-                        <div id="status"></div>                
-                        <fb:login-button id="fb-login" scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
-                    </div>
-                </div>        
                 <div class="card text-white bg-dark admin" style="display:none">
                     <div class="card-body">
                         <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="resetGame()">Reset</button>
