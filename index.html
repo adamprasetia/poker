@@ -139,7 +139,7 @@
                     }                
                 });
                 if (response.val() && typeof response.val() !== 'undefined') {
-                    $('#chat-body').append('<p><span class="badge badge-secondary">'+response.val().from+'</span> '+response.val().message+'</p>');
+                    $('#chat-body').append('<p><span class="badge badge-secondary">'+response.val().from+'</span> '+JSON.stringify(response.val().message)+'</p>');
                     $('#chat-body').scrollTop($('#chat-body')[0].scrollHeight);
                 }
             });
