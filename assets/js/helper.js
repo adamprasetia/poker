@@ -966,7 +966,7 @@ function bot(){
     });
 }
 function sendChat(){
-    if (typeof me.name !== 'undefined') {                    
+    if (me && typeof me.name !== 'undefined') {                    
         firebase.database().ref(room+'/chat').update({
             message:encodeHTML($('#input-chat').val()),
             from:me.name
