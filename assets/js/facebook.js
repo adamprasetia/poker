@@ -19,6 +19,7 @@ function statusChangeCallback(response) {
 function checkLoginState(event) {
     console.log('checkLoginState');
   if (event.authResponse) {
+      console.log('sini');
     // User is signed-in Facebook.
     var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
       unsubscribe();
@@ -38,6 +39,7 @@ function checkLoginState(event) {
         });
     });
   } else {
+      console.log('sono');
     // User is signed-out of Facebook.
     firebase.auth().signOut();
   }
