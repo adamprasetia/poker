@@ -17,6 +17,7 @@ function statusChangeCallback(response) {
 }
 
 function checkLoginState(event) {
+    console.log('checkLoginState');
   if (event.authResponse) {
     // User is signed-in Facebook.
     var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
