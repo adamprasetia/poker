@@ -58,6 +58,7 @@
                         <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="addBot()">Add Bot</button>
                         <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="removeBot()">Remove Bot</button>
                         <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="changeGiliran()">Change Giliran</button>
+                        <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="setPasGiliran()">Pas</button>
                     </div>
                 </div>        
                 <div class="card text-white bg-dark">
@@ -226,6 +227,11 @@
                     swal("Oops", "Silahkan isi nama room yang anda inginkan" , "error");
                 }
             });            
+            function setPasGiliran(){
+                firebase.database().ref(room).once('value').then(function(response){
+                    setPas(response.val().giliran);
+                });
+            }
         </script>
     </body>
 </html>
