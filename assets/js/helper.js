@@ -968,7 +968,7 @@ function bot(){
 function sendChat(){
     if (typeof me.name !== 'undefined') {                    
         firebase.database().ref(room+'/chat').update({
-            message:$('#input-chat').val(),
+            message:encodeHTML($('#input-chat').val()),
             from:me.name
         }).then(function(){                    
             $('#input-chat').val('');
@@ -976,4 +976,7 @@ function sendChat(){
     }else{
         swal("Oops", "Silahkan login terlebih dahulu" , "error");
     }
+}
+function encodeHTML(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 }
