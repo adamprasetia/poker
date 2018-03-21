@@ -59,6 +59,7 @@
                         <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="removeBot()">Remove Bot</button>
                         <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="changeGiliran()">Change Giliran</button>
                         <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="setPasGiliran()">Pas</button>
+                        <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="setStandUpGiliran()">Stand Up</button>
                     </div>
                 </div>        
                 <div class="card text-white bg-dark">
@@ -230,6 +231,11 @@
             function setPasGiliran(){
                 firebase.database().ref(room).once('value').then(function(response){
                     setPas(response.val().giliran);
+                });
+            }
+            function setStandUpGiliran(){
+                firebase.database().ref(room).once('value').then(function(response){
+                    setStandUp(response.val().giliran);
                 });
             }
         </script>
