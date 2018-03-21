@@ -17,9 +17,7 @@ function statusChangeCallback(response) {
 }
 
 function checkLoginState(event) {
-    console.log('checkLoginState');
   if (event.authResponse) {
-      console.log('sini');
     // User is signed-in Facebook.
     var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
       unsubscribe();
@@ -36,11 +34,9 @@ function checkLoginState(event) {
           // The firebase.auth.AuthCredential type that was used.
           var credential = error.credential;
           // ...
-          console.log('error nih', errorCode, errorMessage);
         });
     });
   } else {
-      console.log('sono');
     // User is signed-out of Facebook.
     firebase.auth().signOut();
   }
