@@ -129,7 +129,7 @@
             // Bot
             setInterval(function(){
                 bot();
-            },3000)
+            },5000)
 
             // chat 
             firebase.database().ref(room+'/chat').on('value', function(response) {
