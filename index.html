@@ -146,9 +146,9 @@
 
             // Main Utama
             firebase.database().ref(room).on('value', function(response) {   
-                if (me && response.val()) {                    
+                if (response.val()) {                    
                     var giliran = response.val().giliran
-                    if (giliran == me.id) {
+                    if (me && giliran == me.id) {
                         $('#btn-send').show();
                         $('#btn-pas').show();
                     }else{
