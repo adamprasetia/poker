@@ -1,128 +1,3 @@
-body{
-    background: black;
-}
-a.active > img{
-    border:2px solid lime;
-}
-.row > div{
-    margin-right: -90px;
-}
-img.card {
-    width: 20px;
-}
-img.tablecard {
-    width: 50px;
-}
-#tablecard {
-    position: absolute;
-    top:190px;
-    left: 225px;
-}
-#tablecard img{
-    display: inline;
-}
-#mecard{
-    padding-bottom: 100px;
-}
-.mecard{
-    position: absolute;
-    width:1000px;
-    top:450px;
-}
-.mecard img{
-    width: 80px;
-    display: inline;
-    margin-right: -50px;
-    margin-bottom: -80px;
-}
-.playercard{
-    /* display: absolute; */
-    position: absolute;
-    width: 100px;
-    top: 50px;
-    left: 10px;
-}
-.playercard img{
-    display: inline;
-    /* position: absolute; */
-    margin-right: -18px;
-    /* margin-bottom: 10px; */
-    /* margin-top: -10px; */
-}
-.giliran{
-    background: lime;
-    border-radius: 50px;
-}
-.player{
-    background: silver;
-    position: absolute;
-    padding: 40px;
-    border-radius: 100px;
-}
-.card-custom{
-    /* background: #9bbb59; */
-    position: absolute;
-    margin-left: 0px;
-    margin-top: -50px;
-    display: block;
-    text-align: center;
-    color: white;         
-}
-.sit-1{
-    position: absolute;
-    top: 80px;
-    left: 225px;
-}
-.sit-2{
-    position: absolute;
-    top: 80px;
-    left: 407px;
-}
-.sit-3{
-    position: absolute;
-    top: 115px;
-    left: 510px;
-}
-.sit-4{
-    position: absolute;
-    top: 210px;
-    left: 550px;
-}
-.sit-5{
-    position: absolute;
-    top: 310px;
-    left: 510px;
-}
-.sit-6{
-    position: absolute;
-    top: 350px;
-    left: 407px;
-}
-.sit-7{
-    position: absolute;
-    top: 350px;
-    left: 225px;
-}
-.sit-8{
-    position: absolute;
-    top: 310px;
-    left: 115px;
-}
-.sit-9{
-    position: absolute;
-    top: 210px;
-    left: 85px;
-}
-.sit-10{
-    position: absolute;
-    top: 115px;
-    left: 115px;
-}
-.button-close{
-    position: absolute;
-    top:10px;
-    left:10px;
-}
 .chat{
     position: absolute;
     top: 130px;
@@ -133,59 +8,274 @@ img.tablecard {
     height: 200px;
     overflow-y: scroll;
 }
-.login{
-    top: 10px;
-    left : 700px;
-    width: 300px;
+.loser{
     position: absolute;
+    top:0px;
+    left: -10px;
+    width: 60px;
 }
-.card-custom .card-header{
+.piala{
+    position: absolute;
+    top:-10px;
+    left: -30px;
+    width: 50px;
+}
+.mahkota{
+    position: absolute;
+    top:-35px;
+    left: 0px;
+    width: 60px;
+}
+body{
+    background: black;
+}
+a.active > img{
+    border:2px solid lime;
+}
+.progress{
+    height: 5px;
+}
+.player{
+    width: 60px;
+    font-size: 9px;
+    position: absolute;
+    margin-left: 0px;
+    margin-top: -40px;
+    display: block;
+    text-align: center;
+    color: white;    
+}
+.player .card-header{
     white-space: nowrap; 
     padding:2px;
-    width: 60px;
     text-overflow: ellipsis;
     overflow: hidden;
-    font-size: 9px;
 }
-.card-custom .card-body{
-    padding:5px;
-    max-width: 100px;
-}
-.card-custom .card-footer{
+.player .card-body{
     padding:5px;
 }
-.card-status{
-    white-space: nowrap; 
-    padding:2px;
-    width: 60px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    font-size: 9px;
-    border-top: 1px solid rgba(0,0,0,.125);
+.player .card-footer{
+    padding:1px;
 }
-.button-play{
-    display: none;
+
+.player-1{
+    top:90px;
+    left:245px;    
+}
+.sit{        
     position: absolute;
-    top:380px;
-    left: 20px;
+}
+.sit-1{
+    top:90px;
+    left:245px;
+}    
+.sit-2{
+    top:90px;
+    left:426px;
+}    
+.sit-3{
+    top:130px;
+    left:540px;
+}    
+.sit-4{
+    top:230px;
+    left:575px;
+}    
+.sit-5{
+    top:335px;
+    left:540px;
+}    
+.sit-6{
+    top:370px;
+    left:426px;
+}    
+.sit-7{
+    top:370px;
+    left:245px;
+}    
+.sit-8{
+    top:335px;
+    left:135px;
+}    
+.sit-9{
+    top:230px;
+    left:95px;
+}    
+.sit-10{
+    top:130px;
+    left:130px;
+}    
+
+.player-card-small{
+    position: absolute;
+    width: 100px;
+    top: 50px;
+    left: 10px;
+}
+img.card-small {
+    margin-right: -18px;
+    display: inline;
+    width: 20px;
+}
+
+.stand-up{
+    position: absolute;
+    top: 30px;
+    left: 30px;
+}
+
+#btn-pas{
+    position: absolute;
+    top: 410px;
+    left: 30px;
 }
 #btn-send{
     position: absolute;
-    top: 0px;
-    left: 580px;
-    /* position: absolute;
-    top: 100px;
-    left: 200px; */
+    top: 410px;
+    left: 635px;
 }
-.room{
-    top: 10px;
-    left : 1010px;
-    width: 300px;
-    position: absolute;
+#mecard{
+    /* height: 150px; */
+    /* clear: both; */
+    overflow-x: auto;
 }
-.bot{
-    top: 190px;
-    left : 1010px;
-    width: 300px;
+#mecard img{
+    width: 80px;
+    display: inline-block;
+    margin-right: -50px;
+    /* margin-bottom: -80px; */
+}
+.clearfix{ 
+    display: inline-block;
+    width: 100%;
+}
+img.tablecard {
+    width: 50px;
+}
+#tablecard {
     position: absolute;
+    top:210px;
+    left: 235px;
+    width: 300px;
+}
+#tablecard img{
+    display: inline;
+}
+@media only screen and (max-width: 1100px) {
+    .loser{
+        position: absolute;
+        top:0px;
+        left: -10px;
+        width: 60px;
+    }
+    .piala{
+        position: absolute;
+        top:0px;
+        left: -20px;
+        width: 30px;
+    }
+    .mahkota{
+        position: absolute;
+        top:-20px;
+        left: 0px;
+        width: 40px;
+    }
+    
+    img.tablecard {
+        width: 40px;
+    }
+    #tablecard {
+        position: absolute;
+        top:45%;
+        left: 35%;
+        width: 200px;
+    }
+    #tablecard img{
+        display: inline;
+    }
+    .player{
+        width: 40px;
+    }
+    .sit, .stand-up{        
+        position: absolute;
+        font-size: 8px;
+    }
+    .sit-1{
+        top:19%;
+        left:34%;
+    }    
+    .sit-2{
+        top:19%;
+        left:58.5%;
+    }    
+    .sit-3{
+        top:27%;
+        left:74%;
+    }    
+    .sit-4{
+        top:47.5%;
+        left:79%;
+    }    
+    .sit-5{
+        top:69%;
+        left:74%;
+    }    
+    .sit-6{
+        top:76%;
+        left:58.5%;
+    }    
+    .sit-7{
+        top:76%;
+        left:34%;
+    }    
+    .sit-8{
+        top:68%;
+        left:19%;
+    }    
+    .sit-9{
+        top:47.5%;
+        left:13%;
+    }    
+    .sit-10{
+        top:27%;
+        left:18%;
+    }    
+    .player-card-small{
+        position: absolute;
+        width: 100px;
+        top: 40px;
+        left: -20px;
+    }
+    img.card-small {
+        margin-right: -16px;
+        display: inline;
+        width: 15px;
+    }    
+    
+    #btn-pas{
+        font-size: 12px;
+        position: absolute;
+        top:78%;
+        left: 4%;
+    }
+    #btn-send{
+        font-size: 12px;
+        position: absolute;
+        top: 78%;
+        left: 80%;
+    }    
+}
+@media only screen and (max-width: 600px) {
+    img.tablecard {
+        width: 30px;
+    }    
+    #tablecard {
+        position: absolute;
+        top:42%;
+        left: 29%;
+        width: 200px;
+    }
+    #tablecard img{
+        display: inline;
+    }    
 }

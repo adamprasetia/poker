@@ -1,45 +1,3 @@
-function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}     
-function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}    
-function deleteCookie(cname) {
-    console.log('deleteCookie: '+cname);
-    document.cookie = cname + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/';
-};            
-function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
-
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-
-      // And swap it with the current element.
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-    return array;
-}    
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
@@ -50,181 +8,178 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function remove(array, element) {
-    const index = array.indexOf(element);
-    array.splice(index, 1);
+function getRoom(){
+    var url = window.location.href;
+    var name = 'room';
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return 'games';
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
-
-function setLoser(player){
-    $.each(player, function(index, value) {
-        if (value.card != '[]' && (value.status == 'play' || value.status == 'pas')) {
-            firebase.database().ref(room).update({                 
-                loser: value.id
-            });
-        }
-    });
-}
-function checkReset(){
-    console.log('checkReset');
-    firebase.database().ref(room).once('value').then(function(response){        
-        var player = response.val().player;
-        var winner = response.val().winner;
-        var totalPlayerCard = 0;
-        var totalPlayerSit = 0;
-        $.each(player, function(index, value) {
-            if (value.card != '[]' && typeof value.card !== 'undefined') {
-                totalPlayerCard += 1;
-            }
-            if (value.sitno && value.sitno != 0) {
-                totalPlayerSit += 1;
-            }
-        });
-        if (totalPlayerSit == 1 || (totalPlayerSit > 1 && totalPlayerCard <= 1)) {
-            if (totalPlayerSit > 1) {                
-                setLoser(player);
-            }
-            resetGame(player, winner);
-        }
-    });    
-}
-function checkPlayerExist(playername = '') {
-    var status = false;
-    firebase.database().ref(room+'/player/'+playername).once('value').then(function(response){
-        status = true;
-        console.log()
-        if (response.val()) {
-        }
-    });
-    return status;
-}
-
-function totalPlayer(player){
-    var total = 0;
-    $.each(player, function(index, value) {
-        if (value.sitno && value.sitno != 0) {                            
-            total += 1;
-        }
-    });
-    return total;
-}            
-function resetGame(player = [], winner = ''){
-    console.log('resetGame', winner);
-    var config_total_player = totalPlayer(player);
-    var config_total_kartu = 52;
-    var kartu = new Array(config_total_kartu);
-    for (var i = 0; i < kartu.length; i++) {
-        kartu[i] = i;
-    }
-    kartu = shuffle(kartu);
-    var playerCard = new Array(config_total_player);
-    for (var i = 0; i < config_total_player; i++) {
-        playerCard[i] = [];
-    }
-    $.each(kartu, function(index, value) {
-        playerCard[index % config_total_player].push(value);
-    });
-    
-    var i = 0;
-    $.each(player, function(index, value) {
-        if (value.sitno && value.sitno != 0 && config_total_player > 1) {                            
-            firebase.database().ref(room+'/player/'+index).update({                 
-                card: JSON.stringify(playerCard[i]),
-                status: 'play'
-            });                   
-            i++;
-        }else{
-            firebase.database().ref(room+'/player/'+index).update({                 
-                card: '[]',
-                status: 'waiting'
-            });                                               
-        }
-    });
-    
-    if (winner == '') {                        
-        setGiliran(player);
-    }else{
-        setGiliran(player, winner);
-    }
-    firebase.database().ref(room).update({
-        tablecard:"[]",
-        tablecardplayer:0,
-        winner:0,
-        bom:0
+function setSit(playerId, sitNo, callBack){
+    firebase.database().ref(room+'/player/'+playerId).update({
+        card:'[]',
+        sitno:parseInt(sitNo),
+        status:'menunggu'
     }).then(function(){
-        timeout = 100;
-    });                                                        
-}
-function setPlayAll(player, bom){
-    if (bom && typeof bom !== 'undefined' && bom != 0) {
-        firebase.database().ref(room).once('value', function(response) {   
-            if (response.val().winner != 0) {                
-                resetGame(player, response.val().winner);
-            }else{                
-                resetGame(player, bom);
-            }
-        });
-    }
-    $.each(player, function(index, value) {
-        if (value.status != 'winner' && value.card != '[]' && typeof value.card !== 'undefined') {
-            firebase.database().ref(room+'/player/'+value.id).update({
-                status:'play'
-            }).then(function(){
-                firebase.database().ref(room).update({
-                    tablecard:'[]',
-                    tablecardplayer:0
-                });
-            });
-        }
+        callBack(playerId, sitNo);
     });
 }
-function changeGiliran(callback){
-    firebase.database().ref(room).once('value', function(response) {     
-        if (response.val() && response.val().giliran) {            
-            if (getCountPlay(response.val().player)==0) {    
-                firebase.database().ref(room).update({
-                    giliran:response.val().warisan
-                }).then(function(){
-                    firebase.database().ref(room).update({
-                        warisan:0
-                    });    
-                    setPlayAll(response.val().player, response.val().bom);
-                });
-            }
-            var sitno = parseInt(response.val().player[response.val().giliran].sitno);
-            if (sitno == 10) {
-                sitno = 1;
-            }else{
-                sitno++;
-            }                
-            for (var i = 1; i <= 10; i++) {
-                playerBySit = getPlayerBySit(response.val().player, sitno);
-                if (playerBySit.status && playerBySit.status == 'play') {
-                    firebase.database().ref(room).update({
-                        giliran:playerBySit.id
-                    }).then(function(){
-                        if (getCountPlay(response.val().player) <= 1) {
-                            if (response.val().warisan && response.val().warisan != 0 && typeof response.val().warisan !== 'undefined') {
-                                
-                            }else{
-                                setPlayAll(response.val().player, response.val().bom);
-                            }
-                        }      
-                    });
-                    break;
+function showPlayer(response, callBack){
+    if (response) {        
+        // show tablecard
+        if (response && response.tablecard) {
+            var tablecard = '';
+            $.each(JSON.parse(response.tablecard), function(index, value) {
+                tablecard += '<img class="tablecard img-thumbnail" src="assets/img/card/'+value+'.png">';
+            });
+            $('#tablecard').html(tablecard);
+        }
+        
+        $('.player-wrap').html('');
+        $('button.sit').show();
+        $('.stand-up').hide();
+        var mecard = '';
+        for (var i = 1; i <= 10; i++) {
+            var player = getPlayerSitNo(response.player, i);
+            var playerName = '<div class="card-header">'+player.name+'</div>';
+            var playerStatus = '<div class="card-footer">'+player.status+'</div>';
+            var playerTime = '';
+            var giliran = 'bg-dark';
+            if (response.giliran && response.giliran == player.id) {
+                giliran = 'bg-warning';
+                playerTime = '<div class="card-footer"><div class="progress"><div style="width: '+timeout+'%;" class="progress-bar"></div></div></div>';
+            }        
+            var avatar = '<img src="'+player.picture+'" class="img-thumbnail">';
+            if (player !== false) {
+                var properti = '';
+                if (response.loser==player.id) {                
+                    properti = '<img class="loser" src="assets/img/loser.png">';
                 }
+                if (response.juara==player.id) {                
+                    properti = '<img class="piala" src="assets/img/piala.png"><img class="mahkota" src="assets/img/mahkota.png">';
+                }
+                $('.sit-'+i).hide();
+                if (me && me.id==player.id) {
+                    $('button.sit').hide();
+                    $('.stand-up').show();
+                }
+                var playerCard = '<div class="player-card-small">';
+                var kartuSelected;
+                $.each(JSON.parse(player.card).sort(function(a, b){return a - b}), function(index, value) {
+                    kartuSelected = '';
+                    if (cardSelected.length > 0){                                    
+                        if (cardSelected.indexOf(value)!= -1) {
+                            kartuSelected = 'active';
+                        }
+                    }                
+                    
+                    playerCard += '<img class="card-small img-thumbnail" src="assets/img/card/back.png">';
+                    if (player.id == me.id) {
+                        mecard += '<a href="javascript:void(0)" class="kartu '+kartuSelected+'" data-index="'+index+'" data-value="'+value+'"><img class="card img-thumbnail" src="assets/img/card/'+value+'.png"></a>';
+                    }
+                });
+                playerCard += '</div>';
+                $('.player-wrap').append('<div class="card text-white '+giliran+' player sit sit-'+i+'">'+playerName+'<div class="card-body">'+avatar+'</div>'+playerTime+playerStatus+playerCard+properti+'</div>');
+            }
+        }
+        $('#mecard').html(mecard);
+    }
+    callBack(response);
+}
+function getPlayerSitNo(players, sitNo){
+    var player = false;
+    $.each(players, function(index, value) {
+        if (value.sitno == sitNo) {
+            player = value;
+            return false;
+        }
+    });
+    return player;
+}
+function setPas(playerId, callBack){
+    firebase.database().ref(room).once('value').then(function(response){                   
+        var players = response.val().player;
+        var bom = response.val().bom;
+        firebase.database().ref(room+'/player/'+playerId).update({
+            status: 'pas'
+        }).then(function(){          
+            $('#btn-pas').prop('disabled', false);
+            setLoserByBom(players, bom, function(){
+                changeGiliran(function(){
+                    checkReset();
+                });                    
+            });                    
+        });
+    }).then(function(){
+        callBack(playerId, callBack);
+    });
+}
+function setStandUp(playerId, callBack = function(){}){
+    firebase.database().ref(room).once('value').then(function(response){        
+        var players = response.val().player;
+        var giliran = response.val().giliran;
+        var tablecardplayer = response.val().tablecardplayer;
+        firebase.database().ref(room+'/player/'+playerId).update({
+            card:'[]',
+            sitno:0,
+            status:'nonton'
+        }).then(function(){
+            if (tablecardplayer == playerId) {
+                var sitno = players[playerId].sitno;
                 if (sitno == 10) {
                     sitno = 1;
                 }else{
                     sitno++;
+                }                
+                for (var i = 1; i <= 10; i++) {
+                    player = getPlayerBySit(players, sitno);
+                    if (player.status && player.status != 'menang' && player.status != 'menunggu') {
+                        firebase.database().ref(room).update({
+                            warisan:player.id
+                        });
+                        break;
+                    }
+                    if (sitno == 10) {
+                        sitno = 1;
+                    }else{
+                        sitno++;
+                    }
                 }
             }
-            timeout = 100;
-        }
-    }).then(function(){        
-        callback();
-    });
+            if (giliran == playerId) {
+                changeGiliran(function(){
+                    checkReset();                    
+                });                                            
+            }
+        });                                
+    }).then(function(){
+        callBack(playerId);        
+    });    
 }
-function getSitNoByPlayer(players, player){
+function getTotalPlayer(player){
+    var total = 0;
+    $.each(player, function(index, value) {
+        if (value.sitno != 0 && typeof value.sitno !== 'undefined') {
+            total++;
+        }
+    });
+    return total;
+}
+function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+    while (0 !== currentIndex) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+    return array;
+}    
+function getSitByPlayer(players, player){
     var status = false;
     $.each(players, function(index, value) {
         if (value.id == player) {
@@ -234,39 +189,6 @@ function getSitNoByPlayer(players, player){
     });
     return status;
 }
-function setGiliran(player, winner = ''){
-    if (winner != '' && getSitNoByPlayer(player, winner) != false) {                    
-        firebase.database().ref(room).update({
-            giliran:winner
-        });                    
-    }else{
-        var sitno = Math.floor((Math.random() * 10) + 1);
-        for (var i = 1; i <= 10; i++) {
-            playerBySit = getPlayerBySit(player, sitno);
-            if (parseInt(playerBySit.sitno) == sitno) {
-                firebase.database().ref(room).update({
-                    giliran:playerBySit.id
-                });
-                break;
-            }
-            if (sitno == 10) {
-                sitno = 1;
-            }else{
-                sitno++;
-            }
-        }
-    }
-}            
-
-function checkGiliran(){
-    var status = false;
-    firebase.database().ref(room+'/giliran').once('value', function(response) {
-        if (response.val() == me.id) {
-            status = true;
-        }
-    });
-    return status;
-}            
 function getPlayerBySit(player,sitno){
     var status = false;
     $.each(player, function(index, value) {
@@ -277,32 +199,289 @@ function getPlayerBySit(player,sitno){
     });                    
     return status;
 }
-function getCountPlay(player){
+function setGiliran(response){
+    if (response) {            
+        var bom = response.bom;
+        var winner = response.winner;            
+        var players = response.player;
+        if (winner != '' && getSitByPlayer(players, winner) != false) {
+            return winner;
+        }else if (bom != '' && getSitByPlayer(players, bom) != false) {
+            return bom;            
+        }else{
+            var sitno = Math.floor((Math.random() * 10) + 1);
+            for (var i = 1; i <= 10; i++) {
+                player = getPlayerBySit(players, sitno);
+                if (parseInt(player.sitno) == sitno) {
+                    return player.id;
+                    break;
+                }
+                if (sitno == 10) {
+                    sitno = 1;
+                }else{
+                    sitno++;
+                }
+            }
+        }
+    }
+}            
+
+function setLoser(players, callBack){
+    $.each(players, function(index, value) {
+        if (value.card != '[]' && (value.status == 'main' || value.status == 'pas')) {
+            firebase.database().ref(room).update({                 
+                loser: value.id
+            });
+        }
+    });
+    callBack(players);
+}
+
+function checkGiliran(){
+    var status = false;
+    firebase.database().ref(room+'/giliran').once('value', function(response) {
+        if (response.val() == me.id) {
+            status = true;
+        }
+    });
+    return status;
+}            
+
+function checkReset(){
+    firebase.database().ref(room).once('value').then(function(response){        
+        var players = response.val().player;
+        var totalPlayerCard = 0;
+        var totalPlayerSit = 0;
+        $.each(players, function(index, value) {
+            if (value.card != '[]' && typeof value.card !== 'undefined') {
+                totalPlayerCard += 1;
+            }
+            if (value.sitno && value.sitno != 0) {
+                totalPlayerSit += 1;
+            }
+        });
+        if (totalPlayerSit == 1 || (totalPlayerSit > 1 && totalPlayerCard <= 1)) {
+            if (totalPlayerSit > 1) {
+                setLoser(players, function(){                    
+                    resetGame();
+                });                
+            }else{                
+                resetGame();
+            }
+        }
+    });
+}
+
+function resetGame(){
+    firebase.database().ref(room).once('value', function(response) {   
+        var player = response.val().player;
+        var totalPlayer = getTotalPlayer(player);
+        var totalCard = 52;
+        var card = new Array(totalCard);
+        for (var i = 0; i < card.length; i++) {
+            card[i] = i;
+        }
+        card = shuffle(card);
+        var playerCard = new Array(totalPlayer);
+        for (var i = 0; i < totalPlayer; i++) {
+            playerCard[i] = [];
+        }
+        $.each(card, function(index, value) {
+            playerCard[index % totalPlayer].push(value);
+        });
+        var i = 0;
+        $.each(player, function(index, value) {
+            if (value.sitno && value.sitno != 0 && typeof value.sitno !== 'undefined' && totalPlayer > 1) {
+                firebase.database().ref(room+'/player/'+index).update({
+                    card: JSON.stringify(playerCard[i]),
+                    status: 'main'
+                });
+                i++;
+            }else{
+                firebase.database().ref(room+'/player/'+index).update({                 
+                    card: '[]',
+                    status: 'menunggu'
+                }); 
+            }
+        });
+        var giliran = setGiliran(response.val());
+        firebase.database().ref(room).update({
+            giliran: giliran,
+            winner:0,
+            bom:0,
+            tablecard:'[]',
+            tablecardplayer:0,
+            warisan:0
+        });
+    });
+}
+function remove(array, element) {
+    const index = array.indexOf(element);
+    array.splice(index, 1);
+}
+function setWarisan(callBack){
+    firebase.database().ref(room).once('value', function(response) {                                    
+        var giliran = response.val().giliran;
+        var players = response.val().player;
+        var sitno = response.val().player[giliran].sitno;
+        if (sitno == 10) {
+            sitno = 1;
+        }else{
+            sitno++;
+        }                
+        for (var i = 1; i <= 10; i++) {
+            player = getPlayerBySit(players, sitno);
+            if (player.status && player.status != 'menang' && player.status != 'menunggu') {
+                firebase.database().ref(room).update({
+                    warisan:player.id
+                });
+                break;
+            }
+            if (sitno == 10) {
+                sitno = 1;
+            }else{
+                sitno++;
+            }
+        }
+    }).then(function(){
+        callBack();
+    });
+}
+
+function sendCard(cardSelected, callBack){
+    firebase.database().ref(room).once('value', function(response) {
+        var giliran = response.val().giliran;
+        var playerCard = JSON.parse(response.val().player[giliran].card);  
+        firebase.database().ref(room).update({
+            tablecard:JSON.stringify(cardSelected),
+            tablecardplayer:response.val().player[giliran].id
+        }).then(function(){
+            firebase.database().ref(room).update({
+                warisan:0
+            }).then(function(){                
+                $.each(cardSelected, function(index, value) {
+                    remove(playerCard, value);
+                });            
+                firebase.database().ref(room+'/player/'+giliran).update({
+                    card:JSON.stringify(playerCard)
+                }).then(function(){   
+                    if (playerCard.length == 0) {
+                        firebase.database().ref(room+'/player/'+giliran).update({
+                            status:'menang'
+                        }).then(function(){
+                            setWarisan(function(){
+                                if (response.val().winner == 0 || typeof response.val().winner === 'undefined') {
+                                    firebase.database().ref(room).update({
+                                        winner:giliran,
+                                        juara:giliran
+                                    }).then(function(){
+                                        changeGiliran(function(){
+                                            checkReset();
+                                        });
+                                    });
+                                }else{
+                                    changeGiliran(function(){
+                                        checkReset();
+                                    });
+                                }
+                            });
+                        });
+                    }else{
+                        changeGiliran(function(){
+                            checkReset();
+                        });
+                    }
+                });
+            });
+        });
+    }).then(function(){
+        callBack(cardSelected);
+    });
+}
+function changeGiliran(callBack = function(){}){
+    firebase.database().ref(room).once('value', function(response) {        
+        var giliran = response.val().giliran;
+        var players = response.val().player;
+        var warisan = response.val().warisan;
+        var sitno = getSitByPlayer(players, giliran);
+
+        if (getCountPlay(players)==0) {    
+            firebase.database().ref(room).update({
+                giliran:warisan
+            }).then(function(){
+                firebase.database().ref(room).update({
+                    warisan:0
+                });    
+                setPlayAll(players);
+            });
+        }
+        
+        if (sitno == 10) {
+            sitno = 1;
+        }else{
+            sitno++;
+        }
+        for (var i = 1; i <= 10; i++) {
+            var player = getPlayerBySit(players, sitno);        
+            if (player.status == 'main') {            
+                firebase.database().ref(room).update({
+                    giliran:player.id
+                }).then(function(){
+                    if (getCountPlay(players) <= 1 && (warisan == 0 || typeof warisan === 'undefined')) {
+                        setPlayAll(players);
+                    }
+                });
+                break;
+            }
+            if (sitno == 10) {
+                sitno = 1;
+            }else{
+                sitno++;
+            }
+        }
+    }).then(function(){
+        callBack();
+    });
+}
+function setPlayAll(players){
+    firebase.database().ref(room).once('value', function(response) {   
+        var bom = response.val().bom;
+        var winner = response.val().winner;
+        if (bom && typeof bom !== 'undefined' && bom != 0) {
+            if (winner != 0 && typeof winner !== 'undefined') {                
+                firebase.database().ref(room).update({
+                    winner:bom
+                }).then(function(){
+                    resetGame();
+                });
+            }else{                
+                resetGame();
+            }
+        }    
+    });
+    $.each(players, function(index, value) {
+        if (value.status == 'pas') {
+            firebase.database().ref(room+'/player/'+value.id).update({
+                status:'main'
+            }).then(function(){
+                firebase.database().ref(room).update({
+                    tablecard:'[]',
+                    tablecardplayer:0,
+                    warisan:0
+                });                
+            });            
+        }
+    });
+}
+function getCountPlay(players){
     var total = 0;
-    $.each(player, function(index, value) {
-        if (value.status == 'play') {
+    $.each(players, function(index, value) {
+        if (value.status == 'main') {
             total += 1;
         }
     });
     return total;
 }
-
-function checkSitAvailable(sitno = 0) {
-    var status = true;
-    firebase.database().ref(room+'/player').once('value', function(response) {
-        if (response.val()) {
-            $.each(response.val(), function(index, value) {
-                if (parseInt(value.sitno) == sitno) {
-                    status = false;
-                    return false;
-                }
-                tablecard += '<img class="card img-thumbnail" src="assets/img/'+value+'.png">';
-            });                        
-        }
-    });
-    return status;
-}
-
 function checkStraight(cardSelected){
     if (cardSelected.length != 5) {
         return false;
@@ -353,7 +532,6 @@ function checkFullHouse(cardSelected){
     $.each(cardFullHouse, function(index, value){
         if($.inArray(value, uniqueCardFullHouse) === -1) uniqueCardFullHouse.push(value);
     });
-    console.log(uniqueCardFullHouse);
     if (uniqueCardFullHouse.length == 2) {
         var a = uniqueCardFullHouse[0];
         var b = uniqueCardFullHouse[1];
@@ -419,10 +597,8 @@ function validasi(cardSelected, card_on_arena){
     // validasi 5 card
     if (cardSelected.length == 5) {
         if (checkFullHouse(cardSelected).status) {
-            console.log('full house');                        
             if (card_on_arena.length != 0) {
                 if (checkFullHouse(card_on_arena).status) {
-                    console.log(checkFullHouse(cardSelected).big, checkFullHouse(card_on_arena).big);
                     if (checkFullHouse(cardSelected).big < checkFullHouse(card_on_arena).big) {
                         return false;
                     }
@@ -431,7 +607,6 @@ function validasi(cardSelected, card_on_arena){
                 }
             }
         }else if (checkFlush(cardSelected) && checkStraight(cardSelected)) {
-            console.log('straight flush');
             if (card_on_arena.length != 0) {
                 if (checkStraight(card_on_arena) || checkFlush(card_on_arena)) {
                     if (Math.max(...cardSelected) < Math.max(...card_on_arena)) {
@@ -446,7 +621,6 @@ function validasi(cardSelected, card_on_arena){
                 }
             }
         }else if (checkFlush(cardSelected)) {
-            console.log('flush');    
             if (card_on_arena.length != 0) {                            
                 if (checkFlush(card_on_arena) && !checkStraight(card_on_arena)) {
                     if (Math.max(...cardSelected) < Math.max(...card_on_arena)) {
@@ -457,7 +631,6 @@ function validasi(cardSelected, card_on_arena){
                 }
             }                    
         }else if (checkStraight(cardSelected)) {                        
-            console.log('straight');
             if (card_on_arena.length != 0) {                            
                 if (checkStraight(card_on_arena) && !checkFlush(card_on_arena)) {
                     if (Math.max(...cardSelected) < Math.max(...card_on_arena)) {
@@ -468,112 +641,331 @@ function validasi(cardSelected, card_on_arena){
                 }
             }
         }else{
-            console.log('not match');
             return false;
         }
     }
     
     return true;
 }
-function setWarisan(winner){
-    console.log('setWarisan');
-    firebase.database().ref(room).once('value', function(response) {                                    
-        var sitno = response.val().player[winner].sitno;
-        if (sitno == 10) {
-            sitno = 1;
-        }else{
-            sitno++;
-        }                
-        for (var i = 1; i <= 10; i++) {
-            playerBySit = getPlayerBySit(response.val().player, sitno);
-            if (playerBySit.status && playerBySit.status != 'winner' && playerBySit.status != 'waiting') {
-                firebase.database().ref(room).update({
-                    warisan:playerBySit.id
-                });
-                break;
-            }
-            if (sitno == 10) {
-                sitno = 1;
-            }else{
-                sitno++;
-            }
-        }
-    });
-}
-function tes(callback){
-    console.log('tes 1');
-    console.log('tes 2');
-    console.log('tes 3');
-    callback();
-}
-function kickPlayer(player = 0){           
-    firebase.database().ref(room).once('value', function(response) {
-        var giliran = response.val().giliran;
-        if (player != 0) {
-            giliran = player;
-        }
-        firebase.database().ref(room+'/player/'+giliran).update({
-            card:'[]',
-            status:0,
-            sitno:0
-        }).then(function(){
-            if (response.val().giliran == giliran) {                    
-                changeGiliran(function(){
-                    checkReset();
-                });
-            }
-        });
-    });
-} 
-function setLoserByBom(player, bom, callback){
-    if (getCountPlay(player)==2 && bom != 0) {    
+function setLoserByBom(players, bom, callback){
+    if (getCountPlay(players)==2 && bom != 0) {    
         firebase.database().ref(room).update({
             loser: me.id
         });
     }    
-    callback(player, bom);
+    callback(players, bom);
 }
-function sendCard(cardSelected, callback)
-{
+function addBot(){
+    var dewaJudiList = ['Chow Yun Fat', 'Stephen Chow', 'Andy Lau', 'Ng Man-tat', 'Charles Heung', 'Shing Fui-On', 'Lung Fong', 'Jhon Ching', 'Wong Yat-fei', 'Wong Jing'];
     firebase.database().ref(room).once('value', function(response) {
-        var giliran = response.val().giliran;
-        var playerCard = JSON.parse(response.val().player[giliran].card)
-        firebase.database().ref(room).update({
-            tablecard:JSON.stringify(cardSelected),
-            tablecardplayer:response.val().player[giliran].id
-        }).then(function(){
-            $.each(cardSelected, function(index, value) {
-                remove(playerCard, value);
-            });
-            firebase.database().ref(room+'/player/'+giliran).update({
-                card:JSON.stringify(playerCard)
-            }).then(function(){   
-                if (response.val().warisan && response.val().warisan != 0 && typeof response.val().warisan != 'undefined') {
-                    firebase.database().ref(room).update({
-                        warisan:0
-                    });      
+        for (var i = 1; i <= 10; i++) {
+            if (getPlayerBySit(response.val().player, i) == false) {
+                firebase.database().ref(room+'/player/'+i).update({
+                    id:i,
+                    name: dewaJudiList[i-1],
+                    status:'menunggu',
+                    card:'[]',
+                    sitno:i,
+                    picture:'assets/img/bot/bot'+i+'.jpg',
+                    type:'bot'
+                }).then(function(){
+                    checkReset();
+                });
+                break;
+            }
+        }
+    });                
+}
+function removeBot(){
+    firebase.database().ref(room+'/player').once('value', function(response) {
+        $.each(response.val(), function(index, value) {
+            if (value.type == 'bot' && value.sitno != 0) {
+                setStandUp(value.id, function(){                    
+                    checkReset();
+                    return false;
+                });
+            }
+        });
+    });
+}
+function botPair(card, tablecard = 0, count = 0){
+    var card = card.sort(function(a, b){return a - b});
+    var selected, total, status;
+    status = false;
+    $.each(card, function(index, value) {
+        selected = [];
+        total = 0;
+        $.each(card, function(indexs, values) {
+            if ((value-(value%4))/4 == (values-(values%4))/4) {
+                selected.push(values);
+                total++;
+            }                        
+        });                    
+        if (tablecard !== 0) {
+            if (total == tablecard.length) {
+                if (Math.max.apply(Math, selected) > Math.max.apply(Math, tablecard)) {
+                    status = true;
+                    return false;
                 }
-                if (playerCard.length == 0) {
-                    firebase.database().ref(room+'/player/'+giliran).update({
-                        status:'winner'
-                    }).then(function(){
-                        setWarisan(giliran);
-                        if (response.val().winner == 0 || typeof response.val().winner === 'undefined') {
-                            firebase.database().ref(room).update({
-                                winner:giliran,
-                                juara:giliran
-                            }).then(function(){
-                                checkReset();
-                            });
-                        }else{
-                            checkReset();                                                
-                        }
+            }
+        }else{          
+            if (count !== 0) {
+                if (total == count) {
+                    status = true;
+                    return false;                                
+                }
+            }else{                            
+                status = true;    
+                return false;
+            }
+        }
+    });
+    if (status) {
+        return selected;
+    }else{
+        return false;
+    }
+}
+function botMinMatch5(card, tablecard = 0){
+    var matchtype;
+    if (checkFullHouse(tablecard).status) {
+        matchtype = 'fh';
+    }else if (checkFlush(tablecard) && checkStraight(tablecard)) {
+        matchtype = 'sf';
+    }else if (checkFlush(tablecard)) {
+        matchtype = 'f';
+    }else if (checkStraight(tablecard)) {                        
+        matchtype = 's';
+    }
+    
+    var card = card.sort(function(a, b){return a - b});
+    var selected, total, status;
+    status = false;
+    $.each(card, function(index, value) {
+        selected = [];
+        selected.push(value);
+        total = 1;
+        $.each(card, function(indexs, values) {
+            if (value != values) {                            
+                if (matchtype == 'fh') {
+                    if ((value-(value%4))/4 == (values-(values%4))/4) {
+                        selected.push(values);
+                        total++;
+                    }                                                        
+                }else if (matchtype == 'sf') {
+                    if ((selected[selected.length-1]%4 == values%4) && (((selected[selected.length-1]-(selected[selected.length-1]%4))/4)+1 == (values-(values%4))/4)) {
+                        selected.push(values);
+                        total++;                                
+                    }
+                }else if (matchtype == 'f') {
+                    if (selected[selected.length-1]%4 == values%4) {
+                        selected.push(values);
+                        total++;
+                    }                                                                         
+                }else if (matchtype == 's') {
+                    if (((selected[selected.length-1]-(selected[selected.length-1]%4))/4)+1 == (values-(values%4))/4) {
+                        selected.push(values);
+                        total++;
+                    }                                             
+                }
+            }
+            if (total == tablecard.length) {
+                return false;
+            }       
+        });      
+        if (matchtype == 'fh') {                        
+            if (total == 3) {
+                var child = botPair(card, 0, 2);
+                if (child) {
+                    $.each(child, function(indexChild, valueChild) {
+                        selected.push(valueChild);
                     });
                 }
-                changeGiliran(function(){});
-            });                    
-        });                    
-    }).then(function(){
-        callback(cardSelected);
-    });                    
+                if (checkFullHouse(selected).big > checkFullHouse(tablecard).big) {                                
+                    status = true;
+                    return false;
+                }
+            }
+        }else{
+            if (tablecard !== 0) {
+                if (total == tablecard.length) {
+                    if (Math.max.apply(Math, selected) > Math.max.apply(Math, tablecard)) {
+                        status = true;
+                        return false;
+                    }
+                }
+            }else{                    
+                status = true;    
+                return false;
+            }
+        }         
+    });
+    if (status) {
+        return selected;
+    }else{
+        return false;
+    }
+}
+function botFullHouse(card){
+    var card = card.sort(function(a, b){return a - b});
+    var selected;
+    var status = false;
+    $.each(card, function(index, value) {
+        selected = [];
+        total = 0;
+        $.each(card, function(indexs, values) {
+            if ((value-(value%4))/4 == (values-(values%4))/4) {
+                selected.push(values);
+                total++;
+            }                                                                                
+        });
+        if (total == 3) {
+            var child = botPair(card, 0, 2);
+            if (child) {
+                $.each(child, function(indexChild, valueChild) {
+                    selected.push(valueChild);
+                });
+                status = true;
+                return false;
+            }                        
+        }
+    });
+    if (status) {
+        return selected;
+    }else{
+        return false;
+    }                
+}
+function botStraight(card){
+    var card = card.sort(function(a, b){return a - b});
+    var selected;
+    var status = false;
+    $.each(card, function(index, value) {
+        selected = [];
+        selected.push(value);
+        total = 1;
+        $.each(card, function(indexs, values) {
+            if (((selected[selected.length-1]-(selected[selected.length-1]%4))/4)+1 == (values-(values%4))/4) {
+                selected.push(values);
+                total++;
+            }                  
+        });
+        if (total == 5) {
+            status = true;
+            return false;
+        }                                                              
+    });
+    if (status) {
+        return selected;
+    }else{
+        return false;
+    }                
+}
+function botStraightFlush(card){
+    var card = card.sort(function(a, b){return a - b});
+    var selected;
+    var status = false;
+    $.each(card, function(index, value) {
+        selected = [];
+        selected.push(value);
+        total = 1;
+        $.each(card, function(indexs, values) {
+            if ((((selected[selected.length-1]-(selected[selected.length-1]%4))/4)+1 == (values-(values%4))/4) && (selected[selected.length-1]%4 == values%4)) {
+                selected.push(values);
+                total++;
+            }                  
+        });
+        if (total == 5) {
+            status = true;
+            return false;
+        }                                                              
+    });
+    if (status) {
+        return selected;
+    }else{
+        return false;
+    }                
+}
+function bot(){
+    firebase.database().ref(room).once('value', function(response) {        
+        if (response.val() && response.val().tablecard) {            
+            var tablecard = JSON.parse(response.val().tablecard);
+            var playergiliran = response.val().player[response.val().giliran];
+            var botcard = JSON.parse(playergiliran.card);
+            var botselected = [];
+            if (playergiliran.status == 'main' && playergiliran.type == 'bot' && response.val().tablecardplayer != playergiliran.id) {            
+                if (tablecard.length == 0) {
+                    botselected = botFullHouse(botcard);
+                    if (!botselected) {                                    
+                        botselected = botStraightFlush(botcard);
+                        if (!botselected) {                                    
+                            botselected = botStraight(botcard);
+                            if (!botselected) {                                    
+                                botselected = botPair(botcard);
+                            }
+                        }
+                    }
+                    sendCard(botselected, function(){});
+                }else if (tablecard.length == 1 && tablecard[0] > 47) {       
+                    botselected = botStraightFlush(botcard);
+                    if (!botselected) {                                    
+                        botselected = botPair(botcard, 0, 4);
+                    }                                
+                    if (botselected) {
+                        sendCard(botselected, function(){
+                            firebase.database().ref(room).update({
+                                bom: playergiliran.id
+                            });
+                        });
+                    }else{
+                        firebase.database().ref(room+'/player/'+response.val().giliran).update({
+                            status: 'pas'
+                        }).then(function(){                      
+                            changeGiliran(function(){});
+                        });                                    
+                    }
+                }else if (tablecard.length >= 1 && tablecard.length < 5) {            
+                    botselected = botPair(botcard, tablecard);
+                    if (botselected) {
+                        sendCard(botselected, function(){});
+                    }else{
+                        firebase.database().ref(room+'/player/'+response.val().giliran).update({
+                            status: 'pas'
+                        }).then(function(){                      
+                            changeGiliran(function(){});
+                        });                                    
+                    }
+                }else if (tablecard.length == 5) {            
+                    botselected = botMinMatch5(botcard, tablecard);
+                    if (botselected) {
+                        sendCard(botselected, function(){});
+                    }else{
+                        firebase.database().ref(room+'/player/'+response.val().giliran).update({
+                            status: 'pas'
+                        }).then(function(){                      
+                            changeGiliran(function(){});
+                        });                                    
+                    }
+                }else{     
+                    firebase.database().ref(room+'/player/'+response.val().giliran).update({
+                        status: 'pas'
+                    }).then(function(){                      
+                        changeGiliran(function(){});
+                    });                
+                }                    
+            }
+        }
+    });
+}
+function sendChat(){
+    if (typeof me.name !== 'undefined') {                    
+        firebase.database().ref(room+'/chat').update({
+            message:$('#input-chat').val(),
+            from:me.name
+        }).then(function(){                    
+            $('#input-chat').val('');
+        });                                                                
+    }else{
+        swal("Oops", "Silahkan login terlebih dahulu" , "error");
+    }
 }

@@ -2,156 +2,132 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Poker</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <link rel="stylesheet" href="assets/css/style.css?v=2018.03.09.10.15">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">        
+        <link rel="stylesheet" href="assets/css/style.css">        
+        <title>Cianjur Poker</title>
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115449429-1"></script>
         <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'UA-115449429-1');
-        </script>        
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-115449429-1');
+        </script>                
     </head>
     <body>
-        <img src="assets/img/poker_table_green.png?v=2018.03.07.11.47" alt="">
-        <div id="tablecard" style="width:300px"></div>
-        <div class="tablesit" style="display:none">     
-            <div class="sit-1 sitwrap">                
-                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="1">
-                    Duduk
-                </a>
-            </div>       
-            <div class="sit-2 sitwrap">
-                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="2">
-                    Duduk
-                </a>
-            </div>       
-            <div class="sit-3 sitwrap">                
-                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="3">
-                    Duduk
-                </a>
-            </div>       
-            <div class="sit-4 sitwrap">                
-                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="4">
-                    Duduk
-                </a>
-            </div>       
-            <div class="sit-5 sitwrap">                
-                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="5">
-                    Duduk
-                </a>
-            </div>       
-            <div class="sit-6 sitwrap">                
-                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="6">
-                    Duduk
-                </a>
-            </div>       
-            <div class="sit-7 sitwrap">                
-                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="7">
-                    Duduk
-                </a>
-            </div>       
-            <div class="sit-8 sitwrap">                
-                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="8">
-                    Duduk
-                </a>
-            </div>       
-            <div class="sit-9 sitwrap">                
-                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="9">
-                    Duduk
-                </a>
-            </div>       
-            <div class="sit-10 sitwrap">                
-                <a href="javascript:void(0)" class="sit btn btn-sm btn-secondary" data-index="10">
-                    Duduk
-                </a>
-            </div>       
-        </div>
-        <div class="playersit"></div>
-        <div class="button-close">
-            <button id="btn-standup" type="button" name="button" class="btn btn-sm btn-secondary" disabled="true">Berdiri</button>
-            <!-- <button id="btn-reset" type="button" name="button" class="btn btn-sm btn-danger" onclick="resetGame()">Reset Game</button> -->
-        </div>
-        <div class="chat">
-            <div class="card text-white bg-dark">
-                <div class="card-header">
-                    Chat
-                </div>
-                <div id="chat-body" class="card-body">
-                    
-                </div>
-                <div class="card-footer">
-                    <div class="input-group">
-                        <input id="input-chat" type="text" class="form-control" placeholder="Enter chat ...">
-                        <div class="input-group-append">
-                            <button id="btn-chat" class="btn btn-primary" type="button">Send</button>
-                        </div>
-                    </div>                    
-                </div>
-            </div>
-        </div>
-        <div class="login">            
-            <div class="card text-white bg-dark">
-                <div class="card-body">
-                    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
-                    <div id="status"></div>                
-                </div>
-            </div>
-        </div>
-        <div class="button-play">            
-            <button id="btn-pas" type="button" name="button" class="btn btn-lg btn-danger">Pas</button>
-            <button id="btn-send" type="button" name="button" class="btn btn-lg btn-success">Ikut</button>
-        </div>
-        <div class="mecard">
-            <div class="card text-white bg-dark">
-                <div id="mecard" class="card-body">
-
-                </div>
-            </div>
-        </div>
-        <div class="room">
-            <div class="card text-white bg-dark">
-                <div class="card-body">
-                    <label for="">Room</label>
-                    <div class="form-group">
-                        <input id="room-name" type="text" name="" value="" class="form-control">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card text-white bg-dark">
+                    <div class="card-body">
+                        <img src="assets/img/table.png" class="img-fluid">
+                        <div class="player-wrap"></div>
+                        <div id="tablecard"></div>
+                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-1" data-value="1" style="display:none">Duduk</button>
+                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-2" data-value="2" style="display:none">Duduk</button>
+                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-3" data-value="3" style="display:none">Duduk</button>
+                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-4" data-value="4" style="display:none">Duduk</button>
+                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-5" data-value="5" style="display:none">Duduk</button>
+                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-6" data-value="6" style="display:none">Duduk</button>
+                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-7" data-value="7" style="display:none">Duduk</button>
+                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-8" data-value="8" style="display:none">Duduk</button>
+                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-9" data-value="9" style="display:none">Duduk</button>
+                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-10" data-value="10" style="display:none">Duduk</button>
+                        <button type="button" name="button" class="btn btn-sm btn-secondary stand-up" style="display:none">Berdiri</button>
+                        <button id="btn-pas" type="button" name="button" class="btn btn-lg btn-danger" style="display:none">Pas</button>
+                        <button id="btn-send" type="button" name="button" class="btn btn-lg btn-success" style="display:none">Ikut</button>
                     </div>
-                    <button id="join-room" type="button" name="button" class="btn btn-primary">Ikut Gabung</button>
+                </div>                
+                <div class="card text-white bg-dark">
+                    <div id="mecard" class="card-body clearfix">
+                        
+                    </div>
                 </div>
-            </div>            
+            </div>
+            <div class="col-md-4">                
+                <div class="card text-white bg-dark">
+                    <div class="card-body">
+                        <div id="status"></div>                
+                        <fb:login-button id="fb-login" scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+                    </div>
+                </div>        
+                <div class="card text-white bg-dark admin" style="display:none">
+                    <div class="card-body">
+                        <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="resetGame()">Reset</button>
+                        <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="addBot()">Add Bot</button>
+                        <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="removeBot()">Remove Bot</button>
+                    </div>
+                </div>        
+                <div class="card text-white bg-dark">
+                    <div class="card-header">
+                        Chat
+                    </div>
+                    <div id="chat-body" class="card-body">
+                        
+                    </div>
+                    <div class="card-footer">
+                        <div class="input-group">
+                            <input id="input-chat" type="text" class="form-control" placeholder="Enter chat ...">
+                            <div class="input-group-append">
+                                <button id="btn-chat" class="btn btn-primary" type="button">Send</button>
+                            </div>
+                        </div>                    
+                    </div>
+                </div>      
+                <div class="card text-white bg-dark">
+                    <div class="card-body">
+                        <label for="">Room</label>
+                        <div class="form-group">
+                            <input id="room-name" type="text" name="" value="" class="form-control">
+                        </div>
+                        <button id="join-room" type="button" name="button" class="btn btn-primary">Ikut Gabung</button>
+                    </div>
+                </div>                      
+            </div>
         </div>
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
-        <script src="assets/js/config.js"></script>
-        <script src="assets/js/helper.js?v=2018.03.15.23.03"></script>
-        <script src="assets/js/facebook.js?v=2"></script>
+        <script type="text/javascript" src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>        
+        <script type="text/javascript" src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+        <script type="text/javascript" src="assets/js/helper.js"></script>
+        <script type="text/javascript" src="assets/js/firebase.js"></script>
+        <script type="text/javascript" src="assets/js/facebook.js"></script>
         <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
         <script type="text/javascript">
-            var room = getParameterByName('room');
-            if (!room) {
-                room = 'games';
-            }
-            var me = '';
-            var cardSelected = [];
+            var room = getRoom();
+            var me;
             var timeout = 100;
-
+            var cardSelected = [];
+            
+            // admin
+            if (getParameterByName('admin')=='sempakbolong') {
+                $('.admin').show();
+            }
+            
             // timer
             setInterval(function(){
-                if (timeout==0) {
+                if (timeout<=0) {
                     timeout = 100;
-                    kickPlayer();
+                    firebase.database().ref(room).once('value').then(function(response){        
+                        if (response.val()) {                            
+                            setStandUp(response.val().giliran);
+                        }
+                    });
                 }
-                timeout--;
+                timeout = timeout-2;
                 $('body').find('.progress-bar').attr('style','width: '+timeout+'%');
             },1000);
+            firebase.database().ref(room+'/player').on('value', function(response) {                
+                timeout = 100;
+            });
             
+            // Bot
+            setInterval(function(){
+                bot();
+            },3000)
+
             // chat 
             firebase.database().ref(room+'/chat').on('value', function(response) {
                 firebase.database().ref(room+'/giliran').once('value', function(responseGiliran) {                    
@@ -164,229 +140,38 @@
                     $('#chat-body').scrollTop($('#chat-body')[0].scrollHeight);
                 }
             });
-            firebase.database().ref(room+'/player').on('value', function(response) {                
-                timeout = 100;
-            });
-            // bot
-            // firebase.database().ref(room+'/giliran').on('value', function(response) {   
-            //     if (response.val()) {                    
-            //         firebase.database().ref(room+'/player/'+response.val()).once('value', function(responsePlayer) {                       
-            //             // bot
-            //             if (responsePlayer.val() && responsePlayer.val().type == 'bot') {
-            //                 setTimeout(function(){                        
-            //                     console.log('bot Jalan');
-            //                     bot();
-            //                 },3000)
-            //             }                
-            //         });
-            //     }
-            // });
 
-            setInterval(function(){
-                bot();
-            },3000)
-            
             // Main Utama
             firebase.database().ref(room).on('value', function(response) {   
-                // Notif
-                // if (response.val() && response.val().giliran == me.id) {
-                //     responsiveVoice.speak("Dieum Dieum Bae, Jalan Coy", "Indonesian Female");
-                // }                                                        
-                
-                // check button play
-                if (response.val() && response.val().giliran == me.id && response.val().player[me.id].status == 'play') {
-                    $('.button-play').show();
-                }else{
-                    $('.button-play').hide();
-                }
-
-                // show tablecard
-                if (response.val() && response.val().tablecard) {
-                    var tablecard = '';
-                    $.each(JSON.parse(response.val().tablecard), function(index, value) {
-                        tablecard += '<img class="tablecard img-thumbnail" src="assets/img/'+value+'.png">';
+                if (me && response.val()) {                    
+                    var giliran = response.val().giliran
+                    if (giliran == me.id) {
+                        $('#btn-send').show();
+                        $('#btn-pas').show();
+                    }else{
+                        $('#btn-send').hide();
+                        $('#btn-pas').hide();                    
+                    }
+                    showPlayer(response.val(), function(){
+                        
                     });
-                    $('#tablecard').html(tablecard);
-                }
-                // show player
-                if (response.val() && response.val().player) {
-                    $('.playersit').html('');
-                    $('.tablesit').show();
-                    $('.tablesit > .sitwrap').show();
-                    $('#btn-standup').prop('disabled', true);
-                    var mahkota = '';
-                    var mecard = '';
-                    $.each(response.val().player, function(indexPlayer, valuePlayer) {
-                        if (response.val().juara == valuePlayer.id) {
-                            mahkota = '<div class="card-header"><img class="img-fluid" src="assets/img/mahkota.png"></div>';
-                            mahkota += '<div class="piala" style="position:absolute;left:-40px;top:-5px"><img class="img-fluid" src="assets/img/piala.png"></div>';
-                        }else if(response.val().loser == valuePlayer.id){
-                            mahkota = '<div class="card-header"><img class="img-fluid" src="assets/img/loser.jpg"></div>';
-                            mahkota += '<div class="anting" style="position:absolute;left:-40px"><img class="img-fluid" src="assets/img/anting.png"></div>';
-                        }else{
-                            mahkota = '';
-                        }
-                        var giliran = 'bg-dark';
-                        var status = '<span class="badge badge-secondary">'+valuePlayer.status+'</span>';
-                        if (response.val().giliran && response.val().giliran == valuePlayer.id) {
-                            giliran = 'bg-warning';
-                        }
-                        var playercard = '<div class="playercard">';
-                        var kartuSelected = '';
-                        if (valuePlayer.card) {    
-                            $.each(JSON.parse(valuePlayer.card).sort(function(a, b){return a - b}), function(indexCard, valueCard) {
-                                kartuSelected = '';
-                                if (cardSelected.length > 0){                                    
-                                    if (cardSelected.indexOf(valueCard)!= -1) {
-                                        kartuSelected = 'active';
-                                    }
-                                }
-                                if (valuePlayer.id == me.id) {                                          
-                                    mecard += '<a href="javascript:void(0)" class="kartu '+kartuSelected+'" data-index="'+indexCard+'" data-value="'+valueCard+'"><img class="card img-thumbnail" src="assets/img/'+valueCard+'.png"></a>';
-                                    playercard += '<img class="card img-thumbnail" src="assets/img/back.png">';
-                                }else{                                    
-                                    playercard += '<img class="card img-thumbnail" src="assets/img/back.png">';
-                                }                                                       
-                            });
-                        }
-                        playercard += '</div>';
-                        if (valuePlayer.sitno) {         
-                            $('.tablesit > .sit-'+valuePlayer.sitno).hide();
-                            var waktu = '<div class="card-footer"><div class="progress" style="height: 5px;"><div style="width: 100%;" class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div></div></div>';
-                            if (response.val().giliran && response.val().giliran != valuePlayer.id) {
-                                waktu = '';
-                            }
-                            $('.playersit').append('<div class="sit-'+valuePlayer.sitno+' sitwrap"><div class="card-custom card text-white '+giliran+'">'+mahkota+'<div class="card-header">'+valuePlayer.name+'</div><div class="card-body"><img class="img-thumbnail img-fluid" src="'+valuePlayer.picture+'"></div>'+waktu+'<div class="card-status">'+valuePlayer.status+'</div>'+playercard+'</div></div></div>');
-                        }
-                        if (valuePlayer.id == me.id && valuePlayer.sitno && valuePlayer.sitno != 0) {
-                            $('.tablesit').hide();
-                            $('#btn-standup').prop('disabled', false);
-                        }
-                    });
-
-                    $('#mecard').html(mecard);
                 }
             });
+            
             $('.sit').click(function(){
-                var posisi = $(this).attr('data-index');
-                if (typeof me.id !== 'undefined') {                    
-                    if (checkSitAvailable(parseInt(posisi))) {
-                        firebase.database().ref(room+'/player/'+me.id).update({
-                            sitno:posisi,
-                            status:'waiting'
-                        }).then(function(){
-                            checkReset();
-                        });
-                    }else{
-                        swal("Oops", "Kursi ini udh ada yg nempatin woyyy!" , "error");
-                    }
+                if (me && me.id && typeof me !== 'undefined') {                    
+                    setSit(me.id, $(this).attr('data-value'), function(){
+                        checkReset();
+                    });
                 }else{
-                    swal("Oops", "Login dulu coy, pake facebook!" , "error");
+                    swal("Oops", "Maaf, Silahkan login terlebih dahulu" , "error");
                 }
             });
-            $('body').on('click','#btn-standup',function(){
-                firebase.database().ref(room).once('value').then(function(response){
-                    if (response.val().giliran == me.id) {       
-                        changeGiliran(function(){
-                            firebase.database().ref(room+'/player/'+me.id).update({
-                                sitno:0,
-                                card:'[]',
-                                status:0
-                            }).then(function(){                            
-                                checkReset();
-                            });                                                
-                        });
-                    }else{
-                        firebase.database().ref(room+'/player/'+me.id).update({
-                            sitno:0,
-                            card:'[]',
-                            status:0
-                        }).then(function(){                            
-                            checkReset();
-                        });                                                
-                    }
+            $('.stand-up').click(function(){
+                setStandUp(me.id, function(){
+                    checkReset();
                 });
             });
-
-            $('body').on('click','#btn-send',function(){
-                $(this).prop('disabled', true);
-                firebase.database().ref(room).once('value').then(function(response){                    
-                    var myCard = JSON.parse(response.val().player[me.id].card);
-                    var uniqueCardSelected = [];
-                    $.each(cardSelected, function(i, el){
-                        if($.inArray(el, uniqueCardSelected) === -1 && el <= 51 && el >= 0 && $.inArray(el, myCard) !== -1) uniqueCardSelected.push(el);
-                    });
-                    if (checkGiliran()) {
-                        if (validasi(uniqueCardSelected, JSON.parse(response.val().tablecard))) {
-                            console.log('cardSelected', uniqueCardSelected);
-                            sendCard(uniqueCardSelected, function(){
-                                $('#btn-send').prop('disabled', false);
-                            });
-                            // firebase.database().ref(room).update({
-                            //     tablecard:JSON.stringify(uniqueCardSelected)
-                            // }).then(function(){
-                            //     $.each(uniqueCardSelected, function(index, value) {
-                            //         remove(myCard, value);
-                            //     });
-                            //     firebase.database().ref(room+'/player/'+me.id).update({
-                            //         card:JSON.stringify(myCard)
-                            //     }).then(function(){   
-                            //         if (response.val().warisan && response.val().warisan != 0 && typeof response.val().warisan != 'undefined') {
-                            //             firebase.database().ref(room).update({
-                            //                 warisan:0
-                            //             });      
-                            //         }
-                            //         if (myCard.length == 0) {
-                            //             firebase.database().ref(room+'/player/'+me.id).update({
-                            //                 status:'winner'
-                            //             }).then(function(){
-                            //                 setWarisan(me.id);
-                            //                 if (response.val().winner == 0 || typeof response.val().winner === 'undefined') {
-                            //                     firebase.database().ref(room).update({
-                            //                         winner:me.id,
-                            //                         juara:me.id
-                            //                     }).then(function(){
-                            //                         checkReset();
-                            //                     });
-                            //                 }else{
-                            //                     checkReset();                                                
-                            //                 }
-                            //             });
-                            //         }
-                            //         changeGiliran(function(){});
-                            //         cardSelected = [];
-                            //         $('#btn-send').prop('disabled', false);
-                            //     });                    
-                            // });                    
-                        }else{
-                            swal("Oops", "GAK BISAAA WOYYY!" , "error");
-                            $('#btn-send').prop('disabled', false);
-                        }
-                    }else{
-                        swal("Oops", "Bukan giliran lu coy!" , "error");
-                        $('#btn-send').prop('disabled', false);
-                    }
-                });
-            });            
-            $('body').on('click','#btn-pas',function(){
-                $(this).prop('disabled', true);
-                firebase.database().ref(room).once('value').then(function(response){
-                    if (checkGiliran()) {
-                        firebase.database().ref(room+'/player/'+me.id).update({
-                            status: 'pas'
-                        }).then(function(){          
-                            setLoserByBom(response.val().player, response.val().bom, function(){                                
-                                changeGiliran(function(){});
-                                $('#btn-pas').prop('disabled', false);
-                                checkReset();
-                            });
-                        });
-                    }else{
-                        swal("Oops", "Bukan giliran lu coy!" , "error");
-                        $('#btn-pas').prop('disabled', false);
-                    }
-                });
-            });            
             $('body').on('click','.kartu',function(){
                 cardSelected = [];
                 $(this).toggleClass('active');
@@ -394,18 +179,37 @@
                     cardSelected.push(parseInt(value.getAttribute('data-value')));
                 });
             });
-            function sendChat(){
-                if (typeof me.name !== 'undefined') {                    
-                    firebase.database().ref(room+'/chat').update({
-                        message:$('#input-chat').val(),
-                        from:me.name
-                    }).then(function(){                    
-                        $('#input-chat').val('');
-                    });                                                                
-                }else{
-                    swal("Oops", "Mau ngechat ya login dulu dong coy!" , "error");
-                }
-            }
+            $('#btn-send').click(function(){
+                $(this).prop('disabled', true);
+                firebase.database().ref(room).once('value').then(function(response){                   
+                    var players = response.val().player;
+                    var tablecard = JSON.parse(response.val().tablecard);
+                    var myCard = JSON.parse(players[me.id].card);
+                    var uniqueCardSelected = [];
+                    $.each(cardSelected, function(i, el){
+                        if($.inArray(el, uniqueCardSelected) === -1 && el <= 51 && el >= 0 && $.inArray(el, myCard) !== -1) uniqueCardSelected.push(el);
+                    });
+                    if (checkGiliran()) {   
+                        if (validasi(uniqueCardSelected, tablecard)) {
+                            sendCard(uniqueCardSelected, function(){
+                                $('#btn-send').prop('disabled', false);
+                            });
+                        }else{
+                            swal("Oops", "Maaf, Kartu anda lebih kecil atau tidak termasuk bagian (pair, fullhouse, straight, flush)" , "error");
+                            $('#btn-send').prop('disabled', false);                                                    
+                        }
+                    }else{
+                        swal("Oops", "Maaf, Bukan giliran anda" , "error");
+                        $('#btn-send').prop('disabled', false);                        
+                    }
+                });
+            });
+            $('#btn-pas').click(function(){
+                $(this).prop('disabled', true);
+                setPas(me.id, function(){
+                    
+                });
+            });
             $('#btn-chat').click(function(){
                 sendChat();
             });
@@ -413,290 +217,14 @@
                 if (e.keyCode == 13) {
                     sendChat();
                 }
-            });  
+            });              
             $('#join-room').click(function(){
                 if ($('#room-name').val() != '') {
                     window.location = '?room='+$('#room-name').val();
                 }else{
-                    swal("Oops", "Isi dulu dong nama room nya coy!" , "error");
+                    swal("Oops", "Silahkan isi nama room yang anda inginkan" , "error");
                 }
-            });
-            function botPair(card, tablecard = 0, count = 0){
-                var card = card.sort(function(a, b){return a - b});
-                var selected, total, status;
-                status = false;
-                $.each(card, function(index, value) {
-                    selected = [];
-                    total = 0;
-                    $.each(card, function(indexs, values) {
-                        if ((value-(value%4))/4 == (values-(values%4))/4) {
-                            selected.push(values);
-                            total++;
-                        }                        
-                    });                    
-                    if (tablecard !== 0) {
-                        if (total == tablecard.length) {
-                            if (Math.max.apply(Math, selected) > Math.max.apply(Math, tablecard)) {
-                                status = true;
-                                return false;
-                            }
-                        }
-                    }else{          
-                        if (count !== 0) {
-                            if (total == count) {
-                                status = true;
-                                return false;                                
-                            }
-                        }else{                            
-                            status = true;    
-                            return false;
-                        }
-                    }
-                });
-                if (status) {
-                    return selected;
-                }else{
-                    return false;
-                }
-            }
-            function botMinMatch5(card, tablecard = 0){
-                var matchtype;
-                if (checkFullHouse(tablecard).status) {
-                    console.log('fullhouse');
-                    matchtype = 'fh';
-                }else if (checkFlush(tablecard) && checkStraight(tablecard)) {
-                    console.log('straight flush');
-                    matchtype = 'sf';
-                }else if (checkFlush(tablecard)) {
-                    console.log('flush');    
-                    matchtype = 'f';
-                }else if (checkStraight(tablecard)) {                        
-                    console.log('straight');    
-                    matchtype = 's';
-                }
-                
-                var card = card.sort(function(a, b){return a - b});
-                var selected, total, status;
-                status = false;
-                $.each(card, function(index, value) {
-                    selected = [];
-                    selected.push(value);
-                    total = 1;
-                    $.each(card, function(indexs, values) {
-                        if (value != values) {                            
-                            if (matchtype == 'fh') {
-                                if ((value-(value%4))/4 == (values-(values%4))/4) {
-                                    selected.push(values);
-                                    total++;
-                                }                                                        
-                            }else if (matchtype == 'sf') {
-                                if ((selected[selected.length-1]%4 == values%4) && (((selected[selected.length-1]-(selected[selected.length-1]%4))/4)+1 == (values-(values%4))/4)) {
-                                    selected.push(values);
-                                    total++;                                
-                                }
-                            }else if (matchtype == 'f') {
-                                if (selected[selected.length-1]%4 == values%4) {
-                                    selected.push(values);
-                                    total++;
-                                }                                                                         
-                            }else if (matchtype == 's') {
-                                if (((selected[selected.length-1]-(selected[selected.length-1]%4))/4)+1 == (values-(values%4))/4) {
-                                    selected.push(values);
-                                    total++;
-                                }                                             
-                            }
-                        }
-                        if (total == tablecard.length) {
-                            return false;
-                        }       
-                    });      
-                    if (matchtype == 'fh') {                        
-                        if (total == 3) {
-                            var child = botPair(card, 0, 2);
-                            if (child) {
-                                $.each(child, function(indexChild, valueChild) {
-                                    selected.push(valueChild);
-                                });
-                            }
-                            if (checkFullHouse(selected).big > checkFullHouse(tablecard).big) {                                
-                                status = true;
-                                return false;
-                            }
-                        }
-                    }else{
-                        if (tablecard !== 0) {
-                            if (total == tablecard.length) {
-                                if (Math.max.apply(Math, selected) > Math.max.apply(Math, tablecard)) {
-                                    status = true;
-                                    return false;
-                                }
-                            }
-                        }else{                    
-                            status = true;    
-                            return false;
-                        }
-                    }         
-                });
-                if (status) {
-                    return selected;
-                }else{
-                    return false;
-                }
-            }
-            function botFullHouse(card){
-                var card = card.sort(function(a, b){return a - b});
-                var selected;
-                var status = false;
-                $.each(card, function(index, value) {
-                    selected = [];
-                    total = 0;
-                    $.each(card, function(indexs, values) {
-                        if ((value-(value%4))/4 == (values-(values%4))/4) {
-                            selected.push(values);
-                            total++;
-                        }                                                                                
-                    });
-                    if (total == 3) {
-                        var child = botPair(card, 0, 2);
-                        if (child) {
-                            $.each(child, function(indexChild, valueChild) {
-                                selected.push(valueChild);
-                            });
-                            status = true;
-                            return false;
-                        }                        
-                    }
-                });
-                if (status) {
-                    return selected;
-                }else{
-                    return false;
-                }                
-            }
-            function botStraight(card){
-                var card = card.sort(function(a, b){return a - b});
-                var selected;
-                var status = false;
-                $.each(card, function(index, value) {
-                    selected = [];
-                    selected.push(value);
-                    total = 1;
-                    $.each(card, function(indexs, values) {
-                        if (((selected[selected.length-1]-(selected[selected.length-1]%4))/4)+1 == (values-(values%4))/4) {
-                            selected.push(values);
-                            total++;
-                        }                  
-                    });
-                    if (total == 5) {
-                        status = true;
-                        return false;
-                    }                                                              
-                });
-                if (status) {
-                    return selected;
-                }else{
-                    return false;
-                }                
-            }
-            function botStraightFlush(card){
-                var card = card.sort(function(a, b){return a - b});
-                var selected;
-                var status = false;
-                $.each(card, function(index, value) {
-                    selected = [];
-                    selected.push(value);
-                    total = 1;
-                    $.each(card, function(indexs, values) {
-                        if ((((selected[selected.length-1]-(selected[selected.length-1]%4))/4)+1 == (values-(values%4))/4) && (selected[selected.length-1]%4 == values%4)) {
-                            selected.push(values);
-                            total++;
-                        }                  
-                    });
-                    if (total == 5) {
-                        status = true;
-                        return false;
-                    }                                                              
-                });
-                if (status) {
-                    return selected;
-                }else{
-                    return false;
-                }                
-            }
-            function bot(){
-                firebase.database().ref(room).once('value', function(response) {        
-                    if (response.val() && response.val().tablecard) {            
-                        var tablecard = JSON.parse(response.val().tablecard);
-                        var playergiliran = response.val().player[response.val().giliran];
-                        var botcard = JSON.parse(playergiliran.card);
-                        var botselected = [];
-                        if (playergiliran.status == 'play' && playergiliran.type == 'bot' && response.val().tablecardplayer != playergiliran.id) {            
-                            if (tablecard.length == 0) {
-                                botselected = botFullHouse(botcard);
-                                if (!botselected) {                                    
-                                    botselected = botStraightFlush(botcard);
-                                    if (!botselected) {                                    
-                                        botselected = botStraight(botcard);
-                                        if (!botselected) {                                    
-                                            botselected = botPair(botcard);
-                                        }
-                                    }
-                                }
-                                sendCard(botselected, function(){});
-                            }else if (tablecard.length == 1 && tablecard[0] > 47) {       
-                                botselected = botStraightFlush(botcard);
-                                if (!botselected) {                                    
-                                    botselected = botPair(botcard, 0, 4);
-                                }                                
-                                if (botselected) {
-                                    sendCard(botselected, function(){
-                                        firebase.database().ref(room).update({
-                                            bom: playergiliran.id
-                                        });
-                                    });
-                                }else{
-                                    firebase.database().ref(room+'/player/'+response.val().giliran).update({
-                                        status: 'pas'
-                                    }).then(function(){                      
-                                        changeGiliran(function(){});
-                                    });                                    
-                                }
-                            }else if (tablecard.length >= 1 && tablecard.length < 5) {            
-                                botselected = botPair(botcard, tablecard);
-                                console.log('botselected', botselected);
-                                if (botselected) {
-                                    sendCard(botselected, function(){});
-                                }else{
-                                    firebase.database().ref(room+'/player/'+response.val().giliran).update({
-                                        status: 'pas'
-                                    }).then(function(){                      
-                                        changeGiliran(function(){});
-                                    });                                    
-                                }
-                            }else if (tablecard.length == 5) {            
-                                botselected = botMinMatch5(botcard, tablecard);
-                                console.log('botselected', botselected);
-                                if (botselected) {
-                                    sendCard(botselected, function(){});
-                                }else{
-                                    firebase.database().ref(room+'/player/'+response.val().giliran).update({
-                                        status: 'pas'
-                                    }).then(function(){                      
-                                        changeGiliran(function(){});
-                                    });                                    
-                                }
-                            }else{     
-                                firebase.database().ref(room+'/player/'+response.val().giliran).update({
-                                    status: 'pas'
-                                }).then(function(){                      
-                                    changeGiliran(function(){});
-                                });                
-                            }                    
-                        }
-                    }
-                });
-            }
-            
+            });            
         </script>
     </body>
 </html>
