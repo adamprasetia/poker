@@ -134,7 +134,7 @@
             // chat 
             firebase.database().ref(room+'/chat').on('value', function(response) {
                 firebase.database().ref(room+'/giliran').once('value', function(responseGiliran) {                    
-                    if (responseGiliran.val() && responseGiliran.val() == me.id) {                    
+                    if (responseGiliran.val() && typeof me.id !== 'undefined' && responseGiliran.val() == me.id) {                    
                         responsiveVoice.speak(response.val().message, "Indonesian Female");
                     }                
                 });
