@@ -973,6 +973,9 @@ function bot(){
                     }
                 }else if (tablecard.length >= 1 && tablecard.length < 5) {            
                     botselected = botPair(botcard, tablecard);
+                    if (!botselected) {
+                        botselected = botPairPecah(botcard, tablecard);
+                    }
                     if (botselected) {
                         sendCard(botselected);
                     }else{
