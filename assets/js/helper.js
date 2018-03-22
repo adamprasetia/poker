@@ -129,37 +129,40 @@ function setStandUp(playerId, callBack = function(){}){
         var players = response.val().player;
         var giliran = response.val().giliran;
         var tablecardplayer = response.val().tablecardplayer;
+        var sitno = getSitByPlayer(players, playerId);
         firebase.database().ref(room+'/player/'+playerId).update({
             card:'[]',
             sitno:0,
             status:'nonton'
         }).then(function(){
-            if (tablecardplayer == playerId) {
-                var sitno = players[playerId].sitno;
-                if (sitno == 10) {
-                    sitno = 1;
-                }else{
-                    sitno++;
-                }                
-                for (var i = 1; i <= 10; i++) {
-                    player = getPlayerBySit(players, sitno);
+            if (sitno == 10) {
+                sitno = 1;
+            }else{
+                sitno++;
+            }                
+            for (var i = 1; i <= 10; i++) {
+                player = getPlayerBySit(players, sitno);
+                if (tablecardplayer == playerId) {                    
                     if (player.status && player.status != 'menang' && player.status != 'menunggu') {
                         firebase.database().ref(room).update({
                             warisan:player.id
                         });
                         break;
                     }
-                    if (sitno == 10) {
-                        sitno = 1;
-                    }else{
-                        sitno++;
+                }                
+                if (giliran == playerId) {
+                    if (player.status == 'main') {
+                        firebase.database().ref(room).update({
+                            giliran:player.id
+                        });
+                        break;                        
                     }
                 }
-            }
-            if (giliran == playerId) {
-                changeGiliran(function(){
-                    checkReset();                    
-                });                                            
+                if (sitno == 10) {
+                    sitno = 1;
+                }else{
+                    sitno++;
+                }
             }
         });                                
     }).then(function(){
