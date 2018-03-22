@@ -114,7 +114,7 @@ function setPas(playerId, callBack = function(){}){
             status: 'pas'
         }).then(function(){          
             $('#btn-pas').prop('disabled', false);
-            setLoserByBom(players, bom, function(){
+            setLoserByBom(function(){
                 changeGiliran(function(){
                     checkReset();
                 });                    
@@ -284,6 +284,13 @@ function checkReset(){
 
 function resetGame(){
     firebase.database().ref(room).once('value', function(response) {   
+        var winner = response.val().winner;
+        var bom = response.val().bom;
+        var juara = winner;
+        if (bom !== 0 && winner == 0) {
+            juara = bom;
+        }
+        console.log('juara', juara);
         var player = response.val().player;
         var totalPlayer = getTotalPlayer(player);
         var totalCard = 52;
@@ -321,7 +328,8 @@ function resetGame(){
             bom:0,
             tablecard:'[]',
             tablecardplayer:0,
-            warisan:0
+            warisan:0,
+            juara:juara
         });
     });
 }
@@ -361,6 +369,12 @@ function setWarisan(callBack){
 function sendCard(cardSelected, callBack = function(){}){
     firebase.database().ref(room).once('value', function(response) {
         var giliran = response.val().giliran;
+        var bom = response.val().bom;
+        if (bom !== 0 && typeof bom !== 'undefined') {
+            firebase.database().ref(room).update({
+                bom:giliran
+            });
+        }
         var playerCard = JSON.parse(response.val().player[giliran].card);  
         firebase.database().ref(room).update({
             tablecard:JSON.stringify(cardSelected),
@@ -658,13 +672,19 @@ function validasi(cardSelected, card_on_arena){
     
     return true;
 }
-function setLoserByBom(players, bom, callback){
-    if (getCountPlay(players)==2 && bom != 0) {    
-        firebase.database().ref(room).update({
-            loser: me.id
-        });
-    }    
-    callback(players, bom);
+function setLoserByBom(callBack){
+    firebase.database().ref(room).once('value').then(function(response){
+        var players = response.val().player;
+        var giliran = response.val().giliran;
+        var bom = response.val().bom;
+        if (getCountPlay(players)==1 && bom !== 0 && typeof bom !== 'undefined') {    
+            firebase.database().ref(room).update({
+                loser: giliran                
+            });
+        }    
+    }).then(function(){    
+        callBack();
+    });
 }
 function addBot(){
     var dewaJudiList = ['Chow Yun Fat', 'Stephen Chow', 'Andy Lau', 'Ng Man-tat', 'Charles Heung', 'Shing Fui-On', 'Lung Fong', 'Jhon Ching', 'Wong Yat-fei', 'Wong Jing'];
@@ -961,12 +981,17 @@ function bot(){
                     botselected = botStraightFlush(botcard);
                     if (!botselected) {                                    
                         botselected = botPair(botcard, 0, 4);
+                        if (!botselected) {                                    
+                            botselected = botPairPecah(botcard, tablecard);
+                        }                                
                     }                                
                     if (botselected) {
                         sendCard(botselected, function(){
-                            firebase.database().ref(room).update({
-                                bom: playergiliran.id
-                            });
+                            if (botselected.length >= 4) {                                
+                                firebase.database().ref(room).update({
+                                    bom: playergiliran.id
+                                });
+                            }
                         });
                     }else{
                         setPas(giliran);
