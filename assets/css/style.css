@@ -126,13 +126,13 @@ img.card-small {
 
 #btn-pas{
     position: absolute;
-    top: 410px;
-    left: 30px;
+    top: 400px;
+    left: 20px;
 }
 #btn-send{
     position: absolute;
-    top: 410px;
-    left: 635px;
+    top: 400px;
+    left: 625px;
 }
 #mecard{
     /* height: 150px; */
