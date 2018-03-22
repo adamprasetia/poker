@@ -17,76 +17,78 @@
         </script>                
     </head>
     <body>
-        <div class="card text-white bg-dark">
-            <div class="card-body">
-                <div id="status"></div>                
-                <fb:login-button id="fb-login" scope="public_profile,email" onlogin="signed();"></fb:login-button>
-            </div>
-        </div>                
-        <div class="row">
-            <div class="col-md-8">
-                <div class="card text-white bg-dark">
-                    <div class="card-body">
-                        <img src="assets/img/table.png" class="img-fluid">
-                        <div class="player-wrap"></div>
-                        <div id="tablecard"></div>
-                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-1" data-value="1" style="display:none">Duduk</button>
-                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-2" data-value="2" style="display:none">Duduk</button>
-                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-3" data-value="3" style="display:none">Duduk</button>
-                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-4" data-value="4" style="display:none">Duduk</button>
-                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-5" data-value="5" style="display:none">Duduk</button>
-                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-6" data-value="6" style="display:none">Duduk</button>
-                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-7" data-value="7" style="display:none">Duduk</button>
-                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-8" data-value="8" style="display:none">Duduk</button>
-                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-9" data-value="9" style="display:none">Duduk</button>
-                        <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-10" data-value="10" style="display:none">Duduk</button>
-                        <button type="button" name="button" class="btn btn-sm btn-secondary stand-up" style="display:none">Berdiri</button>
-                        <button id="btn-pas" type="button" name="button" class="btn btn-lg btn-danger" style="display:none">Pas</button>
-                        <button id="btn-send" type="button" name="button" class="btn btn-lg btn-success" style="display:none">Ikut</button>
-                    </div>
-                </div>                
-                <div class="card text-white bg-dark">
-                    <div id="mecard" class="card-body clearfix">
-                        
+        <div class="container-fluid">            
+            <div class="card text-white bg-dark">
+                <div class="card-body">
+                    <div id="status"></div>                
+                    <fb:login-button id="fb-login" scope="public_profile,email" onlogin="signed();"></fb:login-button>
+                </div>
+            </div>                
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card text-white bg-dark">
+                        <div class="card-body">
+                            <img src="assets/img/table.png" class="img-fluid">
+                            <div class="player-wrap"></div>
+                            <div id="tablecard"></div>
+                            <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-1" data-value="1" style="display:none">Duduk</button>
+                            <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-2" data-value="2" style="display:none">Duduk</button>
+                            <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-3" data-value="3" style="display:none">Duduk</button>
+                            <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-4" data-value="4" style="display:none">Duduk</button>
+                            <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-5" data-value="5" style="display:none">Duduk</button>
+                            <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-6" data-value="6" style="display:none">Duduk</button>
+                            <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-7" data-value="7" style="display:none">Duduk</button>
+                            <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-8" data-value="8" style="display:none">Duduk</button>
+                            <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-9" data-value="9" style="display:none">Duduk</button>
+                            <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-10" data-value="10" style="display:none">Duduk</button>
+                            <button type="button" name="button" class="btn btn-sm btn-secondary stand-up" style="display:none">Berdiri</button>
+                            <button id="btn-pas" type="button" name="button" class="btn btn-lg btn-danger" style="display:none">Pas</button>
+                            <button id="btn-send" type="button" name="button" class="btn btn-lg btn-success" style="display:none">Ikut</button>
+                        </div>
+                    </div>                
+                    <div class="card text-white bg-dark">
+                        <div id="mecard" class="card-body clearfix">
+                            
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">                
-                <div class="card text-white bg-dark admin" style="display:none">
-                    <div class="card-body">
-                        <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="resetGame()">Reset</button>
-                        <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="addBot()">Add Bot</button>
-                        <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="removeBot()">Remove Bot</button>
-                        <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="changeGiliran()">Change Giliran</button>
-                        <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="setPasGiliran()">Pas</button>
-                        <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="setStandUpGiliran()">Stand Up</button>
-                    </div>
-                </div>        
-                <div class="card text-white bg-dark">
-                    <div class="card-header">
-                        Chat
-                    </div>
-                    <div id="chat-body" class="card-body">
-                        
-                    </div>
-                    <div class="card-footer">
-                        <div class="input-group">
-                            <input id="input-chat" type="text" class="form-control" placeholder="Enter chat ...">
-                            <div class="input-group-append">
-                                <button id="btn-chat" class="btn btn-primary" type="button">Send</button>
-                            </div>
-                        </div>                    
-                    </div>
-                </div>      
-                <div class="card text-white bg-dark">
-                    <div class="card-body">
-                        <label for="">Room</label>
-                        <div class="form-group">
-                            <input id="room-name" type="text" name="" value="" class="form-control">
+                <div class="col-md-4">                
+                    <div class="card text-white bg-dark admin" style="display:none">
+                        <div class="card-body">
+                            <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="resetGame()">Reset</button>
+                            <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="addBot()">Add Bot</button>
+                            <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="removeBot()">Remove Bot</button>
+                            <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="changeGiliran()">Change Giliran</button>
+                            <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="setPasGiliran()">Pas</button>
+                            <button type="button" name="button" class="btn btn-sm btn-secondary reset" onclick="setStandUpGiliran()">Stand Up</button>
                         </div>
-                        <button id="join-room" type="button" name="button" class="btn btn-primary">Ikut Gabung</button>
-                    </div>
-                </div>                      
+                    </div>        
+                    <div class="card text-white bg-dark">
+                        <div class="card-header">
+                            Chat
+                        </div>
+                        <div id="chat-body" class="card-body">
+                            
+                        </div>
+                        <div class="card-footer">
+                            <div class="input-group">
+                                <input id="input-chat" type="text" class="form-control" placeholder="Enter chat ...">
+                                <div class="input-group-append">
+                                    <button id="btn-chat" class="btn btn-primary" type="button">Send</button>
+                                </div>
+                            </div>                    
+                        </div>
+                    </div>      
+                    <div class="card text-white bg-dark">
+                        <div class="card-body">
+                            <label for="">Room</label>
+                            <div class="form-group">
+                                <input id="room-name" type="text" name="" value="" class="form-control">
+                            </div>
+                            <button id="join-room" type="button" name="button" class="btn btn-primary">Ikut Gabung</button>
+                        </div>
+                    </div>                      
+                </div>
             </div>
         </div>
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
