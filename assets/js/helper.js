@@ -737,6 +737,41 @@ function botPair(card, tablecard = 0, count = 0){
         return false;
     }
 }
+function botPairPecah(card, tablecard = 0){
+    var card = card.sort(function(a, b){return a - b});
+    var selected, total, status;
+    status = false;
+    $.each(card, function(index, value) {
+        selected = [];
+        total = 0;
+        if (value >= 32) {            
+            $.each(card, function(indexs, values) {
+                if ((value-(value%4))/4 == (values-(values%4))/4) {
+                    selected.push(values);
+                    total++;
+                }                        
+                if (tablecard !== 0) {
+                    if (total == tablecard.length) {
+                        return false;
+                    }
+                }            
+            });                    
+            if (tablecard !== 0) {
+                if (total == tablecard.length) {
+                    if (Math.max.apply(Math, selected) > Math.max.apply(Math, tablecard)) {
+                        status = true;
+                        return false;
+                    }
+                }
+            }
+        }
+    });
+    if (status) {
+        return selected;
+    }else{
+        return false;
+    }
+}
 function botMinMatch5(card, tablecard = 0){
     var matchtype;
     if (checkFullHouse(tablecard).status) {
