@@ -117,11 +117,11 @@
                     timeout = 100;
                     firebase.database().ref(room).once('value').then(function(response){        
                         if (response.val()) {                            
-                            setStandUp(response.val().giliran);
+                            setPas(response.val().giliran);
                         }
                     });
                 }
-                timeout = timeout-2;
+                timeout = timeout-5;
                 $('body').find('.progress-bar').attr('style','width: '+timeout+'%');
             },1000);
             firebase.database().ref(room+'/giliran').on('value', function(response) {                
