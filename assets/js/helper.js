@@ -106,7 +106,7 @@ function getPlayerSitNo(players, sitNo){
     });
     return player;
 }
-function setPas(playerId, callBack){
+function setPas(playerId, callBack = function(){}){
     firebase.database().ref(room).once('value').then(function(response){                   
         var players = response.val().player;
         var bom = response.val().bom;
@@ -355,7 +355,7 @@ function setWarisan(callBack){
     });
 }
 
-function sendCard(cardSelected, callBack){
+function sendCard(cardSelected, callBack = function(){}){
     firebase.database().ref(room).once('value', function(response) {
         var giliran = response.val().giliran;
         var playerCard = JSON.parse(response.val().player[giliran].card);  
@@ -898,9 +898,14 @@ function bot(){
     firebase.database().ref(room).once('value', function(response) {        
         if (response.val() && response.val().tablecard) {            
             var tablecard = JSON.parse(response.val().tablecard);
-            var playergiliran = response.val().player[response.val().giliran];
+            var giliran = response.val().giliran;
+            var playergiliran = response.val().player[giliran];
             var botcard = JSON.parse(playergiliran.card);
             var botselected = [];
+            // cek nyangkut
+            if (playergiliran.status == 'main' && playergiliran.type == 'bot' && response.val().tablecardplayer == playergiliran.id) {
+                changeGiliran();
+            }
             if (playergiliran.status == 'main' && playergiliran.type == 'bot' && response.val().tablecardplayer != playergiliran.id) {            
                 if (tablecard.length == 0) {
                     botselected = botFullHouse(botcard);
@@ -913,7 +918,7 @@ function bot(){
                             }
                         }
                     }
-                    sendCard(botselected, function(){});
+                    sendCard(botselected);
                 }else if (tablecard.length == 1 && tablecard[0] > 47) {       
                     botselected = botStraightFlush(botcard);
                     if (!botselected) {                                    
@@ -926,40 +931,24 @@ function bot(){
                             });
                         });
                     }else{
-                        firebase.database().ref(room+'/player/'+response.val().giliran).update({
-                            status: 'pas'
-                        }).then(function(){                      
-                            changeGiliran(function(){});
-                        });                                    
+                        setPas(giliran);
                     }
                 }else if (tablecard.length >= 1 && tablecard.length < 5) {            
                     botselected = botPair(botcard, tablecard);
                     if (botselected) {
-                        sendCard(botselected, function(){});
+                        sendCard(botselected);
                     }else{
-                        firebase.database().ref(room+'/player/'+response.val().giliran).update({
-                            status: 'pas'
-                        }).then(function(){                      
-                            changeGiliran(function(){});
-                        });                                    
+                        setPas(giliran);
                     }
                 }else if (tablecard.length == 5) {            
                     botselected = botMinMatch5(botcard, tablecard);
                     if (botselected) {
-                        sendCard(botselected, function(){});
+                        sendCard(botselected);
                     }else{
-                        firebase.database().ref(room+'/player/'+response.val().giliran).update({
-                            status: 'pas'
-                        }).then(function(){                      
-                            changeGiliran(function(){});
-                        });                                    
+                        setPas(giliran);
                     }
                 }else{     
-                    firebase.database().ref(room+'/player/'+response.val().giliran).update({
-                        status: 'pas'
-                    }).then(function(){                      
-                        changeGiliran(function(){});
-                    });                
+                    setPas(giliran);
                 }                    
             }
         }
