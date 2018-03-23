@@ -290,7 +290,6 @@ function resetGame(){
         if (bom !== 0 && winner == 0) {
             juara = bom;
         }
-        console.log('juara', juara);
         var player = response.val().player;
         var totalPlayer = getTotalPlayer(player);
         var totalCard = 52;

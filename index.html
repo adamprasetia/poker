@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">        
-        <link rel="stylesheet" href="assets/css/style.css?v=2018-03-22-21-47">        
+        <link rel="stylesheet" href="assets/css/style.css?v=2018-03-23-07-08">        
         <title>Cianjur Poker</title>
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115449429-1"></script>
@@ -100,7 +100,7 @@
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>        
         <script type="text/javascript" src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
-        <script type="text/javascript" src="assets/js/helper.js?v=2018-03-22-20-45"></script>
+        <script type="text/javascript" src="assets/js/helper.js?v=2018-03-23-07-08"></script>
         <script type="text/javascript" src="assets/js/firebase.js"></script>
         <script type="text/javascript" src="assets/js/facebook.js?v=2018-03-21-22-08"></script>
         <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
@@ -130,6 +130,9 @@
             },1000);
             firebase.database().ref(room+'/giliran').on('value', function(response) {                
                 timeout = 100;
+                if (response.val()==me.id) {
+                    responsiveVoice.speak(me.name, "Indonesian Female");
+                }
             });
             
             // Bot
