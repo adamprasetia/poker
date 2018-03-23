@@ -2,12 +2,13 @@ function statusChangeCallback(response) {
     if (response.status === 'connected') {
         FB.api('/me', {fields: "id,name,picture"}, function(response) {
             if (response && response.id && typeof response.id !== 'undefined') {                
-                me = response;
                 firebase.database().ref(room+'/player/'+response.id).update({
                     id:response.id,
                     name:response.name,
                     picture:response.picture.data.url,
                     sync:new Date().getUTCMilliseconds()
+                }).then(function(){
+                    me = response;                    
                 });                        
                 $('#fb-login').hide();
                 document.getElementById('status').innerHTML = 'Selamat Datang, ' + response.name + '!';
