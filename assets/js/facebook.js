@@ -1,15 +1,17 @@
 function statusChangeCallback(response) {
     if (response.status === 'connected') {
         FB.api('/me', {fields: "id,name,picture"}, function(response) {
-            me = response;
-            firebase.database().ref(room+'/player/'+response.id).update({
-                id:response.id,
-                name:response.name,
-                picture:response.picture.data.url,
-                sync:new Date().getUTCMilliseconds()
-            });                        
-            $('#fb-login').hide();
-            document.getElementById('status').innerHTML = 'Selamat Datang, ' + response.name + '!';
+            if (response && response.id && typeof response.id !== 'undefined') {                
+                me = response;
+                firebase.database().ref(room+'/player/'+response.id).update({
+                    id:response.id,
+                    name:response.name,
+                    picture:response.picture.data.url,
+                    sync:new Date().getUTCMilliseconds()
+                });                        
+                $('#fb-login').hide();
+                document.getElementById('status').innerHTML = 'Selamat Datang, ' + response.name + '!';
+            }
         });        
     } else {
         document.getElementById('status').innerHTML = 'Silakan login terlebih dahulu.';
