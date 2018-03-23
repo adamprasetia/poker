@@ -20,12 +20,12 @@ function checkLoginState(event) {
       unsubscribe();
       // Check if we are already signed-in Firebase with the correct user.
       if (!isUserEqual(event.authResponse, firebaseUser)) {
-          FB.getLoginStatus(function(response) {
-              statusChangeCallback(response);
-          });
         // Build Firebase credential with the Facebook auth token.
         var credential = firebase.auth.FacebookAuthProvider.credential(event.authResponse.accessToken);
         // Sign in with the credential from the Facebook user.
+        FB.getLoginStatus(function(response) {
+            statusChangeCallback(response);
+        });
         firebase.auth().signInWithCredential(credential).catch(function(error) {
           // Handle Errors here.
           var errorCode = error.code;
