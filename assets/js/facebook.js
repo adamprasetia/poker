@@ -14,6 +14,7 @@ window.fbAsyncInit = function() {
 }
   
 function checkLoginState(event) {
+    console.log('checkLoginState');
   if (event.authResponse) {
     // User is signed-in Facebook.
     var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
@@ -23,10 +24,11 @@ function checkLoginState(event) {
         // Build Firebase credential with the Facebook auth token.
         var credential = firebase.auth.FacebookAuthProvider.credential(event.authResponse.accessToken);
         // Sign in with the credential from the Facebook user.
-        FB.getLoginStatus(function(response) {
-            statusChangeCallback(response);
-        });
-        firebase.auth().signInWithCredential(credential).catch(function(error) {
+        firebase.auth().signInWithCredential(credential).then(function(){
+            FB.getLoginStatus(function(response) {
+                statusChangeCallback(response);
+            });            
+        }).catch(function(error) {
           // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
