@@ -14,14 +14,14 @@
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'UA-115449429-1');
-        </script>                
+        </script>
     </head>
     <body>
         <div class="container-fluids">            
             <div class="card text-white bg-dark">
                 <div class="card-body">
                     <div id="status"></div>                
-                    <fb:login-button id="fb-login" scope="public_profile,email" onlogin="signed();"></fb:login-button>
+                    <fb:login-button id="fb-login" scope="public_profile,email"></fb:login-button>
                 </div>
             </div>                
             <div class="card text-white bg-dark">
@@ -101,8 +101,9 @@
         <script type="text/javascript" src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>        
         <script type="text/javascript" src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
         <script type="text/javascript" src="assets/js/helper.js?v=2018-03-23-07-08"></script>
-        <script type="text/javascript" src="assets/js/firebase.js"></script>
-        <script type="text/javascript" src="assets/js/facebook.js?v=2018-03-23-15-43"></script>
+        <script type="text/javascript" src="assets/js/firebase.js?v=2018-03-23-16-45"></script>
+        <script src="//connect.facebook.net/en_US/sdk.js"></script>
+        <script type="text/javascript" src="assets/js/facebook.js?v=2018-03-23-16-45"></script>
         <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
         <script type="text/javascript">
             var room = getRoom();
@@ -130,7 +131,7 @@
             },1000);
             firebase.database().ref(room+'/giliran').on('value', function(response) {                
                 timeout = 100;
-                if (response.val()==me.id) {
+                if (me && me.id && response.val()==me.id) {
                     responsiveVoice.speak(me.name, "Indonesian Female");
                 }
             });
