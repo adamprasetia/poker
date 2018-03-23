@@ -58,52 +58,48 @@ a.active > img{
     padding:1px;
 }
 
-.player-1{
-    top:90px;
-    left:245px;    
-}
 .sit{        
     position: absolute;
 }
 .sit-1{
-    top:90px;
-    left:245px;
+    top:80px;
+    left:235px;
 }    
 .sit-2{
-    top:90px;
-    left:426px;
+    top:80px;
+    left:416px;
 }    
 .sit-3{
-    top:130px;
-    left:540px;
+    top:120px;
+    left:530px;
 }    
 .sit-4{
-    top:230px;
-    left:575px;
+    top:220px;
+    left:565px;
 }    
 .sit-5{
-    top:335px;
-    left:540px;
+    top:325px;
+    left:530px;
 }    
 .sit-6{
-    top:370px;
-    left:426px;
+    top:360px;
+    left:416px;
 }    
 .sit-7{
-    top:370px;
-    left:245px;
+    top:360px;
+    left:235px;
 }    
 .sit-8{
-    top:335px;
-    left:135px;
+    top:325px;
+    left:125px;
 }    
 .sit-9{
-    top:230px;
-    left:95px;
+    top:220px;
+    left:85px;
 }    
 .sit-10{
-    top:130px;
-    left:130px;
+    top:120px;
+    left:120px;
 }    
 
 .player-card-small{
@@ -154,8 +150,8 @@ img.tablecard {
 }
 #tablecard {
     position: absolute;
-    top:210px;
-    left: 235px;
+    top:200px;
+    left: 225px;
     width: 300px;
 }
 #tablecard img{
