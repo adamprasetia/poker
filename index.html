@@ -121,7 +121,7 @@
                 if (timeout<=0) {
                     timeout = 100;
                     firebase.database().ref(room).once('value').then(function(response){        
-                        if (response.val() && me && response.val().giliran == me.id) {                            
+                        if (response.val()) {
                             setPas(response.val().giliran);
                         }
                     });
