@@ -283,7 +283,6 @@ function checkReset(){
 }
 
 function resetGame(){
-    timeout = 100;
     firebase.database().ref(room).once('value', function(response) {   
         var winner = response.val().winner;
         var bom = response.val().bom;
@@ -468,7 +467,6 @@ function changeGiliran(callBack = function(){}){
     });
 }
 function setPlayAll(players){
-    timeout = 100;
     firebase.database().ref(room).once('value', function(response) {   
         var bom = response.val().bom;
         var winner = response.val().winner;
