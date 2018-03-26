@@ -960,9 +960,9 @@ function bot(){
             var botcard = JSON.parse(playergiliran.card);
             var botselected = [];
             // cek nyangkut
-            if (playergiliran.status == 'main' && playergiliran.type == 'bot' && response.val().tablecardplayer == playergiliran.id) {
-                changeGiliran();
-            }
+            // if (playergiliran.status == 'main' && playergiliran.type == 'bot' && response.val().tablecardplayer == playergiliran.id) {
+            //     changeGiliran();
+            // }
             if (playergiliran.status == 'main' && playergiliran.type == 'bot' && response.val().tablecardplayer != playergiliran.id) {            
                 if (tablecard.length == 0) {
                     botselected = botFullHouse(botcard);
