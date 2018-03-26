@@ -260,6 +260,9 @@ img.tablecard {
         top: 78%;
         left: 80%;
     }    
+    .img-thumbnail{
+        padding: 0px;
+    }
 }
 @media only screen and (max-width: 600px) {
     img.tablecard {
@@ -273,5 +276,9 @@ img.tablecard {
     }
     #tablecard img{
         display: inline;
-    }    
+    }
+    .player .card-header, .player .card-body, .player .card-footer{
+        margin:0px;
+        padding: 0px;
+    }
 }
