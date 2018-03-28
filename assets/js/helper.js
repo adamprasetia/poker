@@ -110,12 +110,13 @@ function setPas(playerId, callBack = function(){}){
     firebase.database().ref(room).once('value').then(function(response){                   
         var players = response.val().player;
         var bom = response.val().bom;
+        var giliran = response.val().giliran;
         firebase.database().ref(room+'/player/'+playerId).update({
             status: 'pas'
         }).then(function(){          
             $('#btn-pas').prop('disabled', false);
             setLoserByBom(function(){
-                changeGiliran(function(){
+                changeGiliran(giliran, function(){
                     checkReset();
                 });                    
             });                    
@@ -210,13 +211,13 @@ function getPlayerBySit(player,sitno){
     return status;
 }
 function setGiliran(response){
-    if (response) {            
+    if (response) {         
         var bom = response.bom;
         var winner = response.winner;            
         var players = response.player;
-        if (winner != '' && getSitByPlayer(players, winner) != false) {
+        if (typeof winner != 'undefined' && winner != '' && getSitByPlayer(players, winner) != false) {
             return winner;
-        }else if (bom != '' && getSitByPlayer(players, bom) != false) {
+        }else if (typeof bom != 'undefined' && bom != '' && getSitByPlayer(players, bom) != false) {
             return bom;            
         }else{
             var sitno = Math.floor((Math.random() * 10) + 1);
@@ -286,8 +287,11 @@ function resetGame(){
     firebase.database().ref(room).once('value', function(response) {   
         var winner = response.val().winner;
         var bom = response.val().bom;
-        var juara = winner;
-        if (bom !== 0 && winner == 0) {
+        var juara = 0;
+        if (winner != 0 && typeof winner != 'undefined') {
+            juara = winner;
+        }
+        if (bom != 0 && typeof bom != 'undefined' && (winner == 0 || typeof winner == 'undefined')) {
             juara = bom;
         }
         var player = response.val().player;
@@ -398,19 +402,19 @@ function sendCard(cardSelected, callBack = function(){}){
                                         winner:giliran,
                                         juara:giliran
                                     }).then(function(){
-                                        changeGiliran(function(){
+                                        changeGiliran(giliran, function(){
                                             checkReset();
                                         });
                                     });
                                 }else{
-                                    changeGiliran(function(){
+                                    changeGiliran(giliran, function(){
                                         checkReset();
                                     });
                                 }
                             });
                         });
                     }else{
-                        changeGiliran(function(){
+                        changeGiliran(giliran, function(){
                             checkReset();
                         });
                     }
@@ -421,9 +425,11 @@ function sendCard(cardSelected, callBack = function(){}){
         callBack(cardSelected);
     });
 }
-function changeGiliran(callBack = function(){}){
+function changeGiliran(giliran = 0, callBack = function(){}){
     firebase.database().ref(room).once('value', function(response) {        
-        var giliran = response.val().giliran;
+        if (giliran == 0) {            
+            giliran = response.val().giliran;
+        }
         var players = response.val().player;
         var warisan = response.val().warisan;
         var sitno = getSitByPlayer(players, giliran);
@@ -463,7 +469,7 @@ function changeGiliran(callBack = function(){}){
             }
         }
     }).then(function(){
-        callBack();
+        callBack(giliran);
     });
 }
 function setPlayAll(players){
@@ -960,9 +966,9 @@ function bot(){
             var botcard = JSON.parse(playergiliran.card);
             var botselected = [];
             // cek nyangkut
-            // if (playergiliran.status == 'main' && playergiliran.type == 'bot' && response.val().tablecardplayer == playergiliran.id) {
-            //     changeGiliran();
-            // }
+            if (playergiliran.status == 'main' && playergiliran.type == 'bot' && response.val().tablecardplayer == playergiliran.id) {
+                changeGiliran(giliran);
+            }
             if (playergiliran.status == 'main' && playergiliran.type == 'bot' && response.val().tablecardplayer != playergiliran.id) {            
                 if (tablecard.length == 0) {
                     botselected = botFullHouse(botcard);
