@@ -14,7 +14,6 @@ window.fbAsyncInit = function() {
 }
   
 function checkLoginState(event) {
-    console.log('checkLoginState');
   if (event.authResponse) {
     // User is signed-in Facebook.
     var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
@@ -70,9 +69,11 @@ function statusChangeCallback(response) {
                     id:response.id,
                     name:response.name,
                     picture:response.picture.data.url,
-                    sync:new Date().getUTCMilliseconds()
                 }).then(function(){
-                    me = response;                    
+                    me = response;
+                    firebase.database().ref(room+'/player/'+response.id).update({
+                        sync:new Date().getUTCMilliseconds()
+                    });
                 });                        
                 $('#fb-login').hide();
                 document.getElementById('status').innerHTML = 'Selamat Datang, ' + response.name + '!';

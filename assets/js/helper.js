@@ -294,6 +294,18 @@ function resetGame(){
         if (bom != 0 && typeof bom != 'undefined' && (winner == 0 || typeof winner == 'undefined')) {
             juara = bom;
         }
+        
+        // count juara
+        if (juara != 0) {            
+            var totalJuara = 0;
+            if (typeof response.val().player[juara].totaljuara != 'undefined') {
+                totalJuara = parseInt(response.val().player[juara].totaljuara);
+            }
+            firebase.database().ref(room+'/player/'+juara).update({
+                totaljuara: totalJuara+1
+            });
+        }
+        
         var player = response.val().player;
         var totalPlayer = getTotalPlayer(player);
         var totalCard = 52;
@@ -404,7 +416,7 @@ function sendCard(cardSelected, callBack = function(){}){
                                     }).then(function(){
                                         changeGiliran(giliran, function(){
                                             checkReset();
-                                        });
+                                        });                                                
                                     });
                                 }else{
                                     changeGiliran(giliran, function(){
