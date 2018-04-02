@@ -100,7 +100,7 @@
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>        
         <script type="text/javascript" src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
-        <script type="text/javascript" src="assets/js/helper.js?v=2018-03-28-21-08"></script>
+        <script type="text/javascript" src="assets/js/helper.js?v=2018-04-02-12-58"></script>
         <script type="text/javascript" src="assets/js/firebase.js?v=2018-03-23-16-45"></script>
         <script src="//connect.facebook.net/en_US/sdk.js"></script>
         <script type="text/javascript" src="assets/js/facebook.js?v=2018-03-23-18-37"></script>
@@ -141,7 +141,18 @@
             setInterval(function(){
                 bot();
             },5000)
-
+            
+            // leaderboard
+            firebase.database().ref(room+'/player').orderByChild('totaljuara').once('value', function(response) {
+                // var players = response.val();
+                // $.each(players, function(index, value){                    
+                //     console.log('leaderboard', value.name, value.totaljuara);
+                // });
+                response.forEach(function(child) {
+                    console.log(child.val().name, child.val().totaljuara); // NOW THE CHILDREN PRINT IN ORDER
+                });                
+            });            
+            
             // chat 
             firebase.database().ref(room+'/chat').on('value', function(response) {
                 firebase.database().ref(room+'/giliran').once('value', function(responseGiliran) {                    
