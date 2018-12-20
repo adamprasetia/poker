@@ -81,6 +81,15 @@
                             </div>                    
                         </div>
                     </div>      
+                    <div class="card text-white bg-dark">
+                        <div class="card-body">
+                            <label for="">Room</label>
+                            <div class="form-group">
+                                <input id="room-name" type="text" name="" value="" class="form-control">
+                            </div>
+                            <button id="join-room" type="button" name="button" class="btn btn-primary">Ikut Gabung</button>
+                        </div>
+                    </div>                      
                 </div>
             </div>
             </div>
@@ -106,8 +115,59 @@
             if (getParameterByName('admin')=='sempakbolong') {
                 $('.admin').show();
             }
+            
+            // timer
+            // setInterval(function(){
+            //     if (timeout<=0) {
+            //         timeout = 100;
+            //         firebase.database().ref(room).once('value').then(function(response){        
+            //             // if (response.val() && response.val().giliran == me.id) {
+            //             if (response.val()) {
+            //                 setPas(response.val().giliran);
+            //             }
+            //         });
+            //     }
+            //     timeout = timeout-5;
+            //     $('body').find('.progress-bar').attr('style','width: '+timeout+'%');
+            // },1000);
+            // firebase.database().ref(room+'/giliran').on('value', function(response) {                
+            //     timeout = 100;
+            //     if (me && me.id && response.val()==me.id) {
+            //         responsiveVoice.speak(me.name, "Indonesian Female");
+            //     }
+            // });
+            
+            // Bot
+            // setInterval(function(){
+            //     bot();
+            // },5000)
+            
+            // leaderboard
+            firebase.database().ref(room+'/player').orderByChild('totaljuara').once('value', function(response) {
+                // var players = response.val();
+                // $.each(players, function(index, value){                    
+                //     console.log('leaderboard', value.name, value.totaljuara);
+                // });
+                response.forEach(function(child) {
+                    // console.log(child.val().name, child.val().totaljuara); // NOW THE CHILDREN PRINT IN ORDER
+                });                
+            });            
+            
+            // chat 
+            firebase.database().ref(room+'/chat').on('value', function(response) {
+                firebase.database().ref(room+'/giliran').once('value', function(responseGiliran) {                    
+                    if (responseGiliran.val() && typeof me !== 'undefined' && responseGiliran.val() == me.id) {                    
+                        responsiveVoice.speak(response.val().message, "Indonesian Female");
+                    }                
+                });
+                if (response.val() && typeof response.val() !== 'undefined') {
+                    $('#chat-body').append('<p><span class="badge badge-secondary">'+response.val().from+'</span> '+encodeHTML(response.val().message)+'</p>');
+                    $('#chat-body').scrollTop($('#chat-body')[0].scrollHeight);
+                }
+            });
 
-            firebase.database().ref(room).on('value', function(response) {
+            // Main Utama
+            firebase.database().ref(room).on('value', function(response) {   
                 if (response.val()) {                    
                     var giliran = response.val().giliran
                     if (me && giliran == me.id) {
@@ -122,7 +182,7 @@
                     });
                 }
             });
-
+            
             $('.sit').click(function(){
                 if (me && me.id && typeof me !== 'undefined') {                    
                     setSit(me.id, $(this).attr('data-value'), function(){
@@ -137,7 +197,6 @@
                     checkReset();
                 });
             });
-
             $('body').on('click','.kartu',function(){
                 cardSelected = [];
                 $(this).toggleClass('active');
@@ -176,7 +235,31 @@
                     
                 });
             });
-
+            $('#btn-chat').click(function(){
+                sendChat();
+            });
+            $('#input-chat').on('keyup', function (e) {
+                if (e.keyCode == 13) {
+                    sendChat();
+                }
+            });              
+            $('#join-room').click(function(){
+                if ($('#room-name').val() != '') {
+                    window.location = '?room='+$('#room-name').val();
+                }else{
+                    swal("Oops", "Silahkan isi nama room yang anda inginkan" , "error");
+                }
+            });            
+            function setPasGiliran(){
+                firebase.database().ref(room).once('value').then(function(response){
+                    setPas(response.val().giliran);
+                });
+            }
+            function setStandUpGiliran(){
+                firebase.database().ref(room).once('value').then(function(response){
+                    setStandUp(response.val().giliran);
+                });
+            }
         </script>
     </body>
 </html>
