@@ -11,7 +11,7 @@ window.fbAsyncInit = function() {
         statusChangeCallback(response);
     });
     
-    FB.Event.subscribe('auth.authResponseChange', checkLoginState);
+    // FB.Event.subscribe('auth.authResponseChange', checkLoginState);
 }
   
 function checkLoginState(event) {
