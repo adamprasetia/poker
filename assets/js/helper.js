@@ -39,7 +39,7 @@ function showPlayer(response, callBack){
         // show tablecard
         if (response && response.tablecard) {
             var tablecard = '';
-            $.each(JSON.parse(response.tablecard), function(index, value) {
+            JSON.parse(response.tablecard).forEach(function(value) {
                 tablecard += '<img class="tablecard img-thumbnail" src="assets/img/card/'+value+'.png">';
             });
             $('#tablecard').html(tablecard);
@@ -75,7 +75,7 @@ function showPlayer(response, callBack){
                 }
                 var playerCard = '<div class="player-card-small">';
                 var kartuSelected;
-                $.each(JSON.parse(player.card).sort(function(a, b){return a - b}), function(index, value) {
+                JSON.parse(player.card).sort(function(a, b){return a - b}).forEach(function(value) {
                     kartuSelected = '';
                     if (cardSelected.length > 0){                                    
                         if (cardSelected.indexOf(value)!= -1) {
@@ -98,7 +98,7 @@ function showPlayer(response, callBack){
 }
 function getPlayerSitNo(players, sitNo){
     var player = false;
-    $.each(players, function(index, value) {
+    players.forEach(function(value) {
         if (value.sitno == sitNo) {
             player = value;
             return false;
@@ -172,7 +172,7 @@ function setStandUp(playerId, callBack = function(){}){
 }
 function getTotalPlayer(player){
     var total = 0;
-    $.each(player, function(index, value) {
+    player.forEach(function(value) {
         if (value.sitno != 0 && typeof value.sitno !== 'undefined') {
             total++;
         }
@@ -192,7 +192,7 @@ function shuffle(array) {
 }    
 function getSitByPlayer(players, player){
     var status = false;
-    $.each(players, function(index, value) {
+    players.forEach(function(value) {
         if (value.id == player) {
             status = value.sitno;
             return false;
@@ -202,7 +202,7 @@ function getSitByPlayer(players, player){
 }
 function getPlayerBySit(player,sitno){
     var status = false;
-    $.each(player, function(index, value) {
+    player.forEach(function(value) {
         if (parseInt(value.sitno) == sitno) {
             status = value;
             return false;
@@ -238,7 +238,7 @@ function setGiliran(response){
 }            
 
 function setLoser(players, callBack){
-    $.each(players, function(index, value) {
+    players.forEach(function(value) {
         if (value.card != '[]' && (value.status == 'main' || value.status == 'pas')) {
             firebase.database().ref(room).update({                 
                 loser: value.id
@@ -263,7 +263,7 @@ function checkReset(){
         var players = response.val().player;
         var totalPlayerCard = 0;
         var totalPlayerSit = 0;
-        $.each(players, function(index, value) {
+        players.forEach(function(value) {
             if (value.card != '[]' && typeof value.card !== 'undefined') {
                 totalPlayerCard += 1;
             }
@@ -318,11 +318,11 @@ function resetGame(){
         for (var i = 0; i < totalPlayer; i++) {
             playerCard[i] = [];
         }
-        $.each(card, function(index, value) {
+        card.forEach(function(value, index) {
             playerCard[index % totalPlayer].push(value);
         });
         var i = 0;
-        $.each(player, function(index, value) {
+        player.forEach(function(value, index) {
             if (value.sitno && value.sitno != 0 && typeof value.sitno !== 'undefined' && totalPlayer > 1) {
                 firebase.database().ref(room+'/player/'+index).update({
                     card: JSON.stringify(playerCard[i]),
@@ -398,7 +398,7 @@ function sendCard(cardSelected, callBack = function(){}){
             firebase.database().ref(room).update({
                 warisan:0
             }).then(function(){                
-                $.each(cardSelected, function(index, value) {
+                cardSelected.forEach(function(value) {
                     remove(playerCard, value);
                 });            
                 firebase.database().ref(room+'/player/'+giliran).update({
@@ -501,7 +501,7 @@ function setPlayAll(players){
             }
         }    
     });
-    $.each(players, function(index, value) {
+    players.forEach(function(value) {
         if (value.status == 'pas') {
             firebase.database().ref(room+'/player/'+value.id).update({
                 status:'main'
@@ -517,7 +517,7 @@ function setPlayAll(players){
 }
 function getCountPlay(players){
     var total = 0;
-    $.each(players, function(index, value) {
+    players.forEach(function(value) {
         if (value.status == 'main') {
             total += 1;
         }
@@ -529,12 +529,12 @@ function checkStraight(cardSelected){
         return false;
     }
     var cardStraight = [];
-    $.each(cardSelected, function(index, value) {
+    cardSelected.forEach(function(value) {
         cardStraight.push((value - (value % 4)) / 4);
     });
     cardStraight.sort(function(a,b){return a-b});
     var a = -1, b = true;
-    $.each(cardStraight, function(index, value) {
+    cardStraight.forEach(function(value) {
         if (a == -1) {
             a = value;
         }else{
@@ -554,10 +554,10 @@ function checkFlush(cardSelected){
     }    
     var cardFlush = [];
     var uniqueCardFlush = [];
-    $.each(cardSelected, function(index, value) {
+    cardSelected.forEach(function(value) {
         cardFlush.push(value % 4);
     });
-    $.each(cardFlush, function(index, value){
+    cardFlush.forEach(function(value){
         if($.inArray(value, uniqueCardFlush) === -1) uniqueCardFlush.push(value);
     });                
     if (uniqueCardFlush.length == 1) {
@@ -568,10 +568,10 @@ function checkFlush(cardSelected){
 function checkFullHouse(cardSelected){
     var cardFullHouse = [];
     var uniqueCardFullHouse = [];
-    $.each(cardSelected, function(index, value) {
+    cardSelected.forEach(function(value) {
         cardFullHouse.push((value - (value % 4)) / 4);
     });                
-    $.each(cardFullHouse, function(index, value){
+    cardFullHouse.forEach(function(value){
         if($.inArray(value, uniqueCardFullHouse) === -1) uniqueCardFullHouse.push(value);
     });
     if (uniqueCardFullHouse.length == 2) {
@@ -580,7 +580,7 @@ function checkFullHouse(cardSelected){
         var aa = 0;
         var bb = 0;
         var big = 0;
-        $.each(cardFullHouse, function(index, value){
+        cardFullHouse.forEach(function(value){
             if (a == value) {
                 aa += 1; 
             }
@@ -617,7 +617,7 @@ function validasi(cardSelected, card_on_arena){
     // validasi pair
     if (cardSelected.length > 1 && cardSelected.length < 5) {
         var valid = true;
-        $.each(cardSelected, function(index, value) {
+        cardSelected.forEach(function(value) {
             if (((value-(value%4))/4) != ((cardSelected[0]-(cardSelected[0]%4))/4)) {
                 valid = false;
                 return false;
@@ -726,7 +726,7 @@ function addBot(){
 }
 function removeBot(){
     firebase.database().ref(room+'/player').once('value', function(response) {
-        $.each(response.val(), function(index, value) {
+        response.val().forEach(function(value) {
             if (value.type == 'bot' && value.sitno != 0) {
                 setStandUp(value.id, function(){                    
                     checkReset();
@@ -740,10 +740,10 @@ function botPair(card, tablecard = 0, count = 0){
     var card = card.sort(function(a, b){return a - b});
     var selected, total, status;
     status = false;
-    $.each(card, function(index, value) {
+    card.forEach(function(value) {
         selected = [];
         total = 0;
-        $.each(card, function(indexs, values) {
+        card.forEach(function(values) {
             if ((value-(value%4))/4 == (values-(values%4))/4) {
                 selected.push(values);
                 total++;
@@ -778,11 +778,11 @@ function botPairPecah(card, tablecard = 0){
     var card = card.sort(function(a, b){return a - b});
     var selected, total, status;
     status = false;
-    $.each(card, function(index, value) {
+    card.forEach(function(value) {
         selected = [];
         total = 0;
         if (value >= 32) {            
-            $.each(card, function(indexs, values) {
+            card.forEach(function(values) {
                 if ((value-(value%4))/4 == (values-(values%4))/4) {
                     selected.push(values);
                     total++;
@@ -824,11 +824,11 @@ function botMinMatch5(card, tablecard = 0){
     var card = card.sort(function(a, b){return a - b});
     var selected, total, status;
     status = false;
-    $.each(card, function(index, value) {
+    card.forEach(function(value) {
         selected = [];
         selected.push(value);
         total = 1;
-        $.each(card, function(indexs, values) {
+        card.forEach(function(values) {
             if (value != values) {                            
                 if (matchtype == 'fh') {
                     if ((value-(value%4))/4 == (values-(values%4))/4) {
@@ -860,7 +860,7 @@ function botMinMatch5(card, tablecard = 0){
             if (total == 3) {
                 var child = botPair(card, 0, 2);
                 if (child) {
-                    $.each(child, function(indexChild, valueChild) {
+                    child.forEach(function(valueChild) {
                         selected.push(valueChild);
                     });
                 }
@@ -893,10 +893,10 @@ function botFullHouse(card){
     var card = card.sort(function(a, b){return a - b});
     var selected;
     var status = false;
-    $.each(card, function(index, value) {
+    card.forEach(function(value) {
         selected = [];
         total = 0;
-        $.each(card, function(indexs, values) {
+        card.forEach(function(values) {
             if ((value-(value%4))/4 == (values-(values%4))/4) {
                 selected.push(values);
                 total++;
@@ -905,7 +905,7 @@ function botFullHouse(card){
         if (total == 3) {
             var child = botPair(card, 0, 2);
             if (child) {
-                $.each(child, function(indexChild, valueChild) {
+                child.forEach(function(valueChild) {
                     selected.push(valueChild);
                 });
                 status = true;
@@ -923,11 +923,11 @@ function botStraight(card){
     var card = card.sort(function(a, b){return a - b});
     var selected;
     var status = false;
-    $.each(card, function(index, value) {
+    card.forEach(function(value) {
         selected = [];
         selected.push(value);
         total = 1;
-        $.each(card, function(indexs, values) {
+        card.forEach(function(values) {
             if (((selected[selected.length-1]-(selected[selected.length-1]%4))/4)+1 == (values-(values%4))/4) {
                 selected.push(values);
                 total++;
@@ -948,11 +948,11 @@ function botStraightFlush(card){
     var card = card.sort(function(a, b){return a - b});
     var selected;
     var status = false;
-    $.each(card, function(index, value) {
+    card.forEach(function(value) {
         selected = [];
         selected.push(value);
         total = 1;
-        $.each(card, function(indexs, values) {
+        card.forEach(function(values) {
             if ((((selected[selected.length-1]-(selected[selected.length-1]%4))/4)+1 == (values-(values%4))/4) && (selected[selected.length-1]%4 == values%4)) {
                 selected.push(values);
                 total++;
