@@ -274,13 +274,14 @@ function checkReset(){
         var totalPlayerCard = 0;
         var totalPlayerSit = 0;
         Object.values(players).forEach(function(value) {
-            if (value.card != '[]' && typeof value.card !== 'undefined') {
+            if (value.card != '[]' && typeof value.card !== 'undefined' && value.id) {
                 totalPlayerCard += 1;
             }
             if (value.sitno && value.sitno != 0) {
                 totalPlayerSit += 1;
             }
         });
+        console.log('ceking',totalPlayerSit, totalPlayerCard);
         if (totalPlayerSit == 1 || (totalPlayerSit > 1 && totalPlayerCard <= 1)) {
             if (totalPlayerSit > 1) {
                 setLoser(players, function(){                    
@@ -294,6 +295,7 @@ function checkReset(){
 }
 
 function resetGame(){
+    console.log('resetGame');
     firebase.database().ref(room).once('value', function(response) {   
         var winner = response.val().winner;
         var bom = response.val().bom;
