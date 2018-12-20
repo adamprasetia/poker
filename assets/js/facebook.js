@@ -1,8 +1,6 @@
 function statusChangeCallback(response) {
     if (response.status === 'connected') {
-        console.log('Welcome!  Fetching your information.... ');
         FB.api('/me', {fields: "id,name,picture"}, function(response) {
-            console.log('connected', response)
             if (response && response.id && typeof response.id !== 'undefined') {                
                 firebase.database().ref(room+'/player/'+response.id).update({
                     id:response.id,
@@ -10,7 +8,6 @@ function statusChangeCallback(response) {
                     picture:response.picture.data.url,
                 }).then(function(){
                     me = response;
-                    console.log('me', me)
                     firebase.database().ref(room+'/player/'+response.id).update({
                         sync:new Date().getUTCMilliseconds()
                     });
