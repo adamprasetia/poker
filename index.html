@@ -126,7 +126,7 @@
                 if (response.val()) {
                     console.log('response',response.val());
                     var giliran = response.val().giliran
-                    if (me && giliran == me.id) {
+                    if (me && giliran == me.id && response.val().player[me.id].card != '[]') {
                         $('#btn-send').show();
                         $('#btn-pas').show();
                     }else{
