@@ -247,9 +247,11 @@ function setGiliran(response){
 function setLoser(players, callBack){
     Object.values(players).forEach(function(value) {
         if (value.card != '[]' && (value.status == 'main' || value.status == 'pas')) {
-            firebase.database().ref(room).update({                 
-                loser: value.id
-            });
+            if(typeof value.id !== 'undefined'){
+                firebase.database().ref(room).update({                 
+                    loser: value.id
+                });    
+            }
         }
     });
     callBack(players);
@@ -266,6 +268,7 @@ function checkGiliran(){
 }            
 
 function checkReset(){
+    console.log('checkReset');
     firebase.database().ref(room).once('value').then(function(response){        
         var players = response.val().player;
         var totalPlayerCard = 0;
@@ -351,7 +354,8 @@ function resetGame(){
             tablecard:'[]',
             tablecardplayer:0,
             warisan:0,
-            juara:juara
+            juara:juara,
+            timer:100
         });
     });
 }

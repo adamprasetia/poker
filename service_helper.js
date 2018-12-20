@@ -188,7 +188,8 @@ function resetGame(response){
         tablecard:'[]',
         tablecardplayer:0,
         warisan:0,
-        juara:juara
+        juara:juara,
+        timer:100
     });
 }
 function remove(array, element) {
