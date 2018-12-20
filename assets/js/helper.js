@@ -80,7 +80,11 @@ function showPlayer(response, callBack){
                 $('.sit-'+i).hide();
                 if (me && me.id==player.id) {
                     $('button.sit').hide();
-                    $('.stand-up').show();
+                    if(player.status == 'main' || player.status == 'pas'){
+                        $('.stand-up').hide();
+                    }else{
+                        $('.stand-up').show();
+                    }                    
                 }
                 var playerCard = '<div class="player-card-small">';
                 var kartuSelected;
