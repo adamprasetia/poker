@@ -39,16 +39,16 @@ function showPlayer(response, callBack){
         // show tablecard
         if (response && response.tablecard) {
             var tablecard = '';
-            if(typeof response.player[response.tablecardplayer].name !== 'undefined'){
+            if(response.tablecardplayer && typeof response.player[response.tablecardplayer].name !== 'undefined'){
                 var tablecard = '<label class="badge badge-primary" style="position:absolute;top:-30px">'+ response.player[response.tablecardplayer].name +'</label>';
             }
             JSON.parse(response.tablecard).forEach(function(value) {
                 tablecard += '<img class="tablecard img-thumbnail" src="assets/img/card/'+value+'.png">';
             });
-            if(typeof response.player[response.warisan].name !== 'undefined'){
+            if(response.warisan && typeof response.player[response.warisan].name !== 'undefined'){
                 tablecard += '<small class="badge badge-warning" style="position:absolute;left:0px;top:70px">Warisan: '+ response.player[response.warisan].name +'</small>';
             }
-            if(typeof response.player[response.bom].name !== 'undefined'){
+            if(response.bom && typeof response.player[response.bom].name !== 'undefined'){
                 tablecard += '<img src="assets/img/bom.png" style="position:absolute;left:0px;top:0px" >';
             }
             $('#tablecard').html(tablecard);

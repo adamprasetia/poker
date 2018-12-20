@@ -91,7 +91,7 @@
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>        
         <script type="text/javascript" src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
-        <script type="text/javascript" src="assets/js/helper.js?v=2018-12-21-02-46"></script>
+        <script type="text/javascript" src="assets/js/helper.js?v=2018-12-21-03-44"></script>
         <script type="text/javascript" src="assets/js/firebase.js?v=2018-03-23-16-45"></script>
         <!-- <script src="//connect.facebook.net/en_US/sdk.js"></script> -->
         <script type="text/javascript" src="assets/js/facebook.js?v=2018-12-21-03-22"></script>
@@ -101,7 +101,9 @@
             var me;
             var timeout = 100;
             var cardSelected = [];
-            
+
+            console.log('room', room);
+
             // admin
             if (getParameterByName('admin')=='sempakbolong') {
                 $('.admin').show();
@@ -121,7 +123,8 @@
             });
 
             firebase.database().ref(room).on('value', function(response) {
-                if (response.val()) {                    
+                if (response.val()) {
+                    console.log('response',response.val());
                     var giliran = response.val().giliran
                     if (me && giliran == me.id) {
                         $('#btn-send').show();
