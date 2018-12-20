@@ -276,6 +276,9 @@ function sendCard(response, cardSelected, callBack = function(){}){
 }
 function changeGiliran(response, giliran = 0, callBack = function(){}){
     console.log('changeGiliran')
+    firebase.database().ref(room).update({
+        timer:100
+    });    
     firebase.database().ref(room).once('value', function(response){
         if (giliran == 0) {            
             giliran = response.val().giliran;
@@ -871,5 +874,6 @@ function bot(response){
 }
 
 module.exports = {
-    bot: bot
+    bot: bot,
+    setPas: setPas
 }

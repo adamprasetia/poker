@@ -17,5 +17,27 @@ setInterval(function(){
             console.log(player[giliran].name,' jalan');
             helper.bot(response);
         }
+        var timer = response.val().timer - 10
+        if(response.val().timer <= 0){
+            helper.setPas(response, response.val().giliran)
+            timer = 100
+        }
+        firebase.database().ref(room).update({
+            timer:timer
+        });    
     });
 }, 4000)
+
+// setInterval(function(){
+//     firebase.database().ref(room).once('value', function(response){
+//         console.log(response.val().timer);
+//         var timer = response.val().timer - 10
+//         if(response.val().timer <= 0){
+//             helper.setPas(response, response.val().giliran)
+//             timer = 100
+//         }
+//         firebase.database().ref(room).update({
+//             timer:timer
+//         });    
+//     });
+// },2000);

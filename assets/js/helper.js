@@ -63,7 +63,7 @@ function showPlayer(response, callBack){
             var giliran = 'bg-dark';
             if (response.giliran && response.giliran == player.id) {
                 giliran = 'bg-warning';
-                playerTime = '<div class="card-footer"><div class="progress"><div style="width: '+timeout+'%;" class="progress-bar"></div></div></div>';
+                playerTime = '<div class="card-footer"><div class="progress"><div style="width: '+response.timer+'%;" class="progress-bar"></div></div></div>';
             }        
             var avatar = '<img src="'+player.picture+'" class="img-thumbnail">';
             if (player !== false) {
@@ -446,6 +446,9 @@ function sendCard(cardSelected, callBack = function(){}){
 
 function changeGiliran(giliran = 0, callBack = function(){}){
     console.log('changeGiliran')
+    firebase.database().ref(room).update({
+        timer:100
+    });    
     firebase.database().ref(room).once('value', function(response){
         if (giliran == 0) {            
             giliran = response.val().giliran;
