@@ -112,6 +112,7 @@ function getPlayerSitNo(players, sitNo){
     });
     return player;
 }
+
 function setPas(playerId, callBack = function(){}){
     firebase.database().ref(room).once('value').then(function(response){                   
         var players = response.val().player;
@@ -456,6 +457,7 @@ function changeGiliran(giliran = 0, callBack = function(){}){
         var players = response.val().player;
         var warisan = response.val().warisan;
 
+        console.log('getCountPlay', getCountPlay(players));
         if(getCountPlay(players)==0){
             if(warisan != 0){
                 firebase.database().ref(room).update({
@@ -482,6 +484,7 @@ function changeGiliran(giliran = 0, callBack = function(){}){
                         giliran:player.id
                     }).then(function(){
                         if(getCountPlay(players)<=1 && (warisan == player.id || warisan == 0)){
+                            console.log('masuk sini', players);
                             setPlayAll(response, players);
                         }
                     });
@@ -498,24 +501,22 @@ function changeGiliran(giliran = 0, callBack = function(){}){
         callBack(giliran);
     })
 }
-function setPlayAll(players){
-    firebase.database().ref(room).once('value', function(response) {   
-        var bom = response.val().bom;
-        var winner = response.val().winner;
-        if (bom && typeof bom !== 'undefined' && bom != 0) {
-            if (winner != 0 && typeof winner !== 'undefined') {                
-                firebase.database().ref(room).update({
-                    winner:bom,
-                    juara:bom
-                }).then(function(){
-                    resetGame();
-                });
-            }else{                
-                resetGame();
-            }
-        }    
-    });
-    Object.values(players).forEach(function(value) {
+function setPlayAll(response, players){
+    var bom = response.val().bom;
+    var winner = response.val().winner;
+    if (bom && typeof bom !== 'undefined' && bom != 0) {
+        if (winner != 0 && typeof winner !== 'undefined') {                
+            firebase.database().ref(room).update({
+                winner:bom,
+                juara:bom
+            }).then(function(){
+                resetGame(response);
+            });
+        }else{                
+            resetGame(response);
+        }
+    }    
+    Object.values(players).map(value => {
         if (value.status == 'pas') {
             firebase.database().ref(room+'/player/'+value.id).update({
                 status:'main'
