@@ -39,9 +39,15 @@ function showPlayer(response, callBack){
         // show tablecard
         if (response && response.tablecard) {
             var tablecard = '';
+            if(typeof response.player[response.tablecardplayer].name !== 'undefined'){
+                var tablecard = '<small style="position:absolute;top:-30px">'+ response.player[response.tablecardplayer].name +'</small>';
+            }
             JSON.parse(response.tablecard).forEach(function(value) {
                 tablecard += '<img class="tablecard img-thumbnail" src="assets/img/card/'+value+'.png">';
             });
+            if(typeof response.player[response.warisan].name !== 'undefined'){
+                tablecard += '<small style="position:absolute;left:0px;top:60px">Warisan: '+ response.player[response.warisan].name +'</small>';
+            }
             $('#tablecard').html(tablecard);
         }
         
@@ -75,7 +81,7 @@ function showPlayer(response, callBack){
                 }
                 var playerCard = '<div class="player-card-small">';
                 var kartuSelected;
-                JSON.parse(player.card).sort(function(a, b){return a - b}).forEach(function(value) {
+                JSON.parse(player.card).sort(function(a, b){return a - b}).forEach(function(value, index) {
                     kartuSelected = '';
                     if (cardSelected.length > 0){                                    
                         if (cardSelected.indexOf(value)!= -1) {
@@ -98,7 +104,7 @@ function showPlayer(response, callBack){
 }
 function getPlayerSitNo(players, sitNo){
     var player = false;
-    players.forEach(function(value) {
+    Object.values(players).forEach(function(value) {
         if (value.sitno == sitNo) {
             player = value;
             return false;
@@ -172,7 +178,7 @@ function setStandUp(playerId, callBack = function(){}){
 }
 function getTotalPlayer(player){
     var total = 0;
-    player.forEach(function(value) {
+    Object.values(player).forEach(function(value) {
         if (value.sitno != 0 && typeof value.sitno !== 'undefined') {
             total++;
         }
@@ -192,7 +198,7 @@ function shuffle(array) {
 }    
 function getSitByPlayer(players, player){
     var status = false;
-    players.forEach(function(value) {
+    Object.values(players).forEach(function(value) {
         if (value.id == player) {
             status = value.sitno;
             return false;
@@ -202,7 +208,7 @@ function getSitByPlayer(players, player){
 }
 function getPlayerBySit(player,sitno){
     var status = false;
-    player.forEach(function(value) {
+    Object.values(player).forEach(function(value) {
         if (parseInt(value.sitno) == sitno) {
             status = value;
             return false;
@@ -238,7 +244,7 @@ function setGiliran(response){
 }            
 
 function setLoser(players, callBack){
-    players.forEach(function(value) {
+    Object.values(players).forEach(function(value) {
         if (value.card != '[]' && (value.status == 'main' || value.status == 'pas')) {
             firebase.database().ref(room).update({                 
                 loser: value.id
@@ -263,7 +269,7 @@ function checkReset(){
         var players = response.val().player;
         var totalPlayerCard = 0;
         var totalPlayerSit = 0;
-        players.forEach(function(value) {
+        Object.values(players).forEach(function(value) {
             if (value.card != '[]' && typeof value.card !== 'undefined') {
                 totalPlayerCard += 1;
             }
@@ -318,19 +324,19 @@ function resetGame(){
         for (var i = 0; i < totalPlayer; i++) {
             playerCard[i] = [];
         }
-        card.forEach(function(value, index) {
+        Object.values(card).forEach(function(value, index) {
             playerCard[index % totalPlayer].push(value);
         });
         var i = 0;
-        player.forEach(function(value, index) {
+        Object.values(player).forEach(function(value) {
             if (value.sitno && value.sitno != 0 && typeof value.sitno !== 'undefined' && totalPlayer > 1) {
-                firebase.database().ref(room+'/player/'+index).update({
+                firebase.database().ref(room+'/player/'+value.id).update({
                     card: JSON.stringify(playerCard[i]),
                     status: 'main'
                 });
                 i++;
             }else{
-                firebase.database().ref(room+'/player/'+index).update({                 
+                firebase.database().ref(room+'/player/'+value.id).update({                 
                     card: '[]',
                     status: 'menunggu'
                 }); 
@@ -398,7 +404,7 @@ function sendCard(cardSelected, callBack = function(){}){
             firebase.database().ref(room).update({
                 warisan:0
             }).then(function(){                
-                cardSelected.forEach(function(value) {
+                Object.values(cardSelected).forEach(function(value) {
                     remove(playerCard, value);
                 });            
                 firebase.database().ref(room+'/player/'+giliran).update({
@@ -437,52 +443,57 @@ function sendCard(cardSelected, callBack = function(){}){
         callBack(cardSelected);
     });
 }
+
 function changeGiliran(giliran = 0, callBack = function(){}){
-    firebase.database().ref(room).once('value', function(response) {        
+    console.log('changeGiliran')
+    firebase.database().ref(room).once('value', function(response){
         if (giliran == 0) {            
             giliran = response.val().giliran;
         }
         var players = response.val().player;
         var warisan = response.val().warisan;
-        var sitno = getSitByPlayer(players, giliran);
 
-        if (getCountPlay(players)==0) {    
-            firebase.database().ref(room).update({
-                giliran:warisan
-            }).then(function(){
+        if(getCountPlay(players)==0){
+            if(warisan != 0){
                 firebase.database().ref(room).update({
-                    warisan:0
-                });    
-                setPlayAll(players);
-            });
-        }
-        
-        if (sitno == 10) {
-            sitno = 1;
-        }else{
-            sitno++;
-        }
-        for (var i = 1; i <= 10; i++) {
-            var player = getPlayerBySit(players, sitno);        
-            if (player.status == 'main') {            
-                firebase.database().ref(room).update({
-                    giliran:player.id
+                    giliran:warisan
                 }).then(function(){
-                    if (getCountPlay(players) <= 1 && (warisan == 0 || typeof warisan === 'undefined')) {
-                        setPlayAll(players);
-                    }
-                });
-                break;
+                    firebase.database().ref(room).update({
+                        warisan:0
+                    });    
+                    setPlayAll(response, players);
+                });        
             }
+            setPlayAll(response, players);
+        }else{
+            var sitno = getSitByPlayer(players, giliran);
             if (sitno == 10) {
                 sitno = 1;
             }else{
                 sitno++;
             }
+            for (var i = 1; i <= 10; i++) {
+                var player = getPlayerBySit(players, sitno);        
+                if (player.status == 'main') {
+                    firebase.database().ref(room).update({
+                        giliran:player.id
+                    }).then(function(){
+                        if(getCountPlay(players)<=1 && (warisan == player.id || warisan == 0)){
+                            setPlayAll(response, players);
+                        }
+                    });
+                    break;
+                }
+                if (sitno == 10) {
+                    sitno = 1;
+                }else{
+                    sitno++;
+                }
+            }            
         }
     }).then(function(){
         callBack(giliran);
-    });
+    })
 }
 function setPlayAll(players){
     firebase.database().ref(room).once('value', function(response) {   
@@ -501,7 +512,7 @@ function setPlayAll(players){
             }
         }    
     });
-    players.forEach(function(value) {
+    Object.values(players).forEach(function(value) {
         if (value.status == 'pas') {
             firebase.database().ref(room+'/player/'+value.id).update({
                 status:'main'
@@ -517,8 +528,8 @@ function setPlayAll(players){
 }
 function getCountPlay(players){
     var total = 0;
-    players.forEach(function(value) {
-        if (value.status == 'main') {
+    Object.values(players).forEach(function(value) {
+        if (value.status == 'main' && typeof value.id !== 'undefined' && typeof getSitByPlayer(players, value.id) !== 'undefined') {
             total += 1;
         }
     });
@@ -529,12 +540,12 @@ function checkStraight(cardSelected){
         return false;
     }
     var cardStraight = [];
-    cardSelected.forEach(function(value) {
+    Object.values(cardSelected).forEach(function(value) {
         cardStraight.push((value - (value % 4)) / 4);
     });
     cardStraight.sort(function(a,b){return a-b});
     var a = -1, b = true;
-    cardStraight.forEach(function(value) {
+    Object.values(cardStraight).forEach(function(value) {
         if (a == -1) {
             a = value;
         }else{
@@ -554,10 +565,10 @@ function checkFlush(cardSelected){
     }    
     var cardFlush = [];
     var uniqueCardFlush = [];
-    cardSelected.forEach(function(value) {
+    Object.values(cardSelected).forEach(function(value) {
         cardFlush.push(value % 4);
     });
-    cardFlush.forEach(function(value){
+    Object.values(cardFlush).forEach(function(value){
         if($.inArray(value, uniqueCardFlush) === -1) uniqueCardFlush.push(value);
     });                
     if (uniqueCardFlush.length == 1) {
@@ -568,10 +579,10 @@ function checkFlush(cardSelected){
 function checkFullHouse(cardSelected){
     var cardFullHouse = [];
     var uniqueCardFullHouse = [];
-    cardSelected.forEach(function(value) {
+    Object.values(cardSelected).forEach(function(value) {
         cardFullHouse.push((value - (value % 4)) / 4);
     });                
-    cardFullHouse.forEach(function(value){
+    Object.values(cardFullHouse).forEach(function(value){
         if($.inArray(value, uniqueCardFullHouse) === -1) uniqueCardFullHouse.push(value);
     });
     if (uniqueCardFullHouse.length == 2) {
@@ -580,7 +591,7 @@ function checkFullHouse(cardSelected){
         var aa = 0;
         var bb = 0;
         var big = 0;
-        cardFullHouse.forEach(function(value){
+        Object.values(cardFullHouse).forEach(function(value){
             if (a == value) {
                 aa += 1; 
             }
@@ -617,7 +628,7 @@ function validasi(cardSelected, card_on_arena){
     // validasi pair
     if (cardSelected.length > 1 && cardSelected.length < 5) {
         var valid = true;
-        cardSelected.forEach(function(value) {
+        Object.values(cardSelected).forEach(function(value) {
             if (((value-(value%4))/4) != ((cardSelected[0]-(cardSelected[0]%4))/4)) {
                 valid = false;
                 return false;
@@ -726,7 +737,7 @@ function addBot(){
 }
 function removeBot(){
     firebase.database().ref(room+'/player').once('value', function(response) {
-        response.val().forEach(function(value) {
+        Object.values(response).val().forEach(function(value) {
             if (value.type == 'bot' && value.sitno != 0) {
                 setStandUp(value.id, function(){                    
                     checkReset();
@@ -740,10 +751,10 @@ function botPair(card, tablecard = 0, count = 0){
     var card = card.sort(function(a, b){return a - b});
     var selected, total, status;
     status = false;
-    card.forEach(function(value) {
+    Object.values(card).forEach(function(value) {
         selected = [];
         total = 0;
-        card.forEach(function(values) {
+        Object.values(card).forEach(function(values) {
             if ((value-(value%4))/4 == (values-(values%4))/4) {
                 selected.push(values);
                 total++;
@@ -778,11 +789,11 @@ function botPairPecah(card, tablecard = 0){
     var card = card.sort(function(a, b){return a - b});
     var selected, total, status;
     status = false;
-    card.forEach(function(value) {
+    Object.values(card).forEach(function(value) {
         selected = [];
         total = 0;
         if (value >= 32) {            
-            card.forEach(function(values) {
+            Object.values(card).forEach(function(values) {
                 if ((value-(value%4))/4 == (values-(values%4))/4) {
                     selected.push(values);
                     total++;
@@ -824,11 +835,11 @@ function botMinMatch5(card, tablecard = 0){
     var card = card.sort(function(a, b){return a - b});
     var selected, total, status;
     status = false;
-    card.forEach(function(value) {
+    Object.values(card).forEach(function(value) {
         selected = [];
         selected.push(value);
         total = 1;
-        card.forEach(function(values) {
+        Object.values(card).forEach(function(values) {
             if (value != values) {                            
                 if (matchtype == 'fh') {
                     if ((value-(value%4))/4 == (values-(values%4))/4) {
@@ -860,7 +871,7 @@ function botMinMatch5(card, tablecard = 0){
             if (total == 3) {
                 var child = botPair(card, 0, 2);
                 if (child) {
-                    child.forEach(function(valueChild) {
+                    Object.values(child).forEach(function(valueChild) {
                         selected.push(valueChild);
                     });
                 }
@@ -893,10 +904,10 @@ function botFullHouse(card){
     var card = card.sort(function(a, b){return a - b});
     var selected;
     var status = false;
-    card.forEach(function(value) {
+    Object.values(card).forEach(function(value) {
         selected = [];
         total = 0;
-        card.forEach(function(values) {
+        Object.values(card).forEach(function(values) {
             if ((value-(value%4))/4 == (values-(values%4))/4) {
                 selected.push(values);
                 total++;
@@ -905,7 +916,7 @@ function botFullHouse(card){
         if (total == 3) {
             var child = botPair(card, 0, 2);
             if (child) {
-                child.forEach(function(valueChild) {
+                Object.values(child).forEach(function(valueChild) {
                     selected.push(valueChild);
                 });
                 status = true;
@@ -923,11 +934,11 @@ function botStraight(card){
     var card = card.sort(function(a, b){return a - b});
     var selected;
     var status = false;
-    card.forEach(function(value) {
+    Object.values(card).forEach(function(value) {
         selected = [];
         selected.push(value);
         total = 1;
-        card.forEach(function(values) {
+        Object.values(card).forEach(function(values) {
             if (((selected[selected.length-1]-(selected[selected.length-1]%4))/4)+1 == (values-(values%4))/4) {
                 selected.push(values);
                 total++;
@@ -948,11 +959,11 @@ function botStraightFlush(card){
     var card = card.sort(function(a, b){return a - b});
     var selected;
     var status = false;
-    card.forEach(function(value) {
+    Object.values(card).forEach(function(value) {
         selected = [];
         selected.push(value);
         total = 1;
-        card.forEach(function(values) {
+        Object.values(card).forEach(function(values) {
             if ((((selected[selected.length-1]-(selected[selected.length-1]%4))/4)+1 == (values-(values%4))/4) && (selected[selected.length-1]%4 == values%4)) {
                 selected.push(values);
                 total++;

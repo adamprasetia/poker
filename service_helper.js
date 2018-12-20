@@ -13,6 +13,7 @@ function getPlayerSitNo(players, sitNo){
     return player;
 }
 function setPas(response, playerId, callBack = function(){}){
+    console.log(response.val().player[playerId].name,'PAS')
     var players = response.val().player;
     var bom = response.val().bom;
     var giliran = response.val().giliran;
@@ -113,14 +114,12 @@ function checkReset(response){
         var totalPlayerSit = 0;
         Object.values(players).map(value => {
             if (value.card != '[]' && typeof value.card !== 'undefined' && value.id) {
-                // console.log(value.id)
                 totalPlayerCard += 1;
             }
             if (value.sitno && value.sitno != 0) {
                 totalPlayerSit += 1;
             }
         });
-        console.log(totalPlayerSit, totalPlayerCard)
         if (totalPlayerSit == 1 || (totalPlayerSit > 1 && totalPlayerCard <= 1)) {
             if (totalPlayerSit > 1) {
                 setLoser(players, function(){                    
@@ -157,7 +156,6 @@ function resetGame(response){
     
     var player = response.val().player;
     var totalPlayer = getTotalPlayer(player);
-    console.log('totalPlayer', totalPlayer)
     var totalCard = 52;
     var card = new Array(totalCard);
     for (var i = 0; i < card.length; i++) {
@@ -173,6 +171,7 @@ function resetGame(response){
     });
     var i = 0;
     Object.values(player).map(value => {
+        console.log('reset', value.name)
         if (value.sitno && value.sitno != 0 && typeof value.sitno !== 'undefined' && totalPlayer > 1) {
             firebase.database().ref(room+'/player/'+value.id).update({
                 card: JSON.stringify(playerCard[i]),
@@ -207,7 +206,7 @@ function setWarisan(response, callBack){
     }                
     for (var i = 1; i <= 10; i++) {
         player = getPlayerBySit(players, sitno);
-        if (player.status && player.status != 'menang' && player.status != 'menunggu') {
+        if (player.status && player.status != 'menang' && player.status != 'menunggu' && player.status != 'pas') {
             firebase.database().ref(room).update({
                 warisan:player.id
             });
@@ -276,48 +275,51 @@ function sendCard(response, cardSelected, callBack = function(){}){
     });
 }
 function changeGiliran(response, giliran = 0, callBack = function(){}){
+    console.log('changeGiliran')
     firebase.database().ref(room).once('value', function(response){
         if (giliran == 0) {            
             giliran = response.val().giliran;
         }
         var players = response.val().player;
         var warisan = response.val().warisan;
-        var sitno = getSitByPlayer(players, giliran);
 
-        // console.log('total play', getCountPlay(players));
-        if (getCountPlay(players)==1) {    
-            firebase.database().ref(room).update({
-                giliran:warisan
-            }).then(function(){
+        if(getCountPlay(players)==0){
+            if(warisan != 0){
                 firebase.database().ref(room).update({
-                    warisan:0
-                });    
-                setPlayAll(response, players);
-            });
-        }
-        
-        if (sitno == 10) {
-            sitno = 1;
-        }else{
-            sitno++;
-        }
-        for (var i = 1; i <= 10; i++) {
-            var player = getPlayerBySit(players, sitno);        
-            if (player.status == 'main') {            
-                firebase.database().ref(room).update({
-                    giliran:player.id
+                    giliran:warisan
                 }).then(function(){
-                    if (getCountPlay(players) <= 1 && (warisan == 0 || typeof warisan === 'undefined')) {
-                        setPlayAll(response, players);
-                    }
-                });
-                break;
+                    firebase.database().ref(room).update({
+                        warisan:0
+                    });    
+                    setPlayAll(response, players);
+                });        
             }
+            setPlayAll(response, players);
+        }else{
+            var sitno = getSitByPlayer(players, giliran);
             if (sitno == 10) {
                 sitno = 1;
             }else{
                 sitno++;
             }
+            for (var i = 1; i <= 10; i++) {
+                var player = getPlayerBySit(players, sitno);        
+                if (player.status == 'main') {
+                    firebase.database().ref(room).update({
+                        giliran:player.id
+                    }).then(function(){
+                        if(getCountPlay(players)<=1 && (warisan == player.id || warisan == 0)){
+                            setPlayAll(response, players);
+                        }
+                    });
+                    break;
+                }
+                if (sitno == 10) {
+                    sitno = 1;
+                }else{
+                    sitno++;
+                }
+            }            
         }
     }).then(function(){
         callBack(response, giliran);
@@ -355,8 +357,7 @@ function setPlayAll(response, players){
 function getCountPlay(players){
     var total = 0;
     Object.values(players).map(value => {
-        if (value.status == 'main' && typeof value.id !== 'undefined' && typeof getSitByPlayer(value.id) !== 'undefined') {
-            // console.log('yg main', value.name)
+        if (value.status == 'main' && typeof value.id !== 'undefined' && typeof getSitByPlayer(players, value.id) !== 'undefined') {
             total += 1;
         }
     });
@@ -560,7 +561,6 @@ function botPair(card, tablecard = 0, count = 0){
         if (tablecard !== 0) {
             if (total == tablecard.length) {
                 if (Math.max.apply(Math, selected) > Math.max.apply(Math, tablecard)) {
-                    // console.log('compare', Math.max.apply(Math, selected), Math.max.apply(Math, tablecard))
                     status = true;
                 }
             }
@@ -810,20 +810,7 @@ function bot(response){
         var playergiliran = response.val().player[giliran];
         var botcard = JSON.parse(playergiliran.card);
         var botselected = [];
-        if(response.val().tablecardplayer == playergiliran.id){
-            if (getCountPlay(response.val().player)==1) {    
-                // console.log('sini', response.val().player);
-                setPlayAll(response, response.val().player);  
-                checkReset(response);              
-            }else{
-                console.log('sini');
-                changeGiliran(response, giliran, function(){
-                    checkReset(response);
-                });                                    
-            }
-            console.log('nyangkut')
-        }
-        if (playergiliran.status == 'main' && playergiliran.type == 'bot' && response.val().tablecardplayer != playergiliran.id) {            
+        if (playergiliran.status == 'main' && playergiliran.type == 'bot') {            
             if (tablecard.length == 0) {
                 botselected = botFullHouse(botcard);
                 if (!botselected || botselected.length == 0) {          
