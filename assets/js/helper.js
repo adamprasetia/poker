@@ -48,6 +48,9 @@ function showPlayer(response, callBack){
             if(typeof response.player[response.warisan].name !== 'undefined'){
                 tablecard += '<small class="badge badge-warning" style="position:absolute;left:0px;top:70px">Warisan: '+ response.player[response.warisan].name +'</small>';
             }
+            if(typeof response.player[response.bom].name !== 'undefined'){
+                tablecard += '<img src="assets/img/bom.png" style="position:absolute;left:0px;top:0px" >';
+            }
             $('#tablecard').html(tablecard);
         }
         
