@@ -740,7 +740,7 @@ function addBot(){
 }
 function removeBot(){
     firebase.database().ref(room+'/player').once('value', function(response) {
-        Object.values(response).val().forEach(function(value) {
+        Object.values(response.val()).forEach(function(value) {
             if (value.type == 'bot' && value.sitno != 0) {
                 setStandUp(value.id, function(){                    
                     checkReset();
