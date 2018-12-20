@@ -282,3 +282,11 @@ img.tablecard {
         padding: 0px;
     }
 }
+.main{    
+    opacity: 1;
+    filter: alpha(opacity=100);
+}
+.pas{    
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+}

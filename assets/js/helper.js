@@ -40,13 +40,13 @@ function showPlayer(response, callBack){
         if (response && response.tablecard) {
             var tablecard = '';
             if(typeof response.player[response.tablecardplayer].name !== 'undefined'){
-                var tablecard = '<small style="position:absolute;top:-30px">'+ response.player[response.tablecardplayer].name +'</small>';
+                var tablecard = '<label class="badge badge-primary" style="position:absolute;top:-30px">'+ response.player[response.tablecardplayer].name +'</label>';
             }
             JSON.parse(response.tablecard).forEach(function(value) {
                 tablecard += '<img class="tablecard img-thumbnail" src="assets/img/card/'+value+'.png">';
             });
             if(typeof response.player[response.warisan].name !== 'undefined'){
-                tablecard += '<small style="position:absolute;left:0px;top:60px">Warisan: '+ response.player[response.warisan].name +'</small>';
+                tablecard += '<small class="badge badge-warning" style="position:absolute;left:0px;top:70px">Warisan: '+ response.player[response.warisan].name +'</small>';
             }
             $('#tablecard').html(tablecard);
         }
@@ -95,7 +95,7 @@ function showPlayer(response, callBack){
                     }
                 });
                 playerCard += '</div>';
-                $('.player-wrap').append('<div class="card text-white '+giliran+' player sit sit-'+i+'">'+playerName+'<div class="card-body">'+avatar+'</div>'+playerTime+playerStatus+playerCard+properti+'</div>');
+                $('.player-wrap').append('<div class="card text-white '+giliran+' '+player.status+' player sit sit-'+i+'">'+playerName+'<div class="card-body">'+avatar+'</div>'+playerTime+playerStatus+playerCard+properti+'</div>');
             }
         }
         $('#mecard').html(mecard);
