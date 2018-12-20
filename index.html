@@ -133,6 +133,11 @@
                         $('#btn-send').hide();
                         $('#btn-pas').hide();                    
                     }
+                    if(response.val().player[me.id].status == 'main' || response.val().player[me.id].status == 'pas'){
+                        $('.stand-up').hide();
+                    }else{
+                        $('.stand-up').show();
+                    }
                     showPlayer(response.val(), function(){
                         
                     });
