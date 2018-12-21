@@ -302,6 +302,7 @@ function checkReset(){
 }
 
 function resetGame(){
+    cardSelected = [];
     console.log('resetGame');
     firebase.database().ref(room).once('value', function(response) {   
         var winner = response.val().winner;
