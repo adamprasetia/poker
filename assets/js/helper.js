@@ -723,7 +723,7 @@ function setLoserByBom(callBack){
         var players = response.val().player;
         var giliran = response.val().giliran;
         var bom = response.val().bom;
-        if (getCountPlay(players)==1 && bom !== 0 && typeof bom !== 'undefined') {    
+        if (bom !== 0 && typeof bom !== 'undefined') {    
             firebase.database().ref(room).update({
                 loser: giliran                
             });
