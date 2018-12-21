@@ -146,8 +146,12 @@
                     var player = response.val().player;
                     var players = [];
                     Object.values(player).forEach(function(value){
-                        if(value.totaljuara && value.type != 'bot'){
-                            players.push({name:value.name, avatar: value.picture, total:value.totaljuara})
+                        if(value.name && value.type != 'bot'){
+                            var total = 0;
+                            if(value.totaljuara){
+                                total = value.totaljuara;
+                            }
+                            players.push({name:value.name, avatar: value.picture, total:total})
                         }
                     });
                     players = players.sort(function(a,b){return b.total - a.total})
@@ -241,6 +245,9 @@
 
             $('#chat-body').slimScroll({
 		        height: '340px'
+	        });
+            $('#leaderboard-body').slimScroll({
+		        height: '400px'
 	        });
         </script>
     </body>
