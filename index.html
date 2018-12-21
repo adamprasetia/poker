@@ -97,6 +97,7 @@
         </div>
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.js"></script>
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>        
         <script type="text/javascript" src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
@@ -237,6 +238,10 @@
             $.get("https://cianjur-poker.herokuapp.com/", function( data ) {
                 console.log(data);
             });
+
+            $('#chat-body').slimScroll({
+		        height: '340px'
+	        });
         </script>
     </body>
 </html>
