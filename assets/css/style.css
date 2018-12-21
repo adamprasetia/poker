@@ -290,3 +290,11 @@ img.tablecard {
     opacity: 0.5;
     filter: alpha(opacity=50);
 }
+.leaderboard-name{
+    width: 80px !important;
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    vertical-align: middle;    
+}

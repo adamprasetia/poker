@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">        
-        <link rel="stylesheet" href="assets/css/style.css?v=2018-12-20-22-03">        
+        <link rel="stylesheet" href="assets/css/style.css?v=2018-12-21-19-13">        
         <title>Cianjur Poker</title>
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115449429-1"></script>
@@ -27,7 +27,7 @@
             <div class="card text-white bg-dark">
             <div class="card-body">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-7">
                     <div class="card text-white bg-dark">
                         <div class="card-bodys">
                             <img src="assets/img/table.png" class="img-fluid img-thumbnail">
@@ -64,7 +64,7 @@
                         </div>
                     </div>        
                 </div>
-                <div class="col-md-4">                
+                <div class="col-lg-3 col-md-12">                
                     <div class="card text-white bg-dark">
                         <div class="card-header">
                             Chat
@@ -82,7 +82,16 @@
                         </div>
                     </div>      
                 </div>
-            </div>
+                <div class="col-lg-2 col-md-12">                
+                        <div class="card text-white bg-dark">
+                            <div class="card-header">
+                                Leaderboard
+                            </div>
+                            <div id="leaderboard-body" class="card-body">
+                            </div>
+                        </div>      
+                    </div>
+                </div>
             </div>
             </div>
         </div>
@@ -132,6 +141,20 @@
                         $('#btn-send').hide();
                         $('#btn-pas').hide();                    
                     }
+                    // leaderboard
+                    var player = response.val().player;
+                    var players = [];
+                    Object.values(player).forEach(function(value){
+                        if(value.totaljuara && value.type != 'bot'){
+                            players.push({name:value.name, avatar: value.picture, total:value.totaljuara})
+                        }
+                    });
+                    players = players.sort(function(a,b){return b.total - a.total})
+                    var leaderboard = '';
+                    players.map(function(value, index){
+                        leaderboard += '<div class="card-bodys mt-2"><small><strong>'+(parseInt(index)+1)+'.</strong></small> <img class="img-thumbnail" width="50px" src="'+value.avatar+'"> <small class="leaderboard-name">'+value.name+'<br>'+value.total+' Wins</small></div>';
+                    });
+                    $('#leaderboard-body').html(leaderboard);
                     showPlayer(response.val(), function(){
                         
                     });
