@@ -40,13 +40,13 @@ function showPlayer(response, callBack){
         if (response && response.tablecard) {
             var tablecard = '';
             if(response.tablecardplayer && typeof response.player[response.tablecardplayer].name !== 'undefined'){
-                var tablecard = '<label class="badge badge-primary" style="position:absolute;top:-30px">'+ response.player[response.tablecardplayer].name +'</label>';
+                var tablecard = '<div class="cardplayer"><label class="badge badge-primary">'+ response.player[response.tablecardplayer].name +'</label></div>';
             }
             JSON.parse(response.tablecard).forEach(function(value) {
                 tablecard += '<img class="tablecard img-thumbnail" src="assets/img/card/'+value+'.png">';
             });
             if(response.warisan && typeof response.player[response.warisan].name !== 'undefined'){
-                tablecard += '<small class="badge badge-warning" style="position:absolute;left:0px;top:70px">Warisan: '+ response.player[response.warisan].name +'</small>';
+                tablecard += '<div class="warisan"><small class="badge badge-warning">Warisan: '+ response.player[response.warisan].name +'</small></div>';
             }
             if(response.bom && typeof response.player[response.bom].name !== 'undefined'){
                 tablecard += '<img src="assets/img/bom.png" style="position:absolute;left:0px;top:0px" >';
