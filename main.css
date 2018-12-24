@@ -1,11 +1,11 @@
 body{
     background: #060203;
 }
-.main{
-    /* width: 100%; */
-}
 .footer{
     margin: 0 auto;
+    width: 691px;
+}
+.main{
     width: 691px;
 }
 .meja{
@@ -151,7 +151,6 @@ img.card-small {
     opacity: 0.5;
     filter: alpha(opacity=50);
 }
-
 .footer .card, .header .card{
     font-size: 10px;
     border-radius: 0px;
