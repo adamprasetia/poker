@@ -20,7 +20,7 @@
         </div>
         <div class="body">
             <div class="meja">
-                <img src="assets/img/table.png" alt="Meja">
+                <img class="gambar-meja" src="assets/img/table.png" alt="Meja">
                 <div class="sit-container">
                     <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-1" data-value="1" style="display:none">Duduk</button>
                     <button type="button" name="button" class="btn btn-sm btn-secondary sit sit-2" data-value="2" style="display:none">Duduk</button>
@@ -244,9 +244,10 @@
         }
 
         // Start Service
-        // $.get("https://cianjur-poker.herokuapp.com/", function( data ) {
-        //     console.log(data);
-        // });
+        $.get("https://cianjur-poker.herokuapp.com/", function( data ) {
+            console.log(data);
+        });
+
         $('#mecard-body').slimScroll({
             height: '100px'
         });

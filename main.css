@@ -1,6 +1,9 @@
 body{
     background: #060203;
 }
+.main{
+    /* width: 100%; */
+}
 .footer{
     margin: 0 auto;
     width: 691px;
@@ -66,14 +69,6 @@ body{
     left: 10px;    
 }
 
-/* @media only screen and (min-width: 691px) {
-    .sit-1{
-        top:15%;
-        left: 38.8%;
-        padding: 2px;
-        font-size: 12px;
-    }    
-} */
 .tablecard-wrap{
     position: absolute;
     top: 181px;
