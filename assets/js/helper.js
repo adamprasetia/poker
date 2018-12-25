@@ -736,14 +736,15 @@ function addBot(){
     var dewaJudiList = ['Chow Yun Fat', 'Stephen Chow', 'Andy Lau', 'Ng Man-tat', 'Charles Heung', 'Shing Fui-On', 'Lung Fong', 'Jhon Ching', 'Wong Yat-fei', 'Wong Jing'];
     firebase.database().ref(room).once('value', function(response) {
         for (var i = 1; i <= 10; i++) {
-            if (getPlayerBySit(response.val().player, i) == false) {
-                firebase.database().ref(room+'/player/'+i).update({
-                    id:i,
-                    name: dewaJudiList[i-1],
+            var pos = Math.floor(Math.random() * 10)+1;
+            if (getPlayerBySit(response.val().player, pos) == false) {
+                firebase.database().ref(room+'/player/'+pos).update({
+                    id:pos,
+                    name: dewaJudiList[pos-1],
                     status:'menunggu',
                     card:'[]',
-                    sitno:i,
-                    picture:'assets/img/bot/bot'+i+'.jpg',
+                    sitno:pos,
+                    picture:'assets/img/bot/bot'+pos+'.jpg',
                     type:'bot'
                 }).then(function(){
                     checkReset();
