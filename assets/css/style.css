@@ -1,37 +1,99 @@
-.chat{
-    position: absolute;
-    top: 130px;
-    width: 300px;
-    left: 700px;
-}
-#chat-body {
-    height: 345px;
-    overflow-y: scroll;
-}
-.loser{
-    position: absolute;
-    top:0px;
-    left: -10px;
-    width: 60px;
-}
-.piala{
-    position: absolute;
-    top:-10px;
-    left: -30px;
-    width: 50px;
-}
-.mahkota{
-    position: absolute;
-    top:-35px;
-    left: 0px;
-    width: 60px;
-}
 body{
-    background: black;
+    background: #060203;
 }
-a.active > img{
-    border:2px solid lime;
+.footer{
+    margin: 0 auto;
+    width: 691px;
 }
+.main{
+    margin: 0 auto;
+    width: 691px;
+}
+.meja{
+    margin: 0 auto;
+    position: relative;
+    width: 691px;
+}
+.sit{
+    position: absolute;
+    /* padding-top: 1px; */
+    font-size: 10px;
+}
+.sit-1{
+    top:80px;
+    left: 230px;
+}
+.sit-2{
+    top:80px;
+    left: 412px;
+}
+.sit-3{
+    top: 118px;
+    left: 518px;
+    transform: rotate(45deg);
+}
+.sit-4{
+    top: 215px;
+    left: 552px;
+    transform: rotate(90deg);
+}
+.sit-5{
+    top: 314px;
+    left: 518px;
+    transform: rotate(-45deg);
+}
+.sit-6{
+    top: 348px;
+    left: 413px;
+}
+.sit-7{
+    top: 348px;
+    left: 231px;
+}
+.sit-8{
+    top: 314px;
+    left: 126px;
+    transform: rotate(45deg);
+}
+.sit-9{
+    top: 214px;
+    left: 91px;
+    transform: rotate(-90deg);
+}
+.sit-10{
+    top: 118px;
+    left: 126px;    
+    transform: rotate(-45deg);
+}
+.stand-up{
+    top: 10px;
+    left: 10px;    
+}
+
+.tablecard-wrap{
+    position: absolute;
+    top: 181px;
+    left: 188px;   
+    width: 318px;
+}
+#tablecard{
+    text-align: center;
+}
+img.tablecard {
+    width: 60px;
+    display: inline-block;
+}
+.cardplayer{
+    position: absolute;
+    top:-25px;
+    width: 318px;
+    text-align: center;
+}
+.warisan{
+    width: 318px;
+    text-align: center;
+}
+
 .progress{
     height: 5px;
 }
@@ -57,51 +119,6 @@ a.active > img{
 .player .card-footer{
     padding:1px;
 }
-
-.sit{        
-    position: absolute;
-}
-.sit-1{
-    top:80px;
-    left:235px;
-}    
-.sit-2{
-    top:80px;
-    left:416px;
-}    
-.sit-3{
-    top:120px;
-    left:530px;
-}    
-.sit-4{
-    top:220px;
-    left:565px;
-}    
-.sit-5{
-    top:325px;
-    left:530px;
-}    
-.sit-6{
-    top:360px;
-    left:416px;
-}    
-.sit-7{
-    top:360px;
-    left:235px;
-}    
-.sit-8{
-    top:325px;
-    left:125px;
-}    
-.sit-9{
-    top:220px;
-    left:85px;
-}    
-.sit-10{
-    top:120px;
-    left:120px;
-}    
-
 .player-card-small{
     position: absolute;
     width: 100px;
@@ -113,188 +130,70 @@ img.card-small {
     display: inline;
     width: 20px;
 }
-
-.stand-up{
+.loser{
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top:0px;
+    left: -10px;
+    width: 60px;
 }
-
-#btn-pas{
+.piala{
     position: absolute;
-    top: 400px;
-    left: 20px;
-}
-#btn-send{
-    position: absolute;
-    top: 400px;
-    left: 625px;
-}
-#mecard{
-    /* height: 150px; */
-    /* clear: both; */
-    overflow-x: auto;
-}
-#mecard img{
-    width: 80px;
-    display: inline-block;
-    margin-right: -50px;
-    /* margin-bottom: -80px; */
-}
-.clearfix{ 
-    display: inline-block;
-    width: 100%;
-}
-img.tablecard {
+    top:-10px;
+    left: -30px;
     width: 50px;
 }
-#tablecard {
+.mahkota{
     position: absolute;
-    top:200px;
-    left: 225px;
-    width: 300px;
-}
-#tablecard img{
-    display: inline;
-}
-@media only screen and (max-width: 1100px) {
-    .loser{
-        position: absolute;
-        top:0px;
-        left: -10px;
-        width: 60px;
-    }
-    .piala{
-        position: absolute;
-        top:0px;
-        left: -20px;
-        width: 30px;
-    }
-    .mahkota{
-        position: absolute;
-        top:-20px;
-        left: 0px;
-        width: 40px;
-    }
-    
-    img.tablecard {
-        width: 40px;
-    }
-    #tablecard {
-        position: absolute;
-        top:45%;
-        left: 35%;
-        width: 200px;
-    }
-    #tablecard img{
-        display: inline;
-    }
-    .player{
-        width: 40px;
-    }
-    .sit, .stand-up{        
-        position: absolute;
-        font-size: 8px;
-    }
-    .sit-1{
-        top:19%;
-        left:34%;
-    }    
-    .sit-2{
-        top:19%;
-        left:58.5%;
-    }    
-    .sit-3{
-        top:27%;
-        left:74%;
-    }    
-    .sit-4{
-        top:47.5%;
-        left:79%;
-    }    
-    .sit-5{
-        top:69%;
-        left:74%;
-    }    
-    .sit-6{
-        top:76%;
-        left:58.5%;
-    }    
-    .sit-7{
-        top:76%;
-        left:34%;
-    }    
-    .sit-8{
-        top:68%;
-        left:19%;
-    }    
-    .sit-9{
-        top:47.5%;
-        left:13%;
-    }    
-    .sit-10{
-        top:27%;
-        left:18%;
-    }    
-    .player-card-small{
-        position: absolute;
-        width: 100px;
-        top: 40px;
-        left: -20px;
-    }
-    img.card-small {
-        margin-right: -16px;
-        display: inline;
-        width: 15px;
-    }    
-    
-    #btn-pas{
-        font-size: 12px;
-        position: absolute;
-        top:78%;
-        left: 4%;
-    }
-    #btn-send{
-        font-size: 12px;
-        position: absolute;
-        top: 78%;
-        left: 80%;
-    }    
-    .img-thumbnail{
-        padding: 0px;
-    }
-}
-@media only screen and (max-width: 600px) {
-    img.tablecard {
-        width: 30px;
-    }    
-    #tablecard {
-        position: absolute;
-        top:42%;
-        left: 29%;
-        width: 200px;
-    }
-    #tablecard img{
-        display: inline;
-    }
-    .player .card-header, .player .card-body, .player .card-footer{
-        margin:0px;
-        padding: 0px;
-    }
-}
-.main{    
-    opacity: 1;
-    filter: alpha(opacity=100);
+    top:-35px;
+    left: 0px;
+    width: 60px;
 }
 .pas{    
     opacity: 0.5;
     filter: alpha(opacity=50);
 }
-.leaderboard-name{
-    width: 80px !important;
+.footer .card, .header .card{
+    font-size: 10px;
+    border-radius: 0px;
+}
+.footer .card-header{
+    padding: 1px;
+}
+.footer-content{
+    margin: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.row{
+    margin-left: 0px;
+    margin-right: 0px;
+}
+.footer-content input{
+    font-size: 10px;
+    border-radius: 0px;
+}
+.footer-content button{
+    font-size: 10px;
+    border-radius: 0px;
+    padding: 5px 20px;
+}
+.footer-content .card-body, .header .card-body{
+    padding: 0px;
+}
+.footer-content .card-footer{
+    padding: 0px;
+    height: 30px;
+}
+#mecard img{
+    width: 80px;
     display: inline-block;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    vertical-align: middle;    
+    margin-right: -50px;
+    margin-bottom: -80px;
+}
+.clearfix{ 
+    display: inline-block;
+    width: 100%;
+}
+a.active > img{
+    border:2px solid lime;
 }

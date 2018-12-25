@@ -43,7 +43,7 @@ function showPlayer(response, callBack){
                 var tablecard = '<div class="cardplayer"><label class="badge badge-primary">'+ response.player[response.tablecardplayer].name +'</label></div>';
             }
             JSON.parse(response.tablecard).forEach(function(value) {
-                tablecard += '<img class="tablecard img-thumbnail" src="assets/img/card/'+value+'.png">';
+                tablecard += '<img class="tablecard img-thumbnail" src="assets/img/card/small/'+value+'.png">';
             });
             if(response.warisan && typeof response.player[response.warisan].name !== 'undefined'){
                 tablecard += '<div class="warisan"><small class="badge badge-warning">Warisan: '+ response.player[response.warisan].name +'</small></div>';
@@ -96,9 +96,9 @@ function showPlayer(response, callBack){
                         }
                     }                
                     
-                    playerCard += '<img class="card-small img-thumbnail" src="assets/img/card/back.png">';
+                    playerCard += '<img class="card-small img-thumbnail" src="assets/img/card/small/back.png">';
                     if (me && player.id == me.id) {
-                        mecard += '<a href="javascript:void(0)" class="kartu '+kartuSelected+'" data-index="'+index+'" data-value="'+value+'"><img class="card img-thumbnail" src="assets/img/card/'+value+'.png"></a>';
+                        mecard += '<a href="javascript:void(0)" class="kartu '+kartuSelected+'" data-index="'+index+'" data-value="'+value+'"><img class="card img-thumbnail" src="assets/img/card/small/'+value+'.png"></a>';
                     }
                 });
                 playerCard += '</div>';
