@@ -197,3 +197,6 @@ img.card-small {
 a.active > img{
     border:2px solid lime;
 }
+.bg-gelap {
+    background-color: #140716!important;
+}
