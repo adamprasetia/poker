@@ -197,3 +197,6 @@ img.card-small {
 a.active > img{
     border:2px solid lime;
 }
+.mecard-footer{
+    margin-top: -30px;
+}

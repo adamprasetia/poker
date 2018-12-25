@@ -6,7 +6,7 @@
     <title>Cianjur Poker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css?v=6" />
+    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css?v=7" />
 </head>
 <body>
     <div class="main">
@@ -64,7 +64,7 @@
                             <div id="mecard" class="card-bodys clearfix">
                             </div>            
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer mecard-footer">
                             <button id="btn-pas" type="button" name="button" class="btn btn-lg btn-danger" style="display:none">Pas</button>
                             <button id="btn-send" type="button" name="button" class="btn btn-lg btn-success" style="display:none">Ikut</button>    
                         </div>
@@ -138,9 +138,11 @@
             if (response.val()) {
                 var giliran = response.val().giliran
                 if (me && giliran == me.id && response.val().player[me.id].card != '[]') {
+                    $('.mecard-footer').show();
                     $('#btn-send').show();
                     $('#btn-pas').show();
                 }else{
+                    $('.mecard-footer').hide();
                     $('#btn-send').hide();
                     $('#btn-pas').hide();                    
                 }
@@ -250,7 +252,7 @@
         });
 
         $('#mecard-body').slimScroll({
-            height: '100px'
+            height: '130px'
         });
         $('#chat-body').slimScroll({
             height: '100px'
