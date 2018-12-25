@@ -160,10 +160,12 @@
                     }
                 });
                 players = players.sort(function(a,b){return b.total - a.total})
-                var leaderboard = '';
+                var leaderboard = '<table>';
                 players.map(function(value, index){
-                    leaderboard += '<div class="card-bodys mt-2"><small><strong>'+(parseInt(index)+1)+'.</strong></small> <img class="img-thumbnail" width="50px" src="'+value.avatar+'"> <small class="leaderboard-name">'+value.name+'<br>'+value.total+' Wins</small></div>';
+                    leaderboard += '<tr><td><strong>'+(parseInt(index)+1)+'.</strong></td><td><img class="img-thumbnail" width="50px" src="'+value.avatar+'"></td><td><small class="leaderboard-name">'+value.name+'<br>'+value.total+' Wins</small></td></tr>';
+                    // leaderboard += '<div class="card-bodys mt-2"><small><strong>'+(parseInt(index)+1)+'.</strong></small> <img class="img-thumbnail" width="50px" src="'+value.avatar+'"> <small class="leaderboard-name">'+value.name+'<br>'+value.total+' Wins</small></div>';
                 });
+                leaderboard += '</table>';
                 $('#leaderboard-body').html(leaderboard);
                 showPlayer(response.val(), function(){
                     
