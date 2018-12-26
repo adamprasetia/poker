@@ -443,7 +443,8 @@ function sendCard(cardSelected, callBack = function(){}){
         });    
         firebase.database().ref(room).update({
             tablecard:JSON.stringify(cardSelected),
-            tablecardplayer:response.val().player[giliran].id
+            tablecardplayer:response.val().player[giliran].id,
+            tablecardrotate: rotate
         }).then(function(){
             firebase.database().ref(room).update({
                 warisan:0
