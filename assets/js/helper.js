@@ -43,13 +43,15 @@ function showPlayer(response, callBack){
                 var tablecard = '<div class="cardplayer"><label class="badge badge-primary">'+ response.player[response.tablecardplayer].name +'</label></div>';
             }
 
-            response.tablecardhistory.forEach(function(value) {
-                tablecard += '<div class="tablecard-container" style="transform: rotate('+value.rotate+'deg);">';
-                JSON.parse(value.card).forEach(function(values) {
-                    tablecard += '<img class="tablecard pas img-thumbnail" src="assets/img/card/small/'+values+'.png">';
-                });
-                tablecard += '</div>';
-            });
+            if(response.tablecardhistory !== 0){
+                response.tablecardhistory.forEach(function(value) {
+                    tablecard += '<div class="tablecard-container" style="transform: rotate('+value.rotate+'deg);">';
+                    JSON.parse(value.card).forEach(function(values) {
+                        tablecard += '<img class="tablecard pas img-thumbnail" src="assets/img/card/small/'+values+'.png">';
+                    });
+                    tablecard += '</div>';
+                });    
+            }
 
             tablecard += '<div class="tablecard-container" style="transform: rotate('+response.tablecardrotate+'deg);">';
             JSON.parse(response.tablecard).forEach(function(value) {
