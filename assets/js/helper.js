@@ -419,7 +419,7 @@ function setWarisan(callBack){
 
 function getLastTableCardHistoryID(tablecardhistory){
     var id = 1;
-    Object.values(players).forEach(function(value) {    
+    Object.values(tablecardhistory).forEach(function(value) {    
         id++;
     });
     return id;   
