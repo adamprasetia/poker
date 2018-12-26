@@ -426,8 +426,8 @@ function getLastTableCardHistoryID(tablecardhistory){
 }
 
 function sendCard(cardSelected, callBack = function(){}){
+    var rotate = Math.floor(Math.random() * 360);
     firebase.database().ref(room).once('value', function(response) {
-        var rotate = Math.floor(Math.random() * 360);
         var lastidcardhistory = getLastTableCardHistoryID(response.val().tablecardhistory);
         var giliran = response.val().giliran;
         var bom = response.val().bom;
