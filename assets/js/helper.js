@@ -42,9 +42,21 @@ function showPlayer(response, callBack){
             if(response.tablecardplayer && typeof response.player[response.tablecardplayer].name !== 'undefined'){
                 var tablecard = '<div class="cardplayer"><label class="badge badge-primary">'+ response.player[response.tablecardplayer].name +'</label></div>';
             }
+
+            response.tablecardhistory.forEach(function(value) {
+                tablecard += '<div class="tablecard-container" style="transform: rotate('+value.rotate+'deg);">';
+                JSON.parse(value.card).forEach(function(values) {
+                    tablecard += '<img class="tablecard pas img-thumbnail" src="assets/img/card/small/'+values+'.png">';
+                });
+                tablecard += '</div>';
+            });
+
+            tablecard += '<div class="tablecard-container" style="transform: rotate('+response.tablecardrotate+'deg);">';
             JSON.parse(response.tablecard).forEach(function(value) {
                 tablecard += '<img class="tablecard img-thumbnail" src="assets/img/card/small/'+value+'.png">';
             });
+            tablecard += '</div>';
+
             if(response.warisan && typeof response.player[response.warisan].name !== 'undefined'){
                 tablecard += '<div class="warisan"><small class="badge badge-warning">Warisan: '+ response.player[response.warisan].name +'</small></div>';
             }
@@ -363,6 +375,7 @@ function resetGame(){
             bom:0,
             tablecard:'[]',
             tablecardplayer:0,
+            tablecardhistory:0,
             warisan:0,
             juara:juara,
             timer:100
@@ -402,7 +415,18 @@ function setWarisan(callBack){
     });
 }
 
+function getLastTableCardHistoryID(tablecardhistory){
+    var id = 1;
+    Object.values(players).forEach(function(value) {    
+        id++;
+    });
+    return id;   
+}
+
 function sendCard(cardSelected, callBack = function(){}){
+    var rotate = Math.floor(Math.random() * 360);
+    var lastidcardhistory = getLastTableCardHistoryID(response.val().tablecardhistory);
+
     firebase.database().ref(room).once('value', function(response) {
         var giliran = response.val().giliran;
         var bom = response.val().bom;
@@ -412,6 +436,10 @@ function sendCard(cardSelected, callBack = function(){}){
             });
         }
         var playerCard = JSON.parse(response.val().player[giliran].card);  
+        firebase.database().ref(room+'/tablecardhistory/'+lastidcardhistory).update({
+            card: JSON.stringify(cardSelected),
+            rotate: rotate
+        });    
         firebase.database().ref(room).update({
             tablecard:JSON.stringify(cardSelected),
             tablecardplayer:response.val().player[giliran].id

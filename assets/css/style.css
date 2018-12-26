@@ -69,29 +69,62 @@ body{
     top: 10px;
     left: 10px;    
 }
-
-.tablecard-wrap{
+.tablecard-wrap {
     position: absolute;
-    top: 181px;
-    left: 188px;   
-    width: 318px;
+    top: 160px;
+    left: 286px;
+    width: 81px;
 }
 #tablecard{
     text-align: center;
 }
+.tablecard-container{
+    position: absolute;
+    width: 98px;
+    height: 115px;
+    /* margin-top: -102px; */
+}
 img.tablecard {
     width: 60px;
     display: inline-block;
+    margin-right: -50px;
 }
-.cardplayer{
+img.tablecard:nth-last-child(1) {
+    transform: rotate(20deg);
+    margin-top: 20px;
+}
+
+img.tablecard:nth-last-child(2) {
+    transform: rotate(9deg);
+    margin-top: 7px;
+}
+img.tablecard:nth-last-child(3) {
+    transform: rotate(0deg);
+}
+
+img.tablecard:nth-last-child(4) {
+    transform: rotate(-9deg);
+    margin-top: 7px;
+}
+img.tablecard:nth-last-child(5) {
+    transform: rotate(-20deg);
+    margin-top: 20px;
+}
+
+.cardplayer {
+    z-index: 100;
     position: absolute;
-    top:-25px;
-    width: 318px;
+    top: -25px;
+    width: 81px;
     text-align: center;
+    left: 18px;
 }
 .warisan{
-    width: 318px;
+    position: absolute;
+    width: 81px;
+    z-index: 100;
     text-align: center;
+    top: 100px;
 }
 
 .progress{
