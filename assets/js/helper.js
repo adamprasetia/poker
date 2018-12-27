@@ -63,7 +63,7 @@ function showPlayer(response, callBack){
                 tablecard += '<div class="warisan"><small class="badge badge-warning">Warisan: '+ response.player[response.warisan].name +'</small></div>';
             }
             if(response.bom && typeof response.player[response.bom].name !== 'undefined'){
-                tablecard += '<img src="assets/img/bom.png" style="position:absolute;left:0px;top:0px" >';
+                tablecard += '<img src="assets/img/bom.png?v=2" style="position:absolute;left:0px;top:0px" >';
             }
             $('#tablecard').html(tablecard);
         }
