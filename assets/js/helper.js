@@ -568,6 +568,7 @@ function setPlayAll(response, players){
                 firebase.database().ref(room).update({
                     tablecard:'[]',
                     tablecardplayer:0,
+                    tablecardhistory:0,
                     warisan:0
                 });                
             });            
