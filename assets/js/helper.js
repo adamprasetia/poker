@@ -400,7 +400,7 @@ function setWarisan(callBack){
         }                
         for (var i = 1; i <= 10; i++) {
             player = getPlayerBySit(players, sitno);
-            if (player.status && player.status != 'menang' && player.status != 'menunggu') {
+            if (player.status && player.status == 'main') {
                 firebase.database().ref(room).update({
                     warisan:player.id
                 });
