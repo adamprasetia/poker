@@ -38,7 +38,7 @@
             <div class="card text-white bg-gelap">
                 <div class="card-body">
                     <div id="status"></div>                
-                    <fb:login-button id="fb-login" scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+                    <button id="btn-login" onclick="login()">login</button>
                 </div>
             </div>                        
         </div>
@@ -129,12 +129,12 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.js"></script>
     <script type="text/javascript" src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>        
     <script type="text/javascript" src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
-    <script type="text/javascript" src="assets/js/helper.js?v=15"></script>
+    <script type="text/javascript" src="assets/js/helper.js?v=16"></script>
     <script type="text/javascript" src="assets/js/firebase.js?v=2"></script>    
-    <script type="text/javascript" src="assets/js/facebook.js?v=2"></script>
+    <script type="text/javascript" src="assets/js/auth.js"></script>
     <script type="text/javascript">
         var room = getRoom();
-        var me;
+        var me = JSON.parse(getCookie('cianjur_poker_user_login'));
         var timeout = 100;
         var cardSelected = [];
 
@@ -169,25 +169,27 @@
                     $('#btn-pas').hide();                    
                 }
                 // leaderboard
-                var player = response.val().player;
-                var players = [];
-                Object.values(player).forEach(function(value){
-                    if(value.name){
-                        var total = 0;
-                        if(value.totaljuara){
-                            total = value.totaljuara;
+                if(response.val().player){
+                    var player = response.val().player;
+                    var players = [];
+                    Object.values(player).forEach(function(value){
+                        if(value.name){
+                            var total = 0;
+                            if(value.totaljuara){
+                                total = value.totaljuara;
+                            }
+                            players.push({name:value.name, avatar: value.picture, total:total})
                         }
-                        players.push({name:value.name, avatar: value.picture, total:total})
-                    }
-                });
-                players = players.sort(function(a,b){return b.total - a.total})
-                var leaderboard = '<table>';
-                players.map(function(value, index){
-                    leaderboard += '<tr><td><strong>'+(parseInt(index)+1)+'.</strong></td><td><img class="img-thumbnail" width="50px" src="'+value.avatar+'"></td><td><small class="leaderboard-name">'+value.name+'<br>'+value.total+' Wins</small></td></tr>';
-                    // leaderboard += '<div class="card-bodys mt-2"><small><strong>'+(parseInt(index)+1)+'.</strong></small> <img class="img-thumbnail" width="50px" src="'+value.avatar+'"> <small class="leaderboard-name">'+value.name+'<br>'+value.total+' Wins</small></div>';
-                });
-                leaderboard += '</table>';
-                $('#leaderboard-body').html(leaderboard);
+                    });
+                    players = players.sort(function(a,b){return b.total - a.total})
+                    var leaderboard = '<table>';
+                    players.map(function(value, index){
+                        leaderboard += '<tr><td><strong>'+(parseInt(index)+1)+'.</strong></td><td><img class="img-thumbnail" width="50px" src="'+value.avatar+'"></td><td><small class="leaderboard-name">'+value.name+'<br>'+value.total+' Wins</small></td></tr>';
+                        // leaderboard += '<div class="card-bodys mt-2"><small><strong>'+(parseInt(index)+1)+'.</strong></small> <img class="img-thumbnail" width="50px" src="'+value.avatar+'"> <small class="leaderboard-name">'+value.name+'<br>'+value.total+' Wins</small></div>';
+                    });
+                    leaderboard += '</table>';
+                    $('#leaderboard-body').html(leaderboard);
+                }
                 showPlayer(response.val(), function(){
                     
                 });
