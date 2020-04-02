@@ -134,7 +134,11 @@
     <script type="text/javascript" src="assets/js/auth.js"></script>
     <script type="text/javascript">
         var room = getRoom();
-        var me = JSON.parse(getCookie('cianjur_poker_user_login'));
+        var cianjur_poker_user_login = getCookie('cianjur_poker_user_login');
+        var me = '';
+        if(cianjur_poker_user_login){
+            me = JSON.parse(cianjur_poker_user_login);
+        }
         var timeout = 100;
         var cardSelected = [];
 
