@@ -8,7 +8,7 @@ function login()
     }
     firebase.database().ref(room+'/player/'+name).update(data).then(function(){
         me = data;
-        setCookie('cianjur_poker_user_login', JSON.stringify(data));
+        setCookie('cianjur_poker_user_login', JSON.stringify(data), 365);
         login_status(data);
         firebase.database().ref(room+'/player/'+name).update({
             sync:new Date().getUTCMilliseconds()
